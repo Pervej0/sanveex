@@ -18,6 +18,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { sanveexLogo } from "@/src/assets";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -76,11 +78,11 @@ export default function Navbar() {
       <div className="container">
         <div className="flex h-16 items-center justify-between">
           {/* Left: Brand Name */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-foreground-accent">
-              Your Brand Name
-            </span>
-          </Link>
+          <div>
+            <Link href="/" className="flex items-center space-x-2">
+            <Image src={sanveexLogo} alt="Brand Name" width={100} height={100}/>
+            </Link>
+          </div>
 
           {/* Center: Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
