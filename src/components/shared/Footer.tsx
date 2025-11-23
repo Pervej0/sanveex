@@ -111,9 +111,9 @@ export default function Footer() {
             <Button
               asChild
               size="lg"
-              className="bg-foreground-accent hover:bg-foreground-accent/90 text-white px-8 py-6 text-base font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-foreground-accent hover:bg-foreground-accent/90 text-white px-6 py-6 text-base font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300"
             >
-              <Link href="#contact">SUBSCRIBE</Link>
+              <span>SUBSCRIBE</span>
             </Button>
           </form>
         </div>

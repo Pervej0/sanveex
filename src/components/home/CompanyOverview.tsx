@@ -28,7 +28,9 @@ export default function CompanyOverview() {
             {/* Heading */}
             <div className="heading mb-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                <span className="text-foreground-accent">SANVEEX GLOBAL HEALTH</span>
+                <span className="text-foreground-accent">
+                  SANVEEX GLOBAL HEALTH
+                </span>
               </h1>
             </div>
 

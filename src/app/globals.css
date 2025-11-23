@@ -4,9 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Your brand colors */              /* Main text */
-  --foreground-secondary: #888888;     /* Secondary text */
-  --foreground-accent: #28316D;        /* Accent/heading text */
+  /* Your brand colors */ /* Main text */
+  --foreground-secondary: #888888; /* Secondary text */
+  --foreground-accent: #28316d; /* Accent/heading text */
 
   /* UI colors */
   --card: oklch(1 0 0);
