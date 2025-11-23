@@ -94,7 +94,7 @@ export default function HeroSlider() {
                         size="lg"
                         className="bg-foreground-accent hover:bg-foreground-accent/90 text-white px-8 py-6 text-base font-medium rounded-md"
                       >
-                        <a href={slide.buttonLink}>{slide.buttonText}</a>
+                        <a className="uppercase" href={slide.buttonLink}>{slide.buttonText}</a>
                       </Button>
                     </div>
                   </div>
