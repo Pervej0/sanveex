@@ -7,7 +7,7 @@ export default function CompanyOverview() {
   const awards = [award1, award2, award3, award4];
 
   return (
-    <section className="welcome_section py-16 md:py-20 lg:py-24 bg-background">
+    <section className="pt-6 bg-background">
       <div className="container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Image */}

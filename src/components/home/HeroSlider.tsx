@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import Autoplay from "embla-carousel-autoplay"
+import Autoplay from "embla-carousel-autoplay";
 
 interface SlideData {
   title: string;
@@ -52,15 +52,18 @@ const slides: SlideData[] = [
 export default function HeroSlider() {
   return (
     <section className="relative w-full">
-      <Carousel opts={{
-    align: "start",
-    loop: true,
-  }}  plugins={[
-        Autoplay({
-          delay: 5000,
-        }),
-        
-      ]} className="w-full">
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        plugins={[
+          Autoplay({
+            delay: 5000,
+          }),
+        ]}
+        className="w-full"
+      >
         <CarouselContent className="-ml-0">
           {slides.map((slide, index) => (
             <CarouselItem key={index} className="pl-0">
@@ -74,14 +77,12 @@ export default function HeroSlider() {
                 }}
               >
                 <div className="container text-left">
-                  <div className="content text-center max-w-2xl">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                  <div className="content w-auto md:w-[120vh] md:mx-auto text-left max-w-2xl">
+                    <h1 className="text-4xl uppercase md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
                       {slide.title.split("<br />").map((line, i) => (
                         <span key={i}>
                           {line}
-                          {i < slide.title.split("<br />").length - 1 && (
-                            <br />
-                          )}
+                          {i < slide.title.split("<br />").length - 1 && <br />}
                         </span>
                       ))}
                     </h1>
@@ -94,7 +95,9 @@ export default function HeroSlider() {
                         size="lg"
                         className="bg-foreground-accent hover:bg-foreground-accent/90 text-white px-8 py-6 text-base font-medium rounded-md"
                       >
-                        <a className="uppercase" href={slide.buttonLink}>{slide.buttonText}</a>
+                        <a className="uppercase" href={slide.buttonLink}>
+                          {slide.buttonText}
+                        </a>
                       </Button>
                     </div>
                   </div>

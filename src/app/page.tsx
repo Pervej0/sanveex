@@ -5,6 +5,9 @@ import WhyChooseUs from "../components/home/WhyChooseUs";
 import CompanyOverview from "../components/home/CompanyOverview";
 import OurDepartments from "../components/home/OurDepartments";
 import BestMedicine from "../components/home/BestMedicine";
+import Milestone from "../components/home/Milestone";
+import ClientsReview from "../components/home/ClientsReview";
+import ArticlesAndFaqs from "../components/home/ArticlesAndFaqs";
 
 export default function Home() {
   return (
@@ -14,15 +17,9 @@ export default function Home() {
       <CompanyOverview />
       <OurDepartments />
       <BestMedicine />
-      <div className="container">
-        <h1>Welcome to Home</h1>
-        <div className="h-screen border">
-          <h2>Hi!</h2>
-        </div>
-        <div className="container h-screen border">
-          <h2>Hello, World</h2>
-        </div>
-      </div>
+      <Milestone />
+      <ClientsReview />
+      <ArticlesAndFaqs />
     </>
   );
 }

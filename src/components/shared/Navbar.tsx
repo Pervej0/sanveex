@@ -48,17 +48,17 @@ export default function Navbar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const viewportHeight = 100;
-      
+
       // Check if scrolled past viewport height
-      if (currentScrollY >= viewportHeight ) {
+      if (currentScrollY >= viewportHeight) {
         setIsSticky(true);
       } else {
         // Not past viewport height - navbar in normal position
         setIsSticky(false);
         setIsVisible(true);
       }
-      
-    //   setLastScrollY(currentScrollY);
+
+      //   setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -68,10 +68,8 @@ export default function Navbar() {
   return (
     <nav
       className={cn(
-        "left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300",
-        isSticky
-          ? "fixed top-0"
-          : "relative",
+        "left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 transition-all duration-300",
+        isSticky ? "fixed top-0" : "relative",
         isSticky && !isVisible && "-translate-y-full"
       )}
     >
@@ -80,7 +78,12 @@ export default function Navbar() {
           {/* Left: Brand Name */}
           <div>
             <Link href="/" className="flex items-center space-x-2">
-            <Image src={sanveexLogo} alt="Brand Name" width={100} height={100}/>
+              <Image
+                src={sanveexLogo}
+                alt="Brand Name"
+                width={100}
+                height={100}
+              />
             </Link>
           </div>
 
@@ -88,13 +91,13 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-6">
             <Link
               href="/"
-              className="text-sm font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+              className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
             >
               Home
             </Link>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-foreground-accent transition-colors outline-none px-2 py-1 rounded-md hover:bg-accent/50 data-[state=open]:bg-accent/50 data-[state=open]:text-foreground-accent">
+              <DropdownMenuTrigger className="flex items-center gap-1.5 text-md font-medium text-foreground hover:text-foreground-accent transition-colors outline-none px-2 py-1 rounded-md hover:bg-accent/50 data-[state=open]:bg-accent/50 data-[state=open]:text-foreground-accent">
                 About
                 <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 data-[state=open]:rotate-180" />
               </DropdownMenuTrigger>
@@ -107,7 +110,7 @@ export default function Navbar() {
                     <DropdownMenuItem asChild className="cursor-pointer">
                       <Link
                         href={item.href}
-                        className="flex items-center px-3 py-2.5 text-sm text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors focus:bg-accent focus:text-accent-foreground outline-none"
+                        className="flex items-center px-3 py-2.5 text-md text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors focus:bg-accent focus:text-accent-foreground outline-none"
                       >
                         <span className="font-medium">{item.title}</span>
                       </Link>
@@ -121,7 +124,7 @@ export default function Navbar() {
             </DropdownMenu>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-foreground-accent transition-colors outline-none px-2 py-1 rounded-md hover:bg-accent/50 data-[state=open]:bg-accent/50 data-[state=open]:text-foreground-accent">
+              <DropdownMenuTrigger className="flex items-center gap-1.5 text-md font-medium text-foreground hover:text-foreground-accent transition-colors outline-none px-2 py-1 rounded-md hover:bg-accent/50 data-[state=open]:bg-accent/50 data-[state=open]:text-foreground-accent">
                 Products
                 <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 data-[state=open]:rotate-180" />
               </DropdownMenuTrigger>
@@ -149,14 +152,14 @@ export default function Navbar() {
 
             <Link
               href="/newsroom"
-              className="text-sm font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+              className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
             >
               Newsroom
             </Link>
 
             <Link
               href="/contact"
-              className="text-sm font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+              className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
             >
               Contact Us
             </Link>
@@ -190,11 +193,14 @@ export default function Navbar() {
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] overflow-y-auto">
+              <SheetContent
+                side="right"
+                className="w-[300px] sm:w-[400px] overflow-y-auto"
+              >
                 <SheetHeader className="pb-6">
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
-                
+
                 <div className="flex flex-col space-y-2 mt-4">
                   {/* Mobile Navigation Links */}
                   <Link

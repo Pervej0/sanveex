@@ -62,13 +62,14 @@ export default function BestMedicine() {
   };
 
   return (
-    <section className="bg-gray-50 py-16 relative">
+    <section className="bg-gray-50 py-8 relative">
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold text-gray-800">
-            BEST <span className="text-foreground-accent">Medicine</span> FOR
-            YOU
+            BEST{" "}
+            <span className="text-foreground-accent uppercase">Medicine</span>{" "}
+            FOR YOU
           </h2>
         </div>
         {/* Custom Navigation Top Right */}
