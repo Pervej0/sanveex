@@ -7,7 +7,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/src/components/ui/accordion";
 
 const articles = [
   {
@@ -79,11 +79,11 @@ export default function ArticlesAndFaqs() {
                   <h6 className="text-lg font-semibold text-gray-800 hover:foreground-accent transition">
                     <Link href="#">{item.title}</Link>
                   </h6>
-                  <p className="text-gray-500 text-[12px]">
+                  <p className="text-gray-500 text-small">
                     {item.category} ·{" "}
                     <Link
                       href="#"
-                      className="text-foreground-accent hover:underline text-[14px]"
+                      className="text-foreground-accent hover:underline text-small"
                     >
                       {item.date}
                     </Link>
@@ -110,7 +110,7 @@ export default function ArticlesAndFaqs() {
                 <AccordionTrigger className="px-4 py-3 text-lg font-medium">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="px-4 pb-4 text-gray-600">
+                <AccordionContent className="px-4 text-small pb-4 text-gray-600">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>

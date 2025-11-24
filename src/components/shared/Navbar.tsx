@@ -9,14 +9,14 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/src/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "@/src/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { sanveexLogo } from "@/src/assets";
@@ -81,8 +81,8 @@ export default function Navbar() {
               <Image
                 src={sanveexLogo}
                 alt="Brand Name"
-                width={100}
-                height={100}
+                width={110}
+                height={110}
               />
             </Link>
           </div>
@@ -91,7 +91,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-6">
             <Link
               href="/"
-              className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+              className="text-md text-red-600 font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
             >
               Home
             </Link>

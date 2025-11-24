@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import { award1, award2, award3, award4 } from "@/src/assets";
 
 export default function CompanyOverview() {
