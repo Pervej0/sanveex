@@ -3,16 +3,11 @@
 import { departments } from "@/src/data/departments";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const DepartmentPage = () => {
   const { slug } = useParams();
-  const [data, setData] = useState<any>({});
 
-  useEffect(()=>{
-    const departmentData = departments.find(item => item.title.toLowerCase() == slug);
-    setData(departmentData);
-  }, [])
+  const data = departments.find((item) => item.title.toLowerCase() == slug);
 
   if (!data) {
     return (

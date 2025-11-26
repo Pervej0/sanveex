@@ -1,25 +1,16 @@
-import Image from "next/image";
-import Topbar from "../components/shared/Topbar";
-import HeroSlider from "../components/home/HeroSlider";
-import WhyChooseUs from "../components/home/WhyChooseUs";
-import CompanyOverview from "../components/home/CompanyOverview";
-import OurDepartments from "../components/home/OurDepartments";
-import BestMedicine from "../components/home/BestMedicine";
-import Milestone from "../components/home/Milestone";
-import ClientsReview from "../components/home/ClientsReview";
-import ArticlesAndFaqs from "../components/home/ArticlesAndFaqs";
+import HeroSection from "../components/home/HeroSection";
+import FeatureSection from "../components/home/FeatureSection";
+import TrustSection from "../components/home/TrustSection";
+import ContactSection from "../components/home/ContactSection";
 
 export default function Home() {
   return (
-    <>
-      <HeroSlider />
-      <WhyChooseUs />
-      <CompanyOverview />
-      <OurDepartments />
-      <BestMedicine />
-      <Milestone />
-      <ClientsReview />
-      <ArticlesAndFaqs />
-    </>
+    <div className="flex flex-col min-h-screen">
+      <HeroSection />
+      <FeatureSection />
+      <TrustSection />
+      <ContactSection />
+    </div>
   );
 }
+
