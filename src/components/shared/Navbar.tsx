@@ -91,7 +91,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-6">
             <Link
               href="/"
-              className="text-md text-red-600 font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+              className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
             >
               Home
             </Link>

@@ -52,7 +52,7 @@ const faqs = [
 
 export default function ArticlesAndFaqs() {
   return (
-    <section id="faqs" className="py-16 bg-gray-50">
+    <section id="faqs" className="py-16 bg-gray-50 container">
       <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12">
         {/* Left Section - Articles */}
         <div>

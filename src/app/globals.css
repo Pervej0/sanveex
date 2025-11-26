@@ -270,19 +270,13 @@ h2 {
 
 @media (min-width: 768px) {
   h2 {
-    font-size: 32px;
-  }
-}
-
-@media (min-width: 1024px) {
-  h2 {
-    font-size: 40px;
+    font-size: 30px;
   }
 }
 
 @media (min-width: 1536px) {
   h2 {
-    font-size: 48px;
+    font-size: 44px;
   }
 }
 
@@ -404,7 +398,7 @@ p {
 
 @media (min-width: 1024px) {
   p {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
