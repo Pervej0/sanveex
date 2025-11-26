@@ -17,7 +17,7 @@ export default function Home() {
       <CompanyOverview />
       <OurDepartments />
       <BestMedicine />
-      <Milestone />
+      {/* <Milestone /> */}
       <ClientsReview />
       <ArticlesAndFaqs />
     </>

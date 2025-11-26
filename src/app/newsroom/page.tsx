@@ -5,7 +5,8 @@ const NewsRoom = () => {
     <>
       <div className="text-center container pt-20 mb-12">
         <h3 className="text-3xl uppercase md:text-5xl font-bold text-gray-800">
-          Read All Articles
+          Read All{" "}
+          <span className="text-foreground-accent uppercase">Articles</span>
         </h3>
       </div>
       <ArticlesSection />
