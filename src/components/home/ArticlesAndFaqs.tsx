@@ -107,8 +107,8 @@ export default function ArticlesAndFaqs() {
                 value={`faq-${i}`}
                 className="rounded-xl bg-white shadow-sm"
               >
-                <AccordionTrigger className="px-4 py-3 text-lg font-medium">
-                  {item.q}
+                <AccordionTrigger className="px-4 py-3 font-medium">
+                  <span className="text-md xl:text-lg">{item.q}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 text-small pb-4 text-gray-600">
                   {item.a}

@@ -51,8 +51,8 @@ export default function CompanyOverview() {
             {/* Awards */}
             <ul className="flex flex-wrap gap-4 md:gap-6 mb-8">
               {awards.map((award, index) => (
-                <li key={index} className="flex-shrink-0">
-                  <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden  border border-border hover:border-foreground-accent/50 transition-all duration-300 hover:shadow-lg hover:scale-110">
+                <li key={index} className="shrink-0">
+                  <div className="relative w-20 h-20 md:w-22 md:h-22 rounded-lg overflow-hidden  border border-border hover:border-foreground-accent/50 transition-all duration-300 hover:shadow-lg hover:scale-110">
                     <Image
                       src={award}
                       alt={`Award ${index + 1}`}
