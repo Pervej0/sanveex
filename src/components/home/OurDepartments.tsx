@@ -33,15 +33,11 @@ export default function OurDepartments() {
             {departments?.map((department, index) => {
               const href = `/departments/${titleToSlug(department.title)}`;
               return (
-                <Link
-                  key={index}
-                  href={href}
-                  className="group block"
-                >
-                  <div className="department_icon_content relative h-full p-8 bg-card border-2 border-border rounded-2xl hover:border-foreground-accent/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+                <Link key={index} href={href} className="group block">
+                  <div className="department_icon_content relative h-full p-8 border-foreground-accent/5 border-2 border-border rounded-2xl hover:border-foreground-accent/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
                     {/* Background gradient on hover */}
                     <div className="absolute inset-0 bg-gradient-to-br from-foreground-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
+
                     {/* Content */}
                     <div className="relative z-10">
                       {/* Icon */}
@@ -56,8 +52,12 @@ export default function OurDepartments() {
 
                       {/* Description */}
                       <p className="text-sm md:text-base text-foreground-secondary leading-relaxed line-clamp-3">
-                        {department.description.split(" ").slice(0, 10).join(" ")}...
-                        </p>
+                        {department.description
+                          .split(" ")
+                          .slice(0, 10)
+                          .join(" ")}
+                        ...
+                      </p>
                       {/* Arrow indicator */}
                       <div className="mt-4 flex items-center text-foreground-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <span className="text-sm font-medium">Learn more</span>

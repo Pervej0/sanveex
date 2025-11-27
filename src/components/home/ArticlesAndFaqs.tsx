@@ -105,7 +105,7 @@ export default function ArticlesAndFaqs() {
               <AccordionItem
                 key={i}
                 value={`faq-${i}`}
-                className="border rounded-xl bg-white shadow-sm"
+                className="rounded-xl bg-white shadow-sm"
               >
                 <AccordionTrigger className="px-4 py-3 text-lg font-medium">
                   {item.q}
