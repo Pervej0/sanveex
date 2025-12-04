@@ -51,13 +51,13 @@ const products = [
 
 export default function ProductsSection() {
   return (
-    <section className="py-10 mb-10">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <section className="py-10 md:py-16 mb-10">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {products.map((item, i) => (
             <div
               key={i}
-              className="rounded-lg shadow-md border bg-white overflow-hidden hover:shadow-xl transition duration-300"
+              className="rounded-lg shadow-md border border-border bg-white overflow-hidden hover:shadow-xl transition duration-300"
             >
               <div className="relative group overflow-hidden">
                 <Image
@@ -75,22 +75,27 @@ export default function ProductsSection() {
 
               <div className="p-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-lg font-bold text-gray-800">
-                    <Link className="text-xl" href={`overview/${item.id}`}>
+                  <h4 className="text-lg font-bold text-foreground">
+                    <Link
+                      className="text-xl hover:text-primary transition"
+                      href={`overview/${item.id}`}
+                    >
                       {item.title}
                     </Link>
                   </h4>
-                  <span className="text-sm font-extrabold text-foreground-accent">
+                  <span className="text-sm font-extrabold text-primary">
                     {item.price}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-600 mt-1">{item.dept}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {item.dept}
+                </p>
 
                 <div className="mt-4">
                   <Button
                     asChild
-                    className="bg-foreground-accent hover:bg-foreground-accent/90 text-white"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
                     <Link href={`overview/${item.id}`}>Product Details</Link>
                   </Button>

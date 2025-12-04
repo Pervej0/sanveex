@@ -43,36 +43,40 @@ export default function ClientsReview() {
   };
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Heading */}
-        <h2 className="text-center text-3xl md:text-5xl font-bold mb-12 text-gray-800">
-          WHAT <span className="text-foreground-accent">CLIENTS SAY</span>
-        </h2>
+    <section className="py-16 md:py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Heading */}
+          <h2 className="text-center text-3xl md:text-4xl lg:text-5xl font-bold mb-12 text-primary">
+            WHAT <span className="text-primary">CLIENTS SAY</span>
+          </h2>
 
-        {/* Testimonial Slider */}
-        <Slider {...testimonialSettings} className="mb-10">
-          {testimonials.map((item, i) => (
-            <div key={i} className="text-center px-4">
-              <p className="text-gray-700 text-lg italic max-w-3xl mx-auto">
-                &rdquo;{item.text}&rdquo;
-              </p>
-              <div className="flex items-center justify-center gap-4 mt-6">
-                <Image
-                  src={item.img}
-                  width={60}
-                  height={60}
-                  alt={item.name}
-                  className="rounded-full border"
-                />
-                <div>
-                  <h6 className="text-lg font-semibold">{item.name}</h6>
-                  <span className="text-sm text-gray-500">{item.role}</span>
+          {/* Testimonial Slider */}
+          <Slider {...testimonialSettings} className="mb-10">
+            {testimonials.map((item, i) => (
+              <div key={i} className="text-center px-4">
+                <p className="text-foreground text-lg italic max-w-3xl mx-auto">
+                  &rdquo;{item.text}&rdquo;
+                </p>
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <Image
+                    src={item.img}
+                    width={60}
+                    height={60}
+                    alt={item.name}
+                    className="rounded-full border"
+                  />
+                  <div>
+                    <h6 className="text-lg font-semibold">{item.name}</h6>
+                    <span className="text-sm text-muted-foreground">
+                      {item.role}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </div>
       </div>
     </section>
   );

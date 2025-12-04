@@ -13,18 +13,18 @@ export default function OurDepartments() {
       className="department_section py-16 md:py-20 lg:py-24 bg-background"
       id="department_section"
     >
-      <div className="container">
+      <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="mb-12 md:mb-16 text-center">
           <div className="inline-block mb-4">
-            <span className="text-sm font-semibold text-foreground-accent uppercase tracking-wider">
+            <span className="text-sm font-semibold text-primary uppercase tracking-wider">
               Our Services
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground">
-            OUR <span className="text-foreground-accent">DEPARTMENTS</span>
+            OUR <span className="text-primary">DEPARTMENTS</span>
           </h2>
-          <div className="w-24 h-1 bg-foreground-accent mx-auto mt-4" />
+          <div className="w-24 h-1 bg-primary mx-auto mt-4" />
         </div>
 
         {/* Departments Grid */}
@@ -34,24 +34,24 @@ export default function OurDepartments() {
               const href = `/departments/${titleToSlug(department.title)}`;
               return (
                 <Link key={index} href={href} className="group block">
-                  <div className="department_icon_content relative h-full p-8 border-foreground-accent/5 border-2 border-border rounded-2xl hover:border-foreground-accent/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+                  <div className="department_icon_content relative h-full p-8 border-2 border-border rounded-2xl hover:border-primary/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
                     {/* Background gradient on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-foreground-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                     {/* Content */}
                     <div className="relative z-10">
                       {/* Icon */}
-                      <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-foreground-accent/10 text-foreground-accent group-hover:bg-foreground-accent group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg group-hover:shadow-xl">
+                      <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg group-hover:shadow-xl">
                         {department.icon}
                       </div>
 
                       {/* Title */}
-                      <h4 className="text-xl md:text-2xl font-bold text-foreground-accent mb-4 group-hover:text-foreground-accent transition-colors">
+                      <h4 className="text-xl md:text-2xl font-bold text-primary mb-4 group-hover:text-primary transition-colors">
                         {department.title}
                       </h4>
 
                       {/* Description */}
-                      <p className="text-sm md:text-base text-foreground-secondary leading-relaxed line-clamp-3">
+                      <p className="text-sm md:text-base text-muted-foreground leading-relaxed line-clamp-3">
                         {department.description
                           .split(" ")
                           .slice(0, 10)
@@ -59,7 +59,7 @@ export default function OurDepartments() {
                         ...
                       </p>
                       {/* Arrow indicator */}
-                      <div className="mt-4 flex items-center text-foreground-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="mt-4 flex items-center text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <span className="text-sm font-medium">Learn more</span>
                         <svg
                           className="w-4 h-4 ml-2"

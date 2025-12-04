@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Topbar from "../components/shared/Topbar";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +27,7 @@ export const metadata: Metadata = {
     "Global Health",
     "Health Technology",
     "Clinical Support",
-    "Pharmaceutical Services"
+    "Pharmaceutical Services",
   ],
   authors: [{ name: "SANVEEX GLOBAL HEALTH" }],
   creator: "SANVEEX GLOBAL HEALTH",
@@ -67,17 +63,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-
-  themeColor: "#568701",
-
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
 };
-
 
 export default function RootLayout({
   children,
@@ -86,9 +72,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.className} antialiased`}>
         <Topbar />
         <Navbar />
         {children}

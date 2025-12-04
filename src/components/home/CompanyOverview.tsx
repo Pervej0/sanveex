@@ -7,8 +7,8 @@ export default function CompanyOverview() {
   const awards = [award1, award2, award3, award4];
 
   return (
-    <section className="pt-6 bg-background">
-      <div className="container">
+    <section className="py-12 md:py-16 bg-background">
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Image */}
           <div className="welcome_image order-2 lg:order-1">
@@ -27,21 +27,19 @@ export default function CompanyOverview() {
           <div className="welcome_inner order-1 lg:order-2">
             {/* Heading */}
             <div className="heading mb-6">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                <span className="text-foreground-accent">
-                  SANVEEX GLOBAL HEALTH
-                </span>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight">
+                <span className="text-primary">SANVEEX GLOBAL HEALTH</span>
               </h1>
             </div>
 
             {/* Subtitle */}
-            <h6 className="text-lg md:text-xl text-foreground-accent font-semibold mb-4 leading-relaxed">
+            <h6 className="text-lg md:text-xl text-primary font-semibold mb-4 leading-relaxed">
               Founded in 2025 to bring advanced biotech solutions to Bangladesh,
               building strong global partnerships.
             </h6>
 
             {/* Description */}
-            <p className="text-base md:text-lg text-foreground-secondary mb-6 leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground mb-6 leading-relaxed">
               Served over 2 million healthcare professionals and labs with
               temperature-controlled, high-quality products. In 2026, achieved 4
               crore BDT profit and launched local manufacturing of essential
@@ -52,7 +50,7 @@ export default function CompanyOverview() {
             <ul className="flex flex-wrap gap-4 md:gap-6 mb-8">
               {awards.map((award, index) => (
                 <li key={index} className="shrink-0">
-                  <div className="relative w-20 h-20 md:w-22 md:h-22 rounded-lg overflow-hidden  border border-border hover:border-foreground-accent/50 transition-all duration-300 hover:shadow-lg hover:scale-110">
+                  <div className="relative w-20 h-20 md:w-22 md:h-22 rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:scale-110">
                     <Image
                       src={award}
                       alt={`Award ${index + 1}`}
@@ -68,7 +66,7 @@ export default function CompanyOverview() {
             <Button
               asChild
               size="lg"
-              className="bg-foreground-accent hover:bg-foreground-accent/90 text-white px-8 py-6 text-base font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-base font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300"
             >
               <Link href="#contact">GET IN TOUCH</Link>
             </Button>
