@@ -1,25 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Phone, Menu, ChevronDown, Search } from "lucide-react";
+import { Phone, Menu, ChevronDown, Search, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/src/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/src/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { sanveexLogo } from "@/src/assets";
+} from "@/components/ui/sheet";
 import {
   CommandDialog,
   CommandEmpty,
@@ -27,338 +19,457 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/src/components/ui/command";
+} from "@/components/ui/command";
+import Image from "next/image";
+
+// Navigation Data
+const aboutItems = [
+  {
+    title: "Company Overview",
+    href: "/about/overview",
+    description: "Learn about our mission and vision",
+  },
+  {
+    title: "Our History",
+    href: "/about/history",
+    description: "50+ years of innovation",
+  },
+  {
+    title: "Leadership Team",
+    href: "/about/leadership",
+    description: "Meet our executive team",
+  },
+  {
+    title: "Mission & Values",
+    href: "/about/mission-and-values",
+    description: "What drives us forward",
+  },
+  {
+    title: "Board Message",
+    href: "/about/speech",
+    description: "Message from our Chairman",
+  },
+];
+
+const productsItems = [
+  {
+    title: "Product Portfolio",
+    href: "/products/overview",
+    description: "Explore our product range",
+  },
+  {
+    title: "Medical Information",
+    href: "/products/medical-info",
+    description: "Clinical data & resources",
+  },
+  {
+    title: "Quality Assurance",
+    href: "/products/quality",
+    description: "Our commitment to quality",
+  },
+  {
+    title: "Safety Information",
+    href: "/products/safety",
+    description: "Drug safety & compliance",
+  },
+];
+
+const scienceItems = [
+  {
+    title: "R&D Overview",
+    href: "/science/overview",
+    description: "Innovation at our core",
+  },
+  {
+    title: "Research Pipeline",
+    href: "/science/pipeline",
+    description: "Products in development",
+  },
+  {
+    title: "Scientific Advisory",
+    href: "/science/advisory",
+    description: "Expert guidance",
+  },
+  {
+    title: "Publications",
+    href: "/science/publications",
+    description: "Latest research findings",
+  },
+];
+
+const storiesItems = [
+  {
+    title: "Patient Stories",
+    href: "/stories/patients",
+    description: "Real impact, real lives",
+  },
+  {
+    title: "Sustainability",
+    href: "/stories/sustainability",
+    description: "Our environmental commitment",
+  },
+  {
+    title: "Community Impact",
+    href: "/stories/community",
+    description: "Making a difference",
+  },
+  {
+    title: "Innovation Stories",
+    href: "/stories/innovation",
+    description: "Breakthroughs & discoveries",
+  },
+];
+
+interface MegaMenuProps {
+  title: string;
+  items: typeof aboutItems;
+  isOpen: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}
+
+function MegaMenu({
+  title,
+  items,
+  isOpen,
+  onMouseEnter,
+  onMouseLeave,
+}: MegaMenuProps) {
+  return (
+    <div
+      className="relative"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <button
+        className={cn(
+          "flex items-center gap-1.5 text-sm font-medium transition-colors py-2 px-1",
+          isOpen ? "text-primary" : "text-foreground hover:text-primary",
+        )}
+      >
+        {title}
+        <ChevronDown
+          className={cn(
+            "h-3.5 w-3.5 transition-transform duration-200",
+            isOpen && "rotate-180",
+          )}
+        />
+      </button>
+
+      {/* Mega Menu Dropdown */}
+      <div
+        className={cn(
+          "absolute left-1/2 -translate-x-1/2 pt-4 transition-all duration-200",
+          isOpen
+            ? "opacity-100 visible translate-y-0"
+            : "opacity-0 invisible -translate-y-2",
+        )}
+      >
+        <div className="bg-card rounded-xl shadow-xl border border-border p-6 min-w-[380px]">
+          <div className="space-y-1">
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group flex items-start gap-4 p-3 rounded-lg hover:bg-accent transition-colors"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                      {item.title}
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {item.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* View All Link */}
+          <div className="mt-4 pt-4 border-t border-border">
+            <Link
+              href={`/${title.toLowerCase()}`}
+              className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            >
+              View all {title}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false);
-  const [productsOpen, setProductsOpen] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [openSearch, setOpenSearch] = useState(false);
-
-  const aboutItems = [
-    { title: "Profile", href: "/about/profile" },
-    { title: "Vision", href: "/about/vision" },
-    { title: "Mission", href: "/about/mission" },
-    { title: "Speech from BOD", href: "/about/speech" },
-  ];
-
-  const productsItems = [
-    { title: "Overview", href: "/products/overview" },
-    { title: "Medical Information", href: "/products/medical-info" },
-  ];
+  const [isSticky, setIsSticky] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const emergencyNumber = "+1 (555) 123-4567";
 
-  // Handle scroll for sticky navbar with slide effect
+  // Handle scroll for sticky navbar
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const viewportHeight = 100;
-
-      // Check if scrolled past viewport height
-      if (currentScrollY >= viewportHeight) {
-        setIsSticky(true);
-      } else {
-        // Not past viewport height - navbar in normal position
-        setIsSticky(false);
-        setIsVisible(true);
-      }
-
-      //   setLastScrollY(currentScrollY);
+      setIsSticky(window.scrollY > 60);
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
+
+  // Handle keyboard shortcut for search
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpenSearch((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
+  const handleMenuEnter = (menu: string) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setActiveMenu(menu);
+  };
+
+  const handleMenuLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setActiveMenu(null);
+    }, 150);
+  };
+
+  const toggleMobileSection = (section: string) => {
+    setExpandedMobile(expandedMobile === section ? null : section);
+  };
 
   return (
     <>
       <nav
         className={cn(
-          "left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 transition-all duration-300",
-          isSticky ? "fixed top-0" : "relative",
-          isSticky && !isVisible && "-translate-y-full"
+          "left-0 right-0 z-50 bg-background/95 backdrop-blur-md supports-backdrop-filter:bg-background/80 transition-all duration-300",
+          isSticky
+            ? "fixed top-0 shadow-sm border-b border-border"
+            : "relative",
         )}
       >
-        <div className="container">
-          <div className="flex h-16 items-center justify-between">
-            {/* Left: Brand Name */}
-            <div>
-              <Link href="/" className="flex items-center space-x-2">
-                <Image
-                  src={sanveexLogo}
-                  alt="Brand Name"
-                  width={110}
-                  height={110}
-                />
-              </Link>
-            </div>
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="flex h-16 lg:h-20 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 shrink-0">
+              <Image
+                src="/sanveex-logo.png"
+                alt="Sanveex Logo"
+                width={140}
+                height={40}
+                priority
+              />
+            </Link>
 
-            {/* Center: Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-6">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-4">
               <Link
                 href="/"
-                className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+                className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-1"
               >
                 Home
               </Link>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1.5 text-md font-medium text-foreground hover:text-foreground-accent transition-colors outline-none px-2 py-1 rounded-md hover:bg-accent/50 data-[state=open]:bg-accent/50 data-[state=open]:text-foreground-accent">
-                  About
-                  <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="w-56 p-2 bg-background border-border shadow-lg"
-                >
-                  {aboutItems.map((item, index) => (
-                    <div key={item.href}>
-                      <DropdownMenuItem asChild className="cursor-pointer">
-                        <Link
-                          href={item.href}
-                          className="flex items-center px-3 py-2.5 text-md text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors focus:bg-accent focus:text-accent-foreground outline-none"
-                        >
-                          <span className="font-medium">{item.title}</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      {index < aboutItems.length - 1 && (
-                        <DropdownMenuSeparator className="my-1" />
-                      )}
-                    </div>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <MegaMenu
+                title="About"
+                items={aboutItems}
+                isOpen={activeMenu === "about"}
+                onMouseEnter={() => handleMenuEnter("about")}
+                onMouseLeave={handleMenuLeave}
+              />
 
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1.5 text-md font-medium text-foreground hover:text-foreground-accent transition-colors outline-none px-2 py-1 rounded-md hover:bg-accent/50 data-[state=open]:bg-accent/50 data-[state=open]:text-foreground-accent">
-                  Products
-                  <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 data-[state=open]:rotate-180" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="w-56 p-2 bg-background border-border shadow-lg"
-                >
-                  {productsItems.map((item, index) => (
-                    <div key={item.href}>
-                      <DropdownMenuItem asChild className="cursor-pointer">
-                        <Link
-                          href={item.href}
-                          className="flex items-center px-3 py-2.5 text-sm text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors focus:bg-accent focus:text-accent-foreground outline-none"
-                        >
-                          <span className="font-medium">{item.title}</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      {index < productsItems.length - 1 && (
-                        <DropdownMenuSeparator className="my-1" />
-                      )}
-                    </div>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <MegaMenu
+                title="Products"
+                items={productsItems}
+                isOpen={activeMenu === "products"}
+                onMouseEnter={() => handleMenuEnter("products")}
+                onMouseLeave={handleMenuLeave}
+              />
 
-              <Link
-                href="/newsroom"
-                className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
-              >
-                Newsroom
-              </Link>
+              <MegaMenu
+                title="Science"
+                items={scienceItems}
+                isOpen={activeMenu === "science"}
+                onMouseEnter={() => handleMenuEnter("science")}
+                onMouseLeave={handleMenuLeave}
+              />
 
-              <Link
-                href="/contact"
-                className="text-md font-medium text-foreground hover:text-foreground-accent transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
-              >
-                Contact Us
-              </Link>
+              <MegaMenu
+                title="Stories"
+                items={storiesItems}
+                isOpen={activeMenu === "stories"}
+                onMouseEnter={() => handleMenuEnter("stories")}
+                onMouseLeave={handleMenuLeave}
+              />
             </div>
 
-            {/* Right: Emergency Contact & Mobile Menu */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-4">
-                {/* Search Button */}
-                <button
-                  onClick={() => setOpenSearch(true)}
-                  className="p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition"
-                >
-                  <Search className="h-5 w-5" />
-                </button>
-                {/* Emergency Contact - Desktop */}
-                <div className="hidden md:flex items-center gap-2.5 text-foreground-accent px-4 py-2.5 rounded-lg transition-colors shadow-sm">
-                  <Phone className="h-4 w-4 text-black shrink-0" />
-                  <div className="flex flex-col">
-                    <a
-                      href={`tel:${emergencyNumber.replace(/\s/g, "")}`}
-                      className="text-sm font-bold hover:underline leading-tight"
-                    >
-                      {emergencyNumber}
-                    </a>
-                  </div>
-                </div>
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-3">
+              {/* Search Button */}
+              <button
+                onClick={() => setOpenSearch(true)}
+                className="flex items-center gap-2 h-9 px-3 rounded-lg bg-secondary hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Search className="h-4 w-4" />
+                <span className="hidden sm:inline text-sm">Search</span>
+                <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                  <span className="text-xs">⌘</span>K
+                </kbd>
+              </button>
 
-                {/* Mobile Menu Button */}
-                <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                  <SheetTrigger asChild className="lg:hidden">
-                    <button
-                      className="inline-flex items-center justify-center rounded-md p-2 text-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none transition-colors"
-                      aria-label="Toggle menu"
-                    >
-                      <Menu className="h-6 w-6" />
-                    </button>
-                  </SheetTrigger>
-                  <SheetContent
-                    side="right"
-                    className="w-[300px] sm:w-[400px] overflow-y-auto"
-                  >
-                    <SheetHeader className="pb-6">
-                      <SheetTitle>Menu</SheetTitle>
+              {/* Phone CTA - Desktop */}
+              <div className="hidden md:flex items-center">
+                <a
+                  href={`tel:${emergencyNumber.replace(/\s/g, "")}`}
+                  className="flex items-center gap-2 h-9 px-4 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  <Phone className="h-4 w-4" />
+                  <span className="text-sm font-medium">{emergencyNumber}</span>
+                </a>
+              </div>
+
+              {/* Mobile Menu Toggle */}
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild className="lg:hidden">
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  side="right"
+                  className="w-full max-w-md p-0 overflow-y-auto"
+                >
+                  <div className="flex flex-col h-full">
+                    <SheetHeader className="p-6 border-b border-border">
+                      <div className="flex items-center justify-between">
+                        <SheetTitle className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                            <span className="text-primary-foreground font-bold">
+                              S
+                            </span>
+                          </div>
+                          <span>Sanveex</span>
+                        </SheetTitle>
+                      </div>
                     </SheetHeader>
 
-                    <div className="flex flex-col space-y-2 mt-4">
-                      {/* Mobile Navigation Links */}
-                      <Link
-                        href="/"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-base font-medium text-foreground hover:text-foreground-accent hover:bg-accent/50 py-3.5 px-4 rounded-md transition-colors"
-                      >
-                        Home
-                      </Link>
-
-                      {/* About Dropdown - Mobile (Collapsible) */}
-                      <div className="space-y-0">
-                        <button
-                          onClick={() => setAboutOpen(!aboutOpen)}
-                          className="w-full flex items-center justify-between text-base font-semibold text-foreground-accent hover:bg-accent/50 py-3.5 px-4 rounded-md transition-colors"
+                    <div className="flex-1 p-6">
+                      <nav className="space-y-2">
+                        <Link
+                          href="/"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center h-12 px-4 rounded-lg text-base font-medium text-foreground hover:bg-accent transition-colors"
                         >
-                          <span>About</span>
-                          <ChevronDown
-                            className={cn(
-                              "h-4 w-4 transition-transform duration-300",
-                              aboutOpen && "rotate-180"
-                            )}
-                          />
-                        </button>
-                        <div
-                          className={cn(
-                            "overflow-hidden transition-all duration-300 ease-in-out",
-                            aboutOpen
-                              ? "max-h-96 opacity-100"
-                              : "max-h-0 opacity-0"
-                          )}
-                        >
-                          <div className="pl-4 pt-2 pb-2 space-y-1">
-                            {aboutItems.map((item) => (
-                              <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => {
-                                  setMobileMenuOpen(false);
-                                  setAboutOpen(false);
-                                }}
-                                className="block text-sm text-foreground-secondary hover:text-foreground-accent hover:bg-accent/50 py-2.5 px-4 rounded-md transition-colors"
-                              >
-                                {item.title}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                          Home
+                        </Link>
 
-                      {/* Products Dropdown - Mobile (Collapsible) */}
-                      <div className="space-y-0">
-                        <button
-                          onClick={() => setProductsOpen(!productsOpen)}
-                          className="w-full flex items-center justify-between text-base font-semibold text-foreground-accent hover:bg-accent/50 py-3.5 px-4 rounded-md transition-colors"
-                        >
-                          <span>Products</span>
-                          <ChevronDown
-                            className={cn(
-                              "h-4 w-4 transition-transform duration-300",
-                              productsOpen && "rotate-180"
-                            )}
-                          />
-                        </button>
-                        <div
-                          className={cn(
-                            "overflow-hidden transition-all duration-300 ease-in-out",
-                            productsOpen
-                              ? "max-h-96 opacity-100"
-                              : "max-h-0 opacity-0"
-                          )}
-                        >
-                          <div className="pl-4 pt-2 pb-2 space-y-1">
-                            {productsItems.map((item) => (
-                              <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => {
-                                  setMobileMenuOpen(false);
-                                  setProductsOpen(false);
-                                }}
-                                className="block text-sm text-foreground-secondary hover:text-foreground-accent hover:bg-accent/50 py-2.5 px-4 rounded-md transition-colors"
-                              >
-                                {item.title}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <Link
-                        href="/newsroom"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-base font-medium text-foreground hover:text-foreground-accent hover:bg-accent/50 py-3.5 px-4 rounded-md transition-colors"
-                      >
-                        Newsroom
-                      </Link>
-
-                      <Link
-                        href="/contact"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-base font-medium text-foreground hover:text-foreground-accent hover:bg-accent/50 py-3.5 px-4 rounded-md transition-colors"
-                      >
-                        Contact Us
-                      </Link>
-
-                      {/* Emergency Contact - Mobile (At the end) */}
-                      <div className="mt-8 pt-6 border-t border-border">
-                        <div className="flex items-center gap-3 bg-error/10 border border-foreground-accent/20 text-foreground-accent px-4 py-4 rounded-lg">
-                          <Phone className="h-5 w-5 shrink-0 text-black" />
-                          <div className="flex flex-col">
-                            <a
-                              href={`tel:${emergencyNumber.replace(/\s/g, "")}`}
-                              className="text-sm font-bold hover:underline leading-tight"
+                        {/* Mobile Accordion Sections */}
+                        {[
+                          { title: "About", items: aboutItems },
+                          { title: "Products", items: productsItems },
+                          { title: "Science", items: scienceItems },
+                          { title: "Stories", items: storiesItems },
+                        ].map((section) => (
+                          <div key={section.title}>
+                            <button
+                              onClick={() => toggleMobileSection(section.title)}
+                              className="flex items-center justify-between w-full h-12 px-4 rounded-lg text-base font-medium text-foreground hover:bg-accent transition-colors"
                             >
-                              {emergencyNumber}
-                            </a>
+                              {section.title}
+                              <ChevronDown
+                                className={cn(
+                                  "h-4 w-4 transition-transform duration-200",
+                                  expandedMobile === section.title &&
+                                    "rotate-180",
+                                )}
+                              />
+                            </button>
+                            <div
+                              className={cn(
+                                "overflow-hidden transition-all duration-300 ease-in-out",
+                                expandedMobile === section.title
+                                  ? "max-h-96 opacity-100"
+                                  : "max-h-0 opacity-0",
+                              )}
+                            >
+                              <div className="pl-4 py-2 space-y-1">
+                                {section.items.map((item) => (
+                                  <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex flex-col py-3 px-4 rounded-lg hover:bg-accent transition-colors"
+                                  >
+                                    <span className="text-sm font-medium text-foreground">
+                                      {item.title}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {item.description}
+                                    </span>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
+                        ))}
+                      </nav>
                     </div>
-                  </SheetContent>
-                </Sheet>
-              </div>
+
+                    {/* Mobile Footer */}
+                    <div className="p-6 border-t border-border bg-muted/50">
+                      <a
+                        href={`tel:${emergencyNumber.replace(/\s/g, "")}`}
+                        className="flex items-center justify-center gap-2 h-12 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
+                        <Phone className="h-4 w-4" />
+                        <span className="text-sm font-semibold">
+                          {emergencyNumber}
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
       </nav>
-      {/* ========== Global Search ========= */}
+
+      {/* Search Command Dialog */}
       <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
-        <CommandInput placeholder="Search medicines, products, pages..." />
+        <CommandInput placeholder="Search products, pages, information..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
 
           <CommandGroup heading="Quick Links">
-            <CommandItem onSelect={() => (window.location.href = "/")}>
-              🏠 Home
+            <CommandItem
+              onSelect={() => {
+                window.location.href = "/";
+                setOpenSearch(false);
+              }}
+            >
+              <span>Home</span>
             </CommandItem>
-            <CommandItem onSelect={() => (window.location.href = "/newsroom")}>
-              📰 Newsroom
-            </CommandItem>
-            <CommandItem onSelect={() => (window.location.href = "/contact")}>
-              📞 Contact Us
+            <CommandItem
+              onSelect={() => {
+                window.location.href = "/contact";
+                setOpenSearch(false);
+              }}
+            >
+              <span>Contact Us</span>
             </CommandItem>
           </CommandGroup>
 
@@ -366,9 +477,12 @@ export default function Navbar() {
             {aboutItems.map((item) => (
               <CommandItem
                 key={item.href}
-                onSelect={() => (window.location.href = item.href)}
+                onSelect={() => {
+                  window.location.href = item.href;
+                  setOpenSearch(false);
+                }}
               >
-                {item.title}
+                <span>{item.title}</span>
               </CommandItem>
             ))}
           </CommandGroup>
@@ -377,9 +491,26 @@ export default function Navbar() {
             {productsItems.map((item) => (
               <CommandItem
                 key={item.href}
-                onSelect={() => (window.location.href = item.href)}
+                onSelect={() => {
+                  window.location.href = item.href;
+                  setOpenSearch(false);
+                }}
               >
-                {item.title}
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+
+          <CommandGroup heading="Science">
+            {scienceItems.map((item) => (
+              <CommandItem
+                key={item.href}
+                onSelect={() => {
+                  window.location.href = item.href;
+                  setOpenSearch(false);
+                }}
+              >
+                <span>{item.title}</span>
               </CommandItem>
             ))}
           </CommandGroup>

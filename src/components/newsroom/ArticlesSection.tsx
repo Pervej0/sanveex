@@ -24,9 +24,9 @@ export default function ArticlesSection() {
   ];
 
   return (
-    <section className="py-14 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-8">
+    <section className="py-12 md:py-16 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 md:gap-8">
           {articles.map((item) => (
             <div
               key={item.id}
@@ -44,25 +44,25 @@ export default function ArticlesSection() {
 
               <div className="p-4 flex flex-col justify-between">
                 <div>
-                  <p className="text-gray-500">
-                    <span className="text-sm font-semibold text-foreground-accent">
+                  <p className="text-muted-foreground">
+                    <span className="text-sm font-semibold text-primary">
                       {item.category}
                     </span>{" "}
                     • <span className="text-sm">{item.date}</span>
                   </p>
 
-                  <h6 className="mt-1 text-base font-semibold text-gray-800 hover:text-foreground-accent/20 transition">
+                  <h6 className="mt-1 text-base font-semibold text-foreground hover:text-primary transition">
                     <a href="#">{item.title}</a>
                   </h6>
 
-                  <p className="mt-2 text-gray-600 line-clamp-2">
+                  <p className="mt-2 text-muted-foreground line-clamp-2">
                     {item.description}
                   </p>
                 </div>
 
                 <Link
                   href={`newsroom/${item.id}`}
-                  className="text-sm mt-3 inline-block px-4 py-1.5 rounded-md bg-foreground-accent text-white hover:bg-foreground-accent/20 transition w-max"
+                  className="text-sm mt-3 inline-block px-4 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition w-max"
                 >
                   Read More
                 </Link>

@@ -52,70 +52,72 @@ const faqs = [
 
 export default function ArticlesAndFaqs() {
   return (
-    <section id="faqs" className="py-16 bg-gray-50 container">
-      <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12">
-        {/* Left Section - Articles */}
-        <div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">
-            POPULAR <span className="text-foreground-accent">ARTICLES</span>
-          </h2>
+    <section id="faqs" className="py-16 md:py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+          {/* Left Section - Articles */}
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-primary">
+              POPULAR <span className="text-primary">ARTICLES</span>
+            </h2>
 
-          <div className="space-y-6">
-            {articles.map((item, i) => (
-              <div
-                key={i}
-                className="flex gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-lg transition"
-              >
-                <Link href="#">
-                  <Image
-                    src={item.img}
-                    width={150}
-                    height={120}
-                    alt={item.title}
-                    className="rounded-lg w-[150px] h-[120px] object-cover"
-                  />
-                </Link>
-                <div className="flex flex-col justify-between h-0 mb-4">
-                  <h6 className="text-lg font-semibold text-gray-800 hover:foreground-accent transition">
-                    <Link href="#">{item.title}</Link>
-                  </h6>
-                  <p className="text-gray-500 text-small">
-                    {item.category} ·{" "}
-                    <Link
-                      href="#"
-                      className="text-foreground-accent hover:underline text-small"
-                    >
-                      {item.date}
-                    </Link>
-                  </p>
+            <div className="space-y-6">
+              {articles.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-lg transition"
+                >
+                  <Link href="#">
+                    <Image
+                      src={item.img}
+                      width={150}
+                      height={120}
+                      alt={item.title}
+                      className="rounded-lg w-[150px] h-[120px] object-cover"
+                    />
+                  </Link>
+                  <div className="flex flex-col justify-between h-0 mb-4">
+                    <h6 className="text-lg font-semibold text-foreground hover:text-primary transition">
+                      <Link href="#">{item.title}</Link>
+                    </h6>
+                    <p className="text-muted-foreground text-sm">
+                      {item.category} ·{" "}
+                      <Link
+                        href="#"
+                        className="text-primary hover:underline text-sm"
+                      >
+                        {item.date}
+                      </Link>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Right Section - FAQs */}
-        <div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">
-            MEDICAL <span className="text-foreground-accent">FAQs</span>
-          </h2>
+          {/* Right Section - FAQs */}
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-primary">
+              MEDICAL <span className="text-primary">FAQs</span>
+            </h2>
 
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((item, i) => (
-              <AccordionItem
-                key={i}
-                value={`faq-${i}`}
-                className="rounded-xl bg-white shadow-sm"
-              >
-                <AccordionTrigger className="px-4 py-3 font-medium">
-                  <span className="text-md xl:text-lg">{item.q}</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 text-small pb-4 text-gray-600">
-                  {item.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((item, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="rounded-xl bg-white shadow-sm"
+                >
+                  <AccordionTrigger className="px-4 py-3 font-medium">
+                    <span className="text-md xl:text-lg">{item.q}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 text-sm pb-4 text-muted-foreground">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
       </div>
     </section>
