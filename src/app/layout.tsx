@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto, Arsenal } from "next/font/google";
 import "./globals.css";
 import Topbar from "../components/shared/Topbar";
 import Navbar from "../components/shared/Navbar";
 import Footer from "../components/shared/Footer";
+import WhatsAppButton from "../components/shared/WhatsAppButton";
 
-const inter = Inter({
+const roboto = Roboto({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
+  variable: "--font-sans",
+});
+
+const arsenal = Arsenal({
+  subsets: ["latin"],
   weight: ["400", "700"],
+  display: "swap",
+  variable: "--font-serif",
 });
 
 export const metadata: Metadata = {
@@ -72,11 +81,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body
+        className={`bg-background text-foreground antialiased ${roboto.className} ${arsenal.variable}`}
+      >
         <Topbar />
         <Navbar />
         {children}
         <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   );

@@ -2,16 +2,22 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation"; // Added usePathname
 import { Phone, Menu, ChevronDown, Search, ArrowRight } from "lucide-react";
+
+// Utils
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+
+// Shadcn UI Components
+import { Button } from "@/src/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/src/components/ui/sheet";
 import {
   CommandDialog,
   CommandEmpty,
@@ -19,10 +25,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import Image from "next/image";
+} from "@/src/components/ui/command";
 
-// Navigation Data
+// --- Navigation Data ---
 const aboutItems = [
   {
     title: "Company Overview",
@@ -53,7 +58,7 @@ const aboutItems = [
 
 const productsItems = [
   {
-    title: "Product Portfolio",
+    title: "Products Overview",
     href: "/products/overview",
     description: "Explore our product range",
   },
@@ -120,12 +125,14 @@ const storiesItems = [
   },
 ];
 
+// --- Mega Menu Component ---
 interface MegaMenuProps {
   title: string;
   items: typeof aboutItems;
   isOpen: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  isActivePath: boolean; // NEW PROP to check if this section is active
 }
 
 function MegaMenu({
@@ -134,6 +141,7 @@ function MegaMenu({
   isOpen,
   onMouseEnter,
   onMouseLeave,
+  isActivePath,
 }: MegaMenuProps) {
   return (
     <div
@@ -143,8 +151,10 @@ function MegaMenu({
     >
       <button
         className={cn(
-          "flex items-center gap-1.5 text-sm font-medium transition-colors py-2 px-1",
-          isOpen ? "text-primary" : "text-foreground hover:text-primary",
+          "flex items-center gap-1 text-sm font-bold uppercase tracking-wider transition-colors py-2 px-1", // Added UPPERCASE
+          isOpen || isActivePath
+            ? "text-primary"
+            : "text-foreground hover:text-primary",
         )}
       >
         {title}
@@ -187,24 +197,16 @@ function MegaMenu({
               </Link>
             ))}
           </div>
-
-          {/* View All Link */}
-          <div className="mt-4 pt-4 border-t border-border">
-            <Link
-              href={`/${title.toLowerCase()}`}
-              className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              View all {title}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
         </div>
       </div>
     </div>
   );
 }
 
+// --- Main Navbar Component ---
 export default function Navbar() {
+  const router = useRouter();
+  const pathname = usePathname(); // NEW: Get current path
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -212,7 +214,7 @@ export default function Navbar() {
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const emergencyNumber = "+1 (555) 123-4567";
+  const emergencyNumber = "+8801996-716929";
 
   // Handle scroll for sticky navbar
   useEffect(() => {
@@ -250,17 +252,22 @@ export default function Navbar() {
     setExpandedMobile(expandedMobile === section ? null : section);
   };
 
+  const runCommand = (command: () => void) => {
+    setOpenSearch(false);
+    command();
+  };
+
   return (
     <>
       <nav
         className={cn(
-          "left-0 right-0 z-50 bg-background/95 backdrop-blur-md supports-backdrop-filter:bg-background/80 transition-all duration-300",
+          "left-0 right-0 z-50 bg-background/95 transition-all duration-300",
           isSticky
             ? "fixed top-0 shadow-sm border-b border-border"
             : "relative",
         )}
       >
-        <div className="container mx-auto px-6 lg:px-8">
+        <div className="container mx-auto max-w-6xl px-4">
           <div className="flex h-16 lg:h-20 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 shrink-0">
@@ -270,22 +277,17 @@ export default function Navbar() {
                 width={140}
                 height={40}
                 priority
+                className="w-auto h-8 lg:h-10"
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-1"
-              >
-                Home
-              </Link>
-
+            <div className="hidden lg:flex items-center gap-6">
               <MegaMenu
                 title="About"
                 items={aboutItems}
                 isOpen={activeMenu === "about"}
+                isActivePath={pathname?.startsWith("/about") ?? false}
                 onMouseEnter={() => handleMenuEnter("about")}
                 onMouseLeave={handleMenuLeave}
               />
@@ -294,6 +296,7 @@ export default function Navbar() {
                 title="Products"
                 items={productsItems}
                 isOpen={activeMenu === "products"}
+                isActivePath={pathname?.startsWith("/products") ?? false}
                 onMouseEnter={() => handleMenuEnter("products")}
                 onMouseLeave={handleMenuLeave}
               />
@@ -302,6 +305,7 @@ export default function Navbar() {
                 title="Science"
                 items={scienceItems}
                 isOpen={activeMenu === "science"}
+                isActivePath={pathname?.startsWith("/science") ?? false}
                 onMouseEnter={() => handleMenuEnter("science")}
                 onMouseLeave={handleMenuLeave}
               />
@@ -310,6 +314,7 @@ export default function Navbar() {
                 title="Stories"
                 items={storiesItems}
                 isOpen={activeMenu === "stories"}
+                isActivePath={pathname?.startsWith("/stories") ?? false}
                 onMouseEnter={() => handleMenuEnter("stories")}
                 onMouseLeave={handleMenuLeave}
               />
@@ -356,26 +361,20 @@ export default function Navbar() {
                     <SheetHeader className="p-6 border-b border-border">
                       <div className="flex items-center justify-between">
                         <SheetTitle className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                            <span className="text-primary-foreground font-bold">
-                              S
-                            </span>
+                          <div className="relative w-32 h-8">
+                            <Image
+                              src="/sanveex-logo.png"
+                              alt="Sanveex"
+                              fill
+                              className="object-contain object-left"
+                            />
                           </div>
-                          <span>Sanveex</span>
                         </SheetTitle>
                       </div>
                     </SheetHeader>
 
                     <div className="flex-1 p-6">
                       <nav className="space-y-2">
-                        <Link
-                          href="/"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center h-12 px-4 rounded-lg text-base font-medium text-foreground hover:bg-accent transition-colors"
-                        >
-                          Home
-                        </Link>
-
                         {/* Mobile Accordion Sections */}
                         {[
                           { title: "About", items: aboutItems },
@@ -386,7 +385,14 @@ export default function Navbar() {
                           <div key={section.title}>
                             <button
                               onClick={() => toggleMobileSection(section.title)}
-                              className="flex items-center justify-between w-full h-12 px-4 rounded-lg text-base font-medium text-foreground hover:bg-accent transition-colors"
+                              className={cn(
+                                "flex items-center justify-between w-full h-12 px-4 rounded-lg text-base font-bold uppercase tracking-wider transition-colors",
+                                pathname?.startsWith(
+                                  `/${section.title.toLowerCase()}`,
+                                )
+                                  ? "text-primary"
+                                  : "text-foreground hover:bg-accent",
+                              )}
                             >
                               {section.title}
                               <ChevronDown
@@ -413,7 +419,14 @@ export default function Navbar() {
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="flex flex-col py-3 px-4 rounded-lg hover:bg-accent transition-colors"
                                   >
-                                    <span className="text-sm font-medium text-foreground">
+                                    <span
+                                      className={cn(
+                                        "text-sm font-medium",
+                                        pathname === item.href
+                                          ? "text-primary"
+                                          : "text-foreground",
+                                      )}
+                                    >
                                       {item.title}
                                     </span>
                                     <span className="text-xs text-muted-foreground">
@@ -455,19 +468,11 @@ export default function Navbar() {
           <CommandEmpty>No results found.</CommandEmpty>
 
           <CommandGroup heading="Quick Links">
-            <CommandItem
-              onSelect={() => {
-                window.location.href = "/";
-                setOpenSearch(false);
-              }}
-            >
+            <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
               <span>Home</span>
             </CommandItem>
             <CommandItem
-              onSelect={() => {
-                window.location.href = "/contact";
-                setOpenSearch(false);
-              }}
+              onSelect={() => runCommand(() => router.push("/contact"))}
             >
               <span>Contact Us</span>
             </CommandItem>
@@ -477,10 +482,7 @@ export default function Navbar() {
             {aboutItems.map((item) => (
               <CommandItem
                 key={item.href}
-                onSelect={() => {
-                  window.location.href = item.href;
-                  setOpenSearch(false);
-                }}
+                onSelect={() => runCommand(() => router.push(item.href))}
               >
                 <span>{item.title}</span>
               </CommandItem>
@@ -491,10 +493,7 @@ export default function Navbar() {
             {productsItems.map((item) => (
               <CommandItem
                 key={item.href}
-                onSelect={() => {
-                  window.location.href = item.href;
-                  setOpenSearch(false);
-                }}
+                onSelect={() => runCommand(() => router.push(item.href))}
               >
                 <span>{item.title}</span>
               </CommandItem>
@@ -505,10 +504,7 @@ export default function Navbar() {
             {scienceItems.map((item) => (
               <CommandItem
                 key={item.href}
-                onSelect={() => {
-                  window.location.href = item.href;
-                  setOpenSearch(false);
-                }}
+                onSelect={() => runCommand(() => router.push(item.href))}
               >
                 <span>{item.title}</span>
               </CommandItem>

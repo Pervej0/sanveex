@@ -4,6 +4,8 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Zap } from "lucide-react";
+import SectionHeader from "../shared/SectionHeader";
 
 const testimonials = [
   {
@@ -43,13 +45,15 @@ export default function ClientsReview() {
   };
 
   return (
-    <section className="py-16 md:py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-20 ">
+      <div className="container mx-auto max-w-6xl px-4">
         <div className="max-w-6xl mx-auto">
           {/* Heading */}
-          <h2 className="text-center text-3xl md:text-4xl lg:text-5xl font-bold mb-12 text-primary">
-            WHAT <span className="text-primary">CLIENTS SAY</span>
-          </h2>
+          <SectionHeader
+            icon={Zap}
+            eyebrow="Client Testimonials"
+            title="What Our Clients Say"
+          />
 
           {/* Testimonial Slider */}
           <Slider {...testimonialSettings} className="mb-10">

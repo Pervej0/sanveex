@@ -2,7 +2,7 @@ import React from "react";
 
 const MedicalInformation = () => {
   return (
-    <>
+    <div className="bg-white">
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
@@ -13,7 +13,7 @@ const MedicalInformation = () => {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

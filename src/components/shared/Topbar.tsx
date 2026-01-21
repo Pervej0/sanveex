@@ -74,13 +74,13 @@ const quickLinks = [
   { title: "Newsroom", href: "/newsroom" },
   { title: "Investors", href: "/investors" },
   { title: "Partners", href: "/partners" },
-  { title: "Careers", href: "/careers" },
+  { title: "Contact", href: "/contact" },
 ];
 
 export default function Topbar() {
   return (
     <div className="hidden md:block bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-6xl px-4">
         <div className="flex items-center justify-between h-10 py-2">
           {/* Left Section: Email */}
           <div className="flex items-center">
@@ -89,7 +89,7 @@ export default function Topbar() {
               className="flex items-center gap-2 text-sm font-medium text-primary-foreground/90 hover:text-primary-foreground transition-colors group"
             >
               <Mail className="h-4 w-4 transition-transform group-hover:scale-110" />
-              <span className="text-xs sm:text-sm">info@company.com</span>
+              <span className="text-xs sm:text-sm">info@sanveex.com</span>
             </a>
           </div>
 

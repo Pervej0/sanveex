@@ -1,17 +1,9 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { Play, Pause, ArrowRight } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { type CarouselApi } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 interface SlideData {
   title: string;
@@ -49,264 +41,206 @@ const slides: SlideData[] = [
     backgroundImage:
       "https://images.unsplash.com/photo-1649134296132-56606326c566?q=80&w=2000",
   },
-  {
-    subtitle: "Excellence in Healthcare",
-    title: "Medicine of the Highest Order",
-    description:
-      "Committed to quality, safety, and efficacy in every product we develop, ensuring the best outcomes for patients worldwide.",
-    buttonText: "Explore Products",
-    buttonLink: "#products",
-    secondaryButtonText: "Quality Standards",
-    secondaryButtonLink: "#quality",
-    backgroundImage:
-      "https://images.unsplash.com/photo-1721784106865-bd5e25c221f2?q=80&w=2000",
-  },
 ];
 
 export default function HeroSlider() {
-  const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [autoplayPlugin] = useState(() =>
-    Autoplay({ delay: 6000, stopOnInteraction: false }),
-  );
 
-  useEffect(() => {
-    if (!api) return;
+  const nextSlide = () => {
+    setCurrent((prev) => (prev + 1) % slides.length);
+  };
 
-    const handleSelect = () => {
-      setCurrent(api.selectedScrollSnap());
-    };
-
-    // Set initial value
-    handleSelect();
-
-    api.on("select", handleSelect);
-
-    return () => {
-      api.off("select", handleSelect);
-    };
-  }, [api]);
-
-  const toggleAutoplay = () => {
-    if (isPlaying) {
-      autoplayPlugin.stop();
-    } else {
-      autoplayPlugin.play();
-    }
-    setIsPlaying(!isPlaying);
+  const prevSlide = () => {
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
   const goToSlide = (index: number) => {
-    api?.scrollTo(index);
+    setCurrent(index);
   };
 
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [current, isPlaying]);
+
   return (
-    <section className="relative w-full h-screen min-h-[600px] max-h-[900px] overflow-hidden bg-black">
-      <Carousel
-        setApi={setApi}
-        plugins={[autoplayPlugin]}
-        className="w-full h-full"
-        opts={{
-          loop: true,
-          duration: 30,
-        }}
-      >
-        <CarouselContent className="h-full ml-0">
-          {slides.map((slide, index) => (
-            <CarouselItem key={index} className="h-full pl-0 relative">
-              {/* Background Image - Directly as img element for better control */}
-              <div className="absolute inset-0 w-full h-full">
+    <div className="relative w-full h-[600px] md:h-screen md:min-h-[600px] md:max-h-[900px] overflow-hidden bg-black">
+      {/* Slides Container */}
+      <div className="relative w-full h-full">
+        {slides.map((slide, index) => {
+          const isActive = index === current;
+
+          return (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+            >
+              {/* Background Image */}
+              <div
+                className={`absolute inset-0 transition-transform duration-[10000ms] ease-out ${
+                  isActive ? "scale-110" : "scale-100"
+                }`}
+              >
                 <Image
                   src={slide.backgroundImage}
                   alt={slide.title}
                   className="w-full h-full object-cover"
-                  loading="eager"
                   height={900}
                   width={1600}
+                  priority={isActive}
                 />
 
-                {/* Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20" />
+                {/* Gradients */}
+                <div className="absolute inset-0 bg-black/40 sm:bg-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent sm:via-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent sm:from-black/60" />
               </div>
 
-              {/* Content Container */}
-              <div className="relative h-full flex items-center z-10">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-                  <div className="max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
-                    <div className="space-y-4 sm:space-y-6 md:space-y-8 pt-10">
-                      {/* Subtitle */}
-                      {slide.subtitle && (
-                        <div className="inline-block px-4 py-2 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
-                          <p className="text-sm font-semibold text-primary">
-                            {slide.subtitle}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Title */}
-                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight sm:leading-tight md:leading-tight">
-                        <span className="bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent">
-                          {slide.title}
-                        </span>
-                      </h1>
-
-                      {/* Description */}
-                      <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80 leading-relaxed max-w-xl sm:max-w-2xl md:max-w-3xl">
-                        {slide.description}
-                      </p>
-
-                      {/* CTA Buttons */}
-                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                        {/* Primary Button */}
-                        <a
-                          href={slide.buttonLink}
-                          className="group inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-primary hover:bg-primary/90 text-white font-semibold text-sm sm:text-base rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.02]"
-                        >
-                          <span>{slide.buttonText}</span>
-                          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
-                        </a>
-
-                        {/* Secondary Button */}
-                        {slide.secondaryButtonText && (
-                          <a
-                            href={slide.secondaryButtonLink}
-                            className="group inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold text-sm sm:text-base rounded-lg transition-all duration-300 hover:border-white/40 hover:scale-[1.02]"
+              {/* Content */}
+              <div className="relative h-full flex items-center z-20">
+                <div className="container mx-auto max-w-6xl px-6 sm:px-8">
+                  <div className="max-w-4xl pt-10 sm:pt-0">
+                    {/* Subtitle */}
+                    {slide.subtitle && (
+                      <div
+                        className={`mb-4 sm:mb-6 transition-all duration-1000 delay-100 ${
+                          isActive
+                            ? "opacity-100 translate-y-0 blur-0"
+                            : "opacity-0 translate-y-12 blur-sm"
+                        }`}
+                      >
+                        <div className="inline-flex items-center gap-2">
+                          <div className="w-8 sm:w-12 h-[2px] bg-gradient-to-r from-primary to-transparent" />
+                          <Badge
+                            variant="outline"
+                            className="border-primary/40 bg-primary/10 text-primary text-xs sm:text-sm md:text-base font-semibold tracking-wider uppercase"
                           >
-                            <span>{slide.secondaryButtonText}</span>
-                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 opacity-70 transition-all group-hover:opacity-100 group-hover:translate-x-1" />
-                          </a>
-                        )}
+                            {slide.subtitle}
+                          </Badge>
+                        </div>
                       </div>
+                    )}
+
+                    {/* Title */}
+                    <h1
+                      className={`text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight transition-all duration-1000 delay-200 ${
+                        isActive
+                          ? "opacity-100 translate-y-0 blur-0"
+                          : "opacity-0 translate-y-12 blur-sm"
+                      }`}
+                    >
+                      {slide.title}
+                    </h1>
+
+                    {/* Description */}
+                    <p
+                      className={`text-sm sm:text-base md:text-xl text-gray-300 mb-8 sm:mb-12 leading-relaxed max-w-xl sm:max-w-2xl transition-all duration-1000 delay-300 ${
+                        isActive
+                          ? "opacity-100 translate-y-0 blur-0"
+                          : "opacity-0 translate-y-12 blur-sm"
+                      }`}
+                    >
+                      {slide.description}
+                    </p>
+
+                    {/* BUTTONS SECTION - FIXED */}
+                    <div
+                      className={`flex flex-row flex-wrap gap-3 sm:gap-4 transition-all duration-1000 delay-500 ${
+                        isActive
+                          ? "opacity-100 translate-y-0 blur-0"
+                          : "opacity-0 translate-y-12 blur-sm"
+                      }`}
+                    >
+                      {/* Primary Button */}
+                      <Button
+                        asChild
+                        size="lg"
+                        // MOBILE: h-10 px-5 text-sm (Compact)
+                        // DESKTOP: md:h-14 md:px-8 md:text-lg (Large & Prominent)
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold 
+                                   h-10 px-5 text-sm w-auto 
+                                   md:h-14 md:px-8 md:text-lg"
+                      >
+                        <a href={slide.buttonLink}>
+                          <span>{slide.buttonText}</span>
+                          <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
+                        </a>
+                      </Button>
+
+                      {/* Secondary Button */}
+                      {slide.secondaryButtonText && (
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="lg"
+                          // MOBILE: h-10 px-5 text-sm (Compact)
+                          // DESKTOP: md:h-14 md:px-8 md:text-lg (Large & Prominent)
+                          className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 font-semibold 
+                                     h-10 px-5 text-sm w-auto 
+                                     md:h-14 md:px-8 md:text-lg"
+                        >
+                          <a href={slide.secondaryButtonLink}>
+                            <span>{slide.secondaryButtonText}</span>
+                            <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
+                          </a>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+            </div>
+          );
+        })}
+      </div>
 
-        {/* Desktop Navigation */}
-        <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-30 hidden md:flex items-center gap-4">
-          <CarouselPrevious className="relative static translate-y-0 h-12 w-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/40 transition-all hover:scale-105" />
+      {/* Navigation Arrows - Desktop Only */}
+      <div className="hidden md:block">
+        <Button
+          onClick={prevSlide}
+          variant="ghost"
+          size="icon"
+          className="absolute left-8 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 transition-all"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </Button>
+        <Button
+          onClick={nextSlide}
+          variant="ghost"
+          size="icon"
+          className="absolute right-8 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 transition-all"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </Button>
+      </div>
 
-          {/* Slide Indicators */}
-          <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className="relative overflow-hidden"
-                aria-label={`Go to slide ${index + 1}`}
-              >
-                <div
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    index === current
-                      ? "w-12 bg-white"
-                      : "w-2 bg-white/40 hover:bg-white/60"
-                  }`}
-                />
-                {index === current && isPlaying && (
-                  <div
-                    className="absolute top-0 left-0 h-full bg-white/40 rounded-full"
-                    style={{
-                      animation: "slideProgress 6s linear forwards",
-                    }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-
-          <CarouselNext className="relative static translate-y-0 h-12 w-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/40 transition-all hover:scale-105" />
-
-          {/* Play/Pause Button */}
-          <button
-            onClick={toggleAutoplay}
-            className="h-12 w-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/40 transition-all hover:scale-105"
-            aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
-          >
-            {isPlaying ? (
-              <Pause className="h-5 w-5" />
-            ) : (
-              <Play className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        <div className="md:hidden absolute bottom-6 left-0 right-0 z-30 flex flex-col items-center gap-4 px-4">
-          {/* Slide Indicators */}
-          <div className="flex items-center gap-2 px-4 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  index === current ? "w-8 bg-white" : "w-2 bg-white/40"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Mobile Controls */}
-          <div className="flex items-center justify-center gap-3 w-full max-w-xs">
-            <CarouselPrevious className="relative static translate-y-0 h-10 w-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white active:bg-white/20 flex-1" />
-
+      {/* Progress Indicators */}
+      <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-30 w-full px-6 flex justify-center">
+        <div className="flex items-center gap-2 sm:gap-3 bg-black/30 backdrop-blur-md px-4 py-3 rounded-full border border-white/10">
+          {slides.map((_, index) => (
             <button
-              onClick={toggleAutoplay}
-              className="h-10 w-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white active:bg-white/20"
-              aria-label={isPlaying ? "Pause" : "Play"}
+              key={index}
+              onClick={() => goToSlide(index)}
+              className="relative group py-2"
+              aria-label={`Go to slide ${index + 1}`}
             >
-              {isPlaying ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
+              <div
+                className={`h-1 rounded-full transition-all duration-500 ${
+                  index === current
+                    ? "w-8 sm:w-16 bg-white"
+                    : "w-4 sm:w-12 bg-white/30 group-hover:bg-white/50"
+                }`}
+              />
             </button>
-
-            <CarouselNext className="relative static translate-y-0 h-10 w-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white active:bg-white/20 flex-1" />
-          </div>
+          ))}
         </div>
-      </Carousel>
-
-      {/* Bottom Gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none z-20" />
-
-      <style jsx global>{`
-        @keyframes slideProgress {
-          from {
-            width: 0%;
-          }
-          to {
-            width: 100%;
-          }
-        }
-
-        /* Ensure image covers full area */
-        .carousel-root {
-          width: 100% !important;
-          height: 100% !important;
-        }
-
-        .embla__container {
-          height: 100% !important;
-        }
-
-        .embla__slide {
-          height: 100% !important;
-          flex: 0 0 100% !important;
-          min-width: 100% !important;
-        }
-
-        /* Fix any overflow issues */
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </section>
+      </div>
+    </div>
   );
 }
