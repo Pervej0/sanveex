@@ -96,14 +96,26 @@ export default function AboutUsSection() {
           title="About Us"
         />
 
-        <p className="text-center text-[#202e44]/80 max-w-3xl mx-auto mb-16 leading-relaxed">
-          The company has reliably catered to over 2 million healthcare
-          professionals and laboratories, delivering temperature controlled,
-          premium quality products. By 2027, it is projected to generate a
-          profit of $264 million and is strategically advancing plans to
-          establish domestic production of critical biotechnology products,
-          reinforcing the nation’s healthcare infrastructure.
-        </p>
+        <div className="max-w-4xl mx-auto mb-16 text-center text-[#202e44]/80 leading-relaxed space-y-6">
+          <p>
+            Sanveex is built by a team of experienced professionals with
+            backgrounds across multinational and leading local pharmaceutical
+            organizations. With strong expertise in product management, brand
+            strategy, and market development, the team has deliberately planned
+            and executed initiatives to build an organization focused on
+            delivering meaningful and sustainable healthcare impact.
+          </p>
+
+          <p>
+            The leadership team brings combined experience from the
+            pharmaceutical and MedTech sectors, positioning Sanveex to address
+            complex healthcare challenges through solutions that are both
+            innovative and practical. Within a relatively short period, Sanveex
+            has established a growing healthcare product portfolio designed to
+            improve patient outcomes and strengthen healthcare delivery across
+            Bangladesh.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Left */}

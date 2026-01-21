@@ -59,7 +59,7 @@ export default function BestMedicine() {
   let sliderRef: Slider | null;
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 600,
     slidesToShow: 4, // Requirement: 4 items on large devices
