@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sanveex Global Health
 
-## Getting Started
+**Sanveex Global Health** is a healthcare and biotechnology company focused on delivering high-quality medical solutions and advancing innovation in global health. This repository contains the source code for the official Sanveex Global Health website.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌐 Live Website
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🔗 https://sanveex.vercel.app/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📖 About Sanveex
 
-## Learn More
+Founded in 2025, **Sanveex Global Health** is dedicated to improving patient outcomes by importing and distributing advanced biotechnology and healthcare products. The company emphasizes quality, safety, innovation, and ethical practices across all operations.
 
-To learn more about Next.js, take a look at the following resources:
+The website presents information about the company’s mission, products, scientific research, and community impact.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✨ Features
 
-## Deploy on Vercel
+- Modern and responsive website design  
+- Company overview, mission, and vision  
+- Product and healthcare solutions showcase  
+- Scientific research and innovation focus  
+- Patient stories and community impact  
+- Contact and career information  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧩 Website Sections
+
+- **Home** – Introduction and key highlights  
+- **About Us** – Company background, mission, and values  
+- **Products** – Overview of healthcare and biotech offerings  
+- **Science & Research** – Innovation and development focus  
+- **Stories** – Patient and community experiences  
+- **Contact** – Business inquiries and communication details  
+
+---
+
+## 🛠 Tech Stack
+
+> Update if your stack differs
+
+- **Next.js** – React framework  
+- **React** – UI library  
+- **Tailwind CSS** – Styling  
+- **Vercel** – Hosting and deployment  
+
+---
