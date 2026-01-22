@@ -38,7 +38,6 @@ export const metadata: Metadata = {
   authors: [{ name: "SANVEEX GLOBAL HEALTH" }],
   creator: "SANVEEX GLOBAL HEALTH",
   publisher: "SANVEEX GLOBAL HEALTH",
-
   openGraph: {
     type: "website",
     url: "https://sanveex.com",
