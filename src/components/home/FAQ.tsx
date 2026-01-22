@@ -1,12 +1,11 @@
 import { PhoneCall } from "lucide-react";
-import { Badge } from "@/src/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/src/components/ui/accordion";
-import { Button } from "@/src/components/ui/button";
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 // --- 1. The Data ---
 const faqData = [

@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  MODERATOR
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  firstName     String
+  lastName      String
+  phone         String
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  password      String?
+  status        Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  token         Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model SiteContent {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  tagline     String
+  title       String
+  description String
+  logoUrl     String
+  socialLinks Json
+  phone       String
+  email       String
+  address     String
+  whatsapp    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model images{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  url         String
+  publicId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

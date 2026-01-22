@@ -11,10 +11,11 @@ import {
   MapPin,
   ArrowRight,
 } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { SiteContent } from "@/generated/prisma/client";
 
-export default function Footer() {
+export default function Footer({ siteContent }: { siteContent: SiteContent }) {
   const [email, setEmail] = useState("");
 
   const handleSubscribe = () => {
@@ -36,11 +37,10 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="mb-6">
               <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-                SANVEEX
+                {siteContent.name.toUpperCase()}
               </h3>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Dedicated to providing exceptional healthcare services to our
-                community with compassion and expertise.
+                {siteContent.description}
               </p>
             </div>
 
@@ -49,21 +49,35 @@ export default function Footer() {
               <p className="text-sm font-semibold text-white">Follow Us</p>
               <div className="flex gap-3">
                 {[
-                  { icon: Facebook, href: "#" },
-                  { icon: Twitter, href: "#" },
-                  { icon: Instagram, href: "#" },
-                  { icon: Linkedin, href: "#" },
-                ].map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-primary text-gray-400 hover:text-white transition-all duration-300 hover:-translate-y-1"
-                  >
-                    <social.icon className="w-4 h-4" />
-                  </a>
-                ))}
+                  {
+                    icon: Facebook,
+                    href: (siteContent.socialLinks as any)?.facebook,
+                  },
+                  {
+                    icon: Twitter,
+                    href: (siteContent.socialLinks as any)?.twitter,
+                  },
+                  {
+                    icon: Instagram,
+                    href: (siteContent.socialLinks as any)?.instagram,
+                  },
+                  {
+                    icon: Linkedin,
+                    href: (siteContent.socialLinks as any)?.linkedin,
+                  },
+                ]
+                  .filter((social) => social.href)
+                  .map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-primary text-gray-400 hover:text-white transition-all duration-300 hover:-translate-y-1"
+                    >
+                      <social.icon className="w-4 h-4" />
+                    </a>
+                  ))}
               </div>
             </div>
           </div>
@@ -128,27 +142,26 @@ export default function Footer() {
                 <Phone className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-white font-medium">
-                    +1 (555) 123-4567
+                    {siteContent.phone}
                   </p>
-                  <p className="text-xs text-gray-500">Mon-Fri, 9am-6pm</p>
+                  <p className="text-xs text-gray-500">Available 24/7</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-white font-medium">
-                    info@sanveex.com
+                    {siteContent.email}
                   </p>
-                  <p className="text-xs text-gray-500">24/7 Support</p>
+                  <p className="text-xs text-gray-500">Support Email</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-white font-medium">
-                    123 Healthcare Ave
+                    {siteContent.address}
                   </p>
-                  <p className="text-xs text-gray-500">New York, NY 10001</p>
                 </div>
               </div>
             </div>
@@ -161,7 +174,10 @@ export default function Footer() {
         <div className="container mx-auto max-w-6xl px-4 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
             <p className="text-gray-400 text-center sm:text-left">
-              © 2025 <span className="text-white font-semibold">SANVEEX</span>{" "}
+              © {new Date().getFullYear()}{" "}
+              <span className="text-white font-semibold">
+                {siteContent.name.toUpperCase()}
+              </span>{" "}
               Global Healthcare. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-gray-400">

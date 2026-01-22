@@ -1,23 +1,22 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { SiteContent } from "@/generated/prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation"; // Added usePathname
 import { Phone, Menu, ChevronDown, Search, ArrowRight } from "lucide-react";
-
-// Utils
 import { cn } from "@/lib/utils";
 
 // Shadcn UI Components
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/src/components/ui/sheet";
+} from "@/components/ui/sheet";
 import {
   CommandDialog,
   CommandEmpty,
@@ -25,7 +24,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/src/components/ui/command";
+} from "@/components/ui/command";
 
 // --- Navigation Data ---
 const aboutItems = [
@@ -204,7 +203,7 @@ function MegaMenu({
 }
 
 // --- Main Navbar Component ---
-export default function Navbar() {
+export default function Navbar({ siteContent }: { siteContent: SiteContent }) {
   const router = useRouter();
   const pathname = usePathname(); // NEW: Get current path
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -214,7 +213,7 @@ export default function Navbar() {
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const emergencyNumber = "+8801996-716929";
+  const emergencyNumber = siteContent.phone;
 
   // Handle scroll for sticky navbar
   useEffect(() => {
@@ -272,8 +271,8 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 shrink-0">
               <Image
-                src="/sanveex-logo.png"
-                alt="Sanveex Logo"
+                src={siteContent.logoUrl}
+                alt={`${siteContent.name} Logo`}
                 width={140}
                 height={40}
                 priority
@@ -363,8 +362,8 @@ export default function Navbar() {
                         <SheetTitle className="flex items-center gap-3">
                           <div className="relative w-32 h-8">
                             <Image
-                              src="/sanveex-logo.png"
-                              alt="Sanveex"
+                              src={siteContent.logoUrl}
+                              alt={siteContent.name}
                               fill
                               className="object-contain object-left"
                             />

@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Roboto, Arsenal } from "next/font/google";
+import { Arsenal, Roboto } from "next/font/google";
 import "./globals.css";
-import Topbar from "../components/shared/Topbar";
-import Navbar from "../components/shared/Navbar";
-import Footer from "../components/shared/Footer";
-import WhatsAppButton from "../components/shared/WhatsAppButton";
+import { Toaster } from "sonner";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -84,11 +81,8 @@ export default function RootLayout({
       <body
         className={`bg-background text-foreground antialiased ${roboto.className} ${arsenal.variable}`}
       >
-        <Topbar />
-        <Navbar />
         {children}
-        <Footer />
-        <WhatsAppButton />
+        <Toaster position="top-center" />
       </body>
     </html>
   );

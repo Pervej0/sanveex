@@ -1,14 +1,15 @@
-import React from "react";
+import { SiteContent } from "@/generated/prisma/client";
 
 interface WhatsAppButtonProps {
-  phoneNumber?: string; // e.g., "15551234567"
+  siteContent: SiteContent;
   message?: string; // e.g., "Hello, I would like to make an appointment."
 }
 
 export default function WhatsAppButton({
-  phoneNumber = "+8801996716929",
+  siteContent,
   message = "Hello!",
 }: WhatsAppButtonProps) {
+  const phoneNumber = siteContent.whatsapp;
   // Create the actual WhatsApp URL
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
