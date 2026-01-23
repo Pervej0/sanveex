@@ -1,17 +1,12 @@
 "use client";
 
-import React from "react";
 import {
-  Mail,
-  Phone,
-  MapPin,
   ArrowRight,
-  AlertCircle,
-  Globe,
-  CheckCircle2,
   Building2,
-  Users,
+  Globe,
+  MapPin,
   Newspaper,
+  Users,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,36 +18,26 @@ import { Textarea } from "@/components/ui/textarea";
 const departments = [
   {
     title: "Media Relations",
-    email: "media@sanveex.com",
+    email: "info@sanveex.com",
     icon: Newspaper,
   },
   {
     title: "Investor Relations",
-    email: "investors@sanveex.com",
+    email: "info@sanveex.com",
     icon: Building2,
   },
   {
     title: "Business Development",
-    email: "partnering@sanveex.com",
+    email: "info@sanveex.com",
     icon: Users,
   },
 ];
 
 const locations = [
   {
-    city: "Cambridge, MA (HQ)",
-    address: "500 Technology Square",
-    phone: "+1 (617) 555-0100",
-  },
-  {
-    city: "Basel, Switzerland",
-    address: "Grenzacherstrasse 124",
-    phone: "+41 61 555 0200",
-  },
-  {
-    city: "London, UK",
-    address: "1 Kingdom Street",
-    phone: "+44 20 7555 0300",
+    city: "Dhaka, Bangladesh",
+    address: "123 Gulshan Avenue, Dhaka 1212",
+    phone: "+8801996716929",
   },
 ];
 

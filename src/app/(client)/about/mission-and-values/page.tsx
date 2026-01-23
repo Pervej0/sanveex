@@ -14,16 +14,17 @@ const MissionPage = () => {
 
         {/* Mission Text */}
         <p className="text-gray-700 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-          The company has reliably catered to over{" "}
+          Our mission is to consistently deliver premium-quality,
+          temperature-controlled healthcare products to medical professionals
+          and laboratories across the nation. Having reliably served more than{" "}
           <span className="font-semibold text-gray-900">
-            2 million healthcare professionals and laboratories
+            two million healthcare professionals and laboratories
           </span>
-          , delivering temperature-controlled, premium-quality products. By{" "}
-          <span className="font-semibold text-gray-900">2027</span>, it is
-          projected to generate a profit of{" "}
-          <span className="font-semibold text-gray-900">$264 million</span>{" "}
-          while advancing domestic production of critical biotechnology
-          products—strengthening the nation’s healthcare infrastructure.
+          , we remain committed to excellence, safety, and innovation. Looking
+          ahead to <span className="font-semibold text-gray-900">2027</span>, we
+          aim to achieve sustainable growth while strengthening domestic
+          production of critical biotechnology products—contributing to a more
+          resilient and self-reliant healthcare infrastructure for Bangladesh.
         </p>
       </div>
     </section>
