@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import SectionHeader from "../shared/SectionHeader";
+import Image from "next/image";
 
 export default function AboutUsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -131,10 +132,12 @@ export default function AboutUsSection() {
           <div className="flex justify-center items-center order-first md:order-none mb-8 md:mb-0">
             <div className="relative w-full max-w-xs">
               <div className="rounded-md overflow-hidden shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1747582411588-f9b4acabe995?q=80&w=3027&auto=format&fit=crop"
+                <Image
+                  src="/about.jpeg"
                   alt="Modern Healthcare"
                   className="w-full h-full object-cover"
+                  height={400}
+                  width={300}
                 />
               </div>
               <div className="absolute inset-0 border border-primary rounded-md -m-3 -z-10" />

@@ -26,8 +26,7 @@ const slides: SlideData[] = [
     buttonLink: "#contact",
     secondaryButtonText: "Learn More",
     secondaryButtonLink: "#about",
-    backgroundImage:
-      "https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?q=80&w=2000",
+    backgroundImage: "/hero1.jpeg",
   },
   {
     subtitle: "Innovation & Growth",
@@ -38,8 +37,7 @@ const slides: SlideData[] = [
     buttonLink: "#science",
     secondaryButtonText: "View Pipeline",
     secondaryButtonLink: "#pipeline",
-    backgroundImage:
-      "https://images.unsplash.com/photo-1649134296132-56606326c566?q=80&w=2000",
+    backgroundImage: "/hero2.jpeg",
   },
 ];
 

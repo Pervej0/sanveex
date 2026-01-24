@@ -135,21 +135,6 @@ export default function InsightsSection() {
                 <p className="text-gray-600 text-sm line-clamp-2 mb-5 leading-relaxed">
                   {article.excerpt}
                 </p>
-
-                {/* Author Mini */}
-                <div className="mt-auto flex items-center gap-2.5 pt-4 border-t border-gray-100">
-                  <div className="relative w-6 h-6 rounded-full overflow-hidden">
-                    <Image
-                      src={article.author.avatar}
-                      alt={article.author.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <span className="text-xs font-medium text-gray-700">
-                    by {article.author.name}
-                  </span>
-                </div>
               </div>
             </Link>
           ))}
