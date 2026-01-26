@@ -7,32 +7,21 @@ import "slick-carousel/slick/slick-theme.css";
 import { Zap } from "lucide-react";
 import SectionHeader from "../shared/SectionHeader";
 
-const testimonials = [
-  {
-    text: `When I began looking for the "best" center for Max I chose Medicol. 
-           You are the best. Many thanks to you and your warm, concerned staff...`,
-    name: "Reta Schmidt",
-    role: "Patient",
-    img: "https://static.vecteezy.com/system/resources/thumbnails/000/439/863/small_2x/Basic_Ui__28186_29.jpg",
-  },
-  {
-    text: `Three and a half months ago, my family lost someone that meant the world to us.
-           We made many trips to Medicol. He adored two employees and they were great to him.`,
-    name: "Katlynn Pouros",
-    role: "Patient’s Family",
-    img: "https://static.vecteezy.com/system/resources/thumbnails/000/439/863/small_2x/Basic_Ui__28186_29.jpg",
-  },
-];
+interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  text: string;
+  image: string;
+}
 
-const clientLogos = [
-  "/assets/image/client/client-hm-1.jpg",
-  "/assets/image/client/client-hm-2.jpg",
-  "/assets/image/client/client-hm-3.jpg",
-  "/assets/image/client/client-hm-4.jpg",
-  "/assets/image/client/client-hm-5.jpg",
-];
+interface ClientsReviewProps {
+  testimonials: Testimonial[];
+}
 
-export default function ClientsReview() {
+export default function ClientsReview({
+  testimonials = [],
+}: ClientsReviewProps) {
   const testimonialSettings = {
     dots: true,
     infinite: true,
@@ -43,6 +32,8 @@ export default function ClientsReview() {
     slidesToScroll: 1,
     arrows: false,
   };
+
+  if (testimonials.length === 0) return null;
 
   return (
     <section className="py-16 md:py-20 ">
@@ -57,20 +48,20 @@ export default function ClientsReview() {
 
           {/* Testimonial Slider */}
           <Slider {...testimonialSettings} className="mb-10">
-            {testimonials.map((item, i) => (
-              <div key={i} className="text-center px-4">
+            {testimonials.map((item) => (
+              <div key={item.id} className="text-center px-4">
                 <p className="text-foreground text-lg italic max-w-3xl mx-auto">
                   &rdquo;{item.text}&rdquo;
                 </p>
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <Image
-                    src={item.img}
+                    src={item.image}
                     width={60}
                     height={60}
                     alt={item.name}
-                    className="rounded-full border"
+                    className="rounded-full border object-cover aspect-square"
                   />
-                  <div>
+                  <div className="text-left">
                     <h6 className="text-lg font-semibold">{item.name}</h6>
                     <span className="text-sm text-muted-foreground">
                       {item.role}

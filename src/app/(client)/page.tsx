@@ -1,24 +1,64 @@
+import { getAboutSection } from "@/actions/about-section/actions";
+import {
+  getAllDepartments,
+  getDepartmentSection,
+} from "@/actions/departments/actions";
+import { getAllSlides } from "@/actions/slides/slide";
+import { getAllWhyChooseUs } from "@/actions/why-choose-us/actions";
+import { getAllTestimonials } from "@/actions/testimonials/actions";
+import { getAllFaqs, getFaqSection } from "@/actions/faqs/actions";
 import ArticlesAndFaqs from "../../components/home/Articles";
 import BestMedicine from "../../components/home/BestMedicine";
 import ClientsReview from "../../components/home/ClientsReview";
-import CompanyOverview from "../../components/home/CompanyOverview";
 import FAQ from "../../components/home/FAQ";
 import HeroSlider from "../../components/home/HeroSlider";
 import OurDepartments from "../../components/home/OurDepartments";
-import WhyChooseUs from "../../components/home/WhyChooseUs";
+import AboutSection from "../../components/home/WhyChooseUs";
 
-export default function Home() {
+import { getAllArticles } from "@/actions/articles/actions";
+
+export default async function Home() {
+  const slides = await getAllSlides();
+  const activeSlides = slides.filter((slide) => slide.isActive);
+
+  const whyChooseUsEntries = await getAllWhyChooseUs();
+  const activeWhyChooseUs = whyChooseUsEntries.filter(
+    (entry) => entry.isActive,
+  );
+
+  const aboutSectionData = await getAboutSection();
+
+  const departments = await getAllDepartments();
+  const activeDepartments = departments.filter((dept) => dept.isActive);
+  const departmentSectionData = await getDepartmentSection();
+
+  const testimonials = await getAllTestimonials();
+  const activeTestimonials = testimonials.filter((t) => t.isActive);
+
+  const faqs = await getAllFaqs();
+  const activeFaqs = faqs.filter((f) => f.isActive);
+  const faqSectionData = await getFaqSection();
+
+  const articles = await getAllArticles();
+  const featuredArticles = articles
+    .filter((a) => a.isActive && a.isFeatured)
+    .slice(0, 3);
+
   return (
     <>
-      <HeroSlider />
-      <WhyChooseUs />
-      {/* <CompanyOverview /> */}
-      <OurDepartments />
+      <HeroSlider slides={activeSlides} />
+      <AboutSection
+        entries={activeWhyChooseUs}
+        sectionData={aboutSectionData}
+      />
+      <OurDepartments
+        departments={activeDepartments}
+        sectionData={departmentSectionData}
+      />
       <BestMedicine />
-      {/* <Milestone /> */}
-      <ClientsReview />
-      <FAQ />
-      <ArticlesAndFaqs />
+      <ClientsReview testimonials={activeTestimonials} />
+      <FAQ faqs={activeFaqs} sectionData={faqSectionData} />
+      <ArticlesAndFaqs articles={featuredArticles} />
     </>
   );
 }

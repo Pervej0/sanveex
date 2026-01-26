@@ -2,87 +2,62 @@
 
 import type React from "react";
 import { useRef } from "react";
-import {
-  Pen,
-  PaintBucket,
-  Home,
-  Ruler,
-  PenTool,
-  Building2,
-  CheckCircle,
-  Sparkles,
-  Star,
-  ArrowRight,
-  Zap,
-} from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { ArrowRight, Zap } from "lucide-react";
 import SectionHeader from "../shared/SectionHeader";
 import Image from "next/image";
 
-export default function AboutUsSection() {
+interface WhyChooseUsEntry {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  secondaryIcon?: string | null;
+  position: string;
+}
+
+interface AboutSectionData {
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+interface WhyChooseUsProps {
+  entries: WhyChooseUsEntry[];
+  sectionData?: AboutSectionData | null;
+}
+
+export default function AboutSection({
+  entries = [],
+  sectionData,
+}: WhyChooseUsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const services = [
-    {
-      icon: <Pen className="w-6 h-6" />,
-      secondaryIcon: (
-        <Sparkles className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
-      ),
-      title: "Importing Innovation",
-      description:
-        "Bringing cutting-edge medical technologies from around the world to enhance healthcare solutions and patient outcomes.",
-      position: "left",
-    },
-    {
-      icon: <Home className="w-6 h-6" />,
-      secondaryIcon: (
-        <CheckCircle className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
-      ),
-      title: "Delivering Quality",
-      description:
-        "Ensuring the highest standards in every product and service we provide, prioritizing patient safety and satisfaction.",
-      position: "left",
-    },
-    {
-      icon: <PenTool className="w-6 h-6" />,
-      secondaryIcon: (
-        <Star className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
-      ),
-      title: "Improving Healthcare",
-      description:
-        "Committed to advancing medical care through innovative solutions that empower healthcare professionals and improve patient lives.",
-      position: "left",
-    },
-    {
-      icon: <PaintBucket className="w-6 h-6" />,
-      secondaryIcon: (
-        <Sparkles className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
-      ),
-      title: "Customized Solutions",
-      description:
-        "Tailoring medical products and solutions to meet the specific needs of healthcare providers and institutions.",
-      position: "right",
-    },
-    {
-      icon: <Ruler className="w-6 h-6" />,
-      secondaryIcon: (
-        <CheckCircle className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
-      ),
-      title: "Regulatory Compliance",
-      description:
-        "Adhering strictly to international medical standards and regulations to ensure safety, reliability, and trust.",
-      position: "right",
-    },
-    {
-      icon: <Building2 className="w-6 h-6" />,
-      secondaryIcon: (
-        <Star className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
-      ),
-      title: "Healthcare Partnerships",
-      description:
-        "Building strong, long-term partnerships with hospitals, clinics, and distributors to drive sustainable healthcare growth.",
-      position: "right",
-    },
-  ];
+  // Default values if no data exists
+  const eyebrow = sectionData?.eyebrow || "About Our Company";
+  const title = sectionData?.title || "About Us";
+  const image = sectionData?.image || "/about.jpeg";
+  const descriptionParagraphs = sectionData?.description
+    ? sectionData.description.split("\n").filter((p) => p.trim() !== "")
+    : [""];
+
+  const getIcon = (name: string, className: string = "w-6 h-6") => {
+    // @ts-expect-error - Dynamic lucide icon access
+    const IconComponent = LucideIcons[name] || LucideIcons.HelpCircle;
+    return <IconComponent className={className} />;
+  };
+
+  const getSecondaryIcon = (name?: string | null) => {
+    if (!name) return null;
+    // @ts-expect-error - Dynamic lucide icon access
+    const IconComponent = LucideIcons[name];
+    if (!IconComponent) return null;
+
+    return (
+      <IconComponent className="w-4 h-4 absolute -top-1 -right-1 text-[#A9BBC8]" />
+    );
+  };
 
   return (
     <section
@@ -91,40 +66,27 @@ export default function AboutUsSection() {
       className="w-full py-12 md:py-24 px-4 bg-background overflow-hidden relative"
     >
       <div className="container mx-auto max-w-6xl relative z-10">
-        <SectionHeader
-          icon={Zap}
-          eyebrow="About Our Company"
-          title="About Us"
-        />
+        <SectionHeader icon={Zap} eyebrow={eyebrow} title={title} />
 
         <div className="max-w-4xl mx-auto mb-16 text-center text-[#202e44]/80 leading-relaxed space-y-6">
-          <p>
-            Sanveex is built by a team of experienced professionals with
-            backgrounds across multinational and leading local pharmaceutical
-            organizations. With strong expertise in product management, brand
-            strategy, and market development, the team has deliberately planned
-            and executed initiatives to build an organization focused on
-            delivering meaningful and sustainable healthcare impact.
-          </p>
-
-          <p>
-            The leadership team brings combined experience from the
-            pharmaceutical and MedTech sectors, positioning Sanveex to address
-            complex healthcare challenges through solutions that are both
-            innovative and practical. Within a relatively short period, Sanveex
-            has established a growing healthcare product portfolio designed to
-            improve patient outcomes and strengthen healthcare delivery across
-            Bangladesh.
-          </p>
+          {descriptionParagraphs.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Left */}
           <div className="space-y-4 md:space-y-16">
-            {services
+            {entries
               .filter((s) => s.position === "left")
-              .map((service, index) => (
-                <ServiceItem key={index} {...service} />
+              .map((service) => (
+                <ServiceItem
+                  key={service.id}
+                  title={service.title}
+                  description={service.description}
+                  icon={getIcon(service.icon)}
+                  secondaryIcon={getSecondaryIcon(service.secondaryIcon)}
+                />
               ))}
           </div>
 
@@ -133,8 +95,8 @@ export default function AboutUsSection() {
             <div className="relative w-full max-w-xs">
               <div className="rounded-md overflow-hidden shadow-xl">
                 <Image
-                  src="/about.jpeg"
-                  alt="Modern Healthcare"
+                  src={image}
+                  alt={title}
                   className="w-full h-full object-cover"
                   height={400}
                   width={300}
@@ -146,10 +108,16 @@ export default function AboutUsSection() {
 
           {/* Right */}
           <div className="space-y-4 md:space-y-16">
-            {services
+            {entries
               .filter((s) => s.position === "right")
-              .map((service, index) => (
-                <ServiceItem key={index} {...service} />
+              .map((service) => (
+                <ServiceItem
+                  key={service.id}
+                  title={service.title}
+                  description={service.description}
+                  icon={getIcon(service.icon)}
+                  secondaryIcon={getSecondaryIcon(service.secondaryIcon)}
+                />
               ))}
           </div>
         </div>

@@ -10,6 +10,7 @@ import FormInput from "@/components/forms/FormInput";
 import FormTextArea from "@/components/forms/FormTextArea";
 import { Button } from "@/components/ui/button";
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header";
+import MediaPickerField from "@/components/forms/MediaPickerField";
 
 import {
   Card,
@@ -127,10 +128,10 @@ export default function UpdateSiteContentForm({
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <FormInput
+                    <MediaPickerField
                       name="logoUrl"
-                      label="Logo URL"
-                      placeholder="https://example.com/logo.png"
+                      label="Logo"
+                      description="Select your company logo from the gallery or paste a direct URL"
                     />
                   </div>
                 </div>

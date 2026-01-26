@@ -14,6 +14,7 @@ import type { FormSwitchProps } from "@/types/form.types";
 const FormSwitch: React.FC<FormSwitchProps> = ({
   name,
   label,
+  description,
   disabled,
   className,
   required,
@@ -26,7 +27,7 @@ const FormSwitch: React.FC<FormSwitchProps> = ({
       name={name}
       render={({ field }) => (
         <FormItem
-          className={`flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm ${className}`}
+          className={`flex flex-row items-center justify-between rounded-lg border p-4 shadow-none ${className}`}
         >
           <div className="space-y-0.5">
             {label && (
@@ -34,6 +35,7 @@ const FormSwitch: React.FC<FormSwitchProps> = ({
                 {label} {required && <span className="text-red-500">*</span>}
               </FormLabel>
             )}
+            {description && <FormDescription>{description}</FormDescription>}
           </div>
           <FormControl>
             <Switch

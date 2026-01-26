@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Arsenal, Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import QueryProvider from "@/components/providers/query-provider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -80,8 +81,10 @@ export default function RootLayout({
       <body
         className={`bg-background text-foreground antialiased ${roboto.className} ${arsenal.variable}`}
       >
-        {children}
-        <Toaster position="top-center" />
+        <QueryProvider>
+          {children}
+          <Toaster position="top-center" />
+        </QueryProvider>
       </body>
     </html>
   );

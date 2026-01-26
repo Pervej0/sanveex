@@ -37,6 +37,7 @@ const FormInput: React.FC<FormInputProps> = ({
           <FormControl>
             <Input
               {...field}
+              value={field.value ?? ""}
               type={type}
               placeholder={placeholder}
               disabled={disabled}

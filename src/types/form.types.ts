@@ -78,6 +78,7 @@ export interface FormRadioProps {
 export interface FormSwitchProps {
   name: string;
   label?: string;
+  description?: string;
   disabled?: boolean;
   required?: boolean;
   className?: string;

@@ -41,9 +41,11 @@ const FormSelect: React.FC<FormSelectProps> = ({
           )}
           <Select
             disabled={disabled}
-            onValueChange={field.onChange}
+            onValueChange={(val) =>
+              field.onChange(val === "___empty___" ? "" : val)
+            }
             defaultValue={field.value}
-            value={field.value}
+            value={field.value === "" ? "___empty___" : field.value || ""}
           >
             <FormControl>
               <SelectTrigger>
@@ -52,14 +54,17 @@ const FormSelect: React.FC<FormSelectProps> = ({
             </FormControl>
             <SelectContent>
               {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value}
+                  value={option.value === "" ? "___empty___" : option.value}
+                >
                   {option.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-xs text-muted-foreground">{description}</p>
           )}
           <FormMessage />
         </FormItem>

@@ -6,42 +6,23 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
 interface SlideData {
+  id?: string;
   title: string;
-  subtitle?: string;
+  subtitle?: string | null;
   description: string;
-  buttonText: string;
-  buttonLink: string;
-  secondaryButtonText?: string;
-  secondaryButtonLink?: string;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+  secondaryButtonText?: string | null;
+  secondaryButtonLink?: string | null;
   backgroundImage: string;
+  isActive?: boolean;
 }
 
-const slides: SlideData[] = [
-  {
-    subtitle: "Patient-Centered Care",
-    title: "Planning For Patient Support Program",
-    description:
-      "The bold mission of America's MEDITEX Companies is to bring an end to the burdens of disease, in all its forms.",
-    buttonText: "Get In Touch",
-    buttonLink: "#contact",
-    secondaryButtonText: "Learn More",
-    secondaryButtonLink: "#about",
-    backgroundImage: "/hero1.jpeg",
-  },
-  {
-    subtitle: "Innovation & Growth",
-    title: "Growing to Meet Your Needs",
-    description:
-      "Advancing healthcare through cutting-edge research and development, delivering breakthrough treatments that transform lives.",
-    buttonText: "Our Research",
-    buttonLink: "#science",
-    secondaryButtonText: "View Pipeline",
-    secondaryButtonLink: "#pipeline",
-    backgroundImage: "/hero2.jpeg",
-  },
-];
+interface HeroSliderProps {
+  slides: SlideData[];
+}
 
-export default function HeroSlider() {
+export default function HeroSlider({ slides = [] }: HeroSliderProps) {
   const [current, setCurrent] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -165,7 +146,7 @@ export default function HeroSlider() {
                                    h-10 px-5 text-sm w-auto 
                                    md:h-14 md:px-8 md:text-lg"
                       >
-                        <a href={slide.buttonLink}>
+                        <a href={slide.buttonLink ?? undefined}>
                           <span>{slide.buttonText}</span>
                           <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
                         </a>
@@ -183,7 +164,7 @@ export default function HeroSlider() {
                                      h-10 px-5 text-sm w-auto 
                                      md:h-14 md:px-8 md:text-lg"
                         >
-                          <a href={slide.secondaryButtonLink}>
+                          <a href={slide.secondaryButtonLink ?? undefined}>
                             <span>{slide.secondaryButtonText}</span>
                             <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
                           </a>

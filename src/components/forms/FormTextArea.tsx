@@ -38,6 +38,7 @@ const FormTextArea: React.FC<FormTextAreaProps> = ({
               placeholder={placeholder}
               className="resize-none"
               {...field}
+              value={field.value ?? ""}
               id={name}
               disabled={disabled}
               rows={rows}
