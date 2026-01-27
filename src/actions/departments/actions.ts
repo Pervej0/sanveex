@@ -32,6 +32,17 @@ export async function getDepartmentById(id: string) {
   }
 }
 
+export async function getDepartmentBySlug(slug: string) {
+  try {
+    return await prisma.department.findFirst({
+      where: { slug },
+    });
+  } catch (error) {
+    console.error("Error fetching department by slug:", error);
+    return null;
+  }
+}
+
 export async function createDepartment(data: DepartmentFormValues) {
   try {
     const validated = departmentSchema.parse(data);

@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button";
 import ArticleForm from "../ArticleForm";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function UpdateArticlePage({ params }: PageProps) {

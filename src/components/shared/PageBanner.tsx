@@ -48,8 +48,8 @@ interface GlobalPageBannerProps {
 }
 
 export default function GlobalPageBanner({
-  desktopImage = "/banners/default-desktop.jpg", // Change this to your default image path
-  mobileImage = "/banners/default-mobile.jpg", // Change this to your default image path
+  desktopImage = "/banners/default-desktop.jpg",
+  mobileImage = "/banners/default-mobile.jpg",
 }: GlobalPageBannerProps) {
   const pathname = usePathname();
 
@@ -112,8 +112,8 @@ export default function GlobalPageBanner({
             priority
           />
         </div>
-        {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Overlay for readability - sophisticated gradient */}
+        <div className="absolute inset-0 bg-black/40 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
       </div>
 
       {/* --- CONTENT --- */}
@@ -141,8 +141,8 @@ export default function GlobalPageBanner({
         </div>
 
         {/* Title */}
-        <div className="mt-10 border-l-[6px] border-white pl-6 md:pl-8">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight capitalize">
+        <div className="mt-10 border-l-[6px] border-white pl-6 md:pl-8 py-1">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-md capitalize">
             {pageTitle}
           </h1>
         </div>

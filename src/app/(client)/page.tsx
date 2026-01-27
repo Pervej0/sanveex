@@ -16,30 +16,45 @@ import OurDepartments from "../../components/home/OurDepartments";
 import AboutSection from "../../components/home/WhyChooseUs";
 
 import { getAllArticles } from "@/actions/articles/actions";
+import { getFeaturedProducts } from "@/actions/products/actions";
 
 export default async function Home() {
-  const slides = await getAllSlides();
+  const [
+    slides,
+    whyChooseUsEntries,
+    aboutSectionData,
+    departments,
+    departmentSectionData,
+    testimonials,
+    faqs,
+    faqSectionData,
+    articles,
+    products,
+  ] = await Promise.all([
+    getAllSlides(),
+    getAllWhyChooseUs(),
+    getAboutSection(),
+    getAllDepartments(),
+    getDepartmentSection(),
+    getAllTestimonials(),
+    getAllFaqs(),
+    getFaqSection(),
+    getAllArticles(),
+    getFeaturedProducts(),
+  ]);
+
   const activeSlides = slides.filter((slide) => slide.isActive);
 
-  const whyChooseUsEntries = await getAllWhyChooseUs();
   const activeWhyChooseUs = whyChooseUsEntries.filter(
     (entry) => entry.isActive,
   );
 
-  const aboutSectionData = await getAboutSection();
-
-  const departments = await getAllDepartments();
   const activeDepartments = departments.filter((dept) => dept.isActive);
-  const departmentSectionData = await getDepartmentSection();
 
-  const testimonials = await getAllTestimonials();
   const activeTestimonials = testimonials.filter((t) => t.isActive);
 
-  const faqs = await getAllFaqs();
   const activeFaqs = faqs.filter((f) => f.isActive);
-  const faqSectionData = await getFaqSection();
 
-  const articles = await getAllArticles();
   const featuredArticles = articles
     .filter((a) => a.isActive && a.isFeatured)
     .slice(0, 3);
@@ -55,7 +70,7 @@ export default async function Home() {
         departments={activeDepartments}
         sectionData={departmentSectionData}
       />
-      <BestMedicine />
+      <BestMedicine medicines={products} />
       <ClientsReview testimonials={activeTestimonials} />
       <FAQ faqs={activeFaqs} sectionData={faqSectionData} />
       <ArticlesAndFaqs articles={featuredArticles} />

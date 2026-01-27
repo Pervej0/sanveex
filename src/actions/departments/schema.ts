@@ -2,7 +2,9 @@ import { z } from "zod";
 
 export const departmentSchema = z.object({
   title: z.string().min(1, "Title is required"),
+  slug: z.string().min(1, "Slug is required"),
   description: z.string().min(1, "Description is required"),
+  content: z.string().min(1, "Content is required"),
   icon: z.string().min(1, "Icon is required"),
   secondaryIcon: z.string().optional().nullable(),
   color: z.string().default("#88734C"),

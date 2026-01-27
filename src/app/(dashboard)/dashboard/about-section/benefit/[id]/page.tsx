@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button";
 import WhyChooseUsForm from "../../WhyChooseUsForm";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function UpdateBenefitPage({ params }: PageProps) {

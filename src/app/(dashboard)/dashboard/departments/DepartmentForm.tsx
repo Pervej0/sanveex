@@ -24,14 +24,7 @@ import {
   createDepartment,
   updateDepartment,
 } from "@/actions/departments/actions";
-
-const COLOR_OPTIONS = [
-  { label: "Golden Brown", value: "#88734C" },
-  { label: "Slate Blue", value: "#A9BBC8" },
-  { label: "Navy", value: "#202e44" },
-  { label: "Emerald", value: "#10b981" },
-  { label: "Rose", value: "#f43f5e" },
-];
+import FormRichTextEditor from "@/components/forms/FormRichTextEditor";
 
 interface DepartmentFormProps {
   initialData?: any;
@@ -77,6 +70,8 @@ export default function DepartmentForm({
         initialData || {
           title: "",
           description: "",
+          content: "",
+          slug: "",
           icon: "Heart",
           secondaryIcon: "Sparkles",
           color: "#88734C",
@@ -102,10 +97,21 @@ export default function DepartmentForm({
                 label="Title"
                 placeholder="e.g. Cardiology"
               />
+              <FormInput
+                name="slug"
+                label="Slug"
+                placeholder="e.g. cardiology"
+                description="Unique identifier for the department URL"
+              />
               <FormTextArea
                 name="description"
                 label="Description"
                 placeholder="Brief overview of the department..."
+              />
+              <FormRichTextEditor
+                name="content"
+                label="Detailed Information"
+                placeholder="Comprehensive details about the department..."
               />
             </CardContent>
           </Card>

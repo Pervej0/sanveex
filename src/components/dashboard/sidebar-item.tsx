@@ -107,7 +107,7 @@ export function SidebarItem({ item, collapsed }: SidebarItemProps) {
         <Link
           href={item.disabled ? "#" : item.href}
           className={cn(
-            "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200",
+            "group flex items-center gap-3 px-3 py-2.5 text-sm font-semibold transition-all duration-200 border-b border-zinc-200 dark:border-zinc-800",
             isActive
               ? "bg-primary/10 text-primary" // Premium active state
               : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/80 dark:hover:text-zinc-50",

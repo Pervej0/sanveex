@@ -5,6 +5,8 @@ import * as LucideIcons from "lucide-react";
 import { Zap, ArrowRight } from "lucide-react";
 import SectionHeader from "../shared/SectionHeader";
 import Link from "next/link";
+import DepartmentCard from "./DepartmentCard";
+import { Department } from "@/generated/prisma/client";
 
 interface DepartmentData {
   id: string;
@@ -95,7 +97,7 @@ export default function OurDepartments({
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-          {departments.map((department) => (
+          {departments.map((department: any) => (
             <DepartmentCard
               key={department.id}
               department={{
@@ -110,93 +112,5 @@ export default function OurDepartments({
         </div>
       </div>
     </section>
-  );
-}
-
-interface DepartmentCardProps {
-  department: {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-    color: string;
-    secondaryIcon: React.ReactNode;
-  };
-}
-
-function DepartmentCard({ department }: DepartmentCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <div
-      className="relative group h-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="relative bg-gray-50 rounded-xl p-4 md:p-8 h-full flex flex-col overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-md">
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{
-            background: `linear-gradient(135deg, ${department.color}10 0%, ${department.color}05 100%)`,
-          }}
-        />
-
-        <div className="relative z-10 flex flex-col flex-grow">
-          <div className="mb-3 md:mb-6 relative inline-block self-start">
-            <div
-              className="p-2.5 md:p-4 rounded-xl relative transition-transform duration-300 group-hover:rotate-3"
-              style={{ backgroundColor: `${department.color}15` }}
-            >
-              <div style={{ color: department.color }}>{department.icon}</div>
-
-              {department.secondaryIcon && (
-                <div
-                  className={`absolute -top-1 -right-1 md:-top-2 md:-right-2 transition-transform duration-300 ${
-                    isHovered ? "scale-100" : "scale-0"
-                  }`}
-                  style={{ color: department.color }}
-                >
-                  {department.secondaryIcon}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <h3
-            className="text-base sm:text-lg md:text-2xl font-semibold mb-2 md:mb-3 transition-colors duration-300"
-            style={{ color: isHovered ? department.color : "#202e44" }}
-          >
-            {department.title}
-          </h3>
-
-          <p className="text-xs sm:text-sm md:text-base text-[#202e44]/70 leading-relaxed mb-4 md:mb-6 flex-grow line-clamp-4 md:line-clamp-none">
-            {department.description}
-          </p>
-
-          <div
-            className="flex items-center gap-1.5 md:gap-2 font-medium text-xs md:text-sm transition-transform duration-300 mt-auto"
-            style={{
-              color: department.color,
-              transform: isHovered ? "translateX(4px)" : "translateX(0)",
-            }}
-          >
-            Learn more
-            <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
-          </div>
-        </div>
-
-        <div
-          className="absolute bottom-0 left-0 h-1 rounded-full transition-all duration-300"
-          style={{
-            backgroundColor: department.color,
-            width: isHovered ? "100%" : "0%",
-          }}
-        />
-
-        <div
-          className="hidden md:block absolute top-4 right-4 w-20 h-20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{ backgroundColor: `${department.color}08` }}
-        />
-      </div>
-    </div>
   );
 }

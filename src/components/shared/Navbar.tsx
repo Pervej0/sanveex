@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { SiteContent } from "@/generated/prisma/client";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation"; // Added usePathname
+import { useRouter, usePathname } from "next/navigation";
 import { Phone, Menu, ChevronDown, Search, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { DynamicNavItem } from "@/types/navigation.types";
 
 // Shadcn UI Components
 import { Button } from "@/components/ui/button";
@@ -26,112 +27,14 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-// --- Navigation Data ---
-const aboutItems = [
-  {
-    title: "Company Overview",
-    href: "/about/overview",
-    description: "Learn about our mission and vision",
-  },
-  {
-    title: "Our History",
-    href: "/about/history",
-    description: "50+ years of innovation",
-  },
-  {
-    title: "Leadership Team",
-    href: "/about/leadership",
-    description: "Meet our executive team",
-  },
-  {
-    title: "Mission & Values",
-    href: "/about/mission-and-values",
-    description: "What drives us forward",
-  },
-  {
-    title: "Board Message",
-    href: "/about/speech",
-    description: "Message from our Chairman",
-  },
-];
-
-const productsItems = [
-  {
-    title: "Products Overview",
-    href: "/products/overview",
-    description: "Explore our product range",
-  },
-  {
-    title: "Medical Information",
-    href: "/products/medical-info",
-    description: "Clinical data & resources",
-  },
-  {
-    title: "Quality Assurance",
-    href: "/products/quality",
-    description: "Our commitment to quality",
-  },
-  {
-    title: "Safety Information",
-    href: "/products/safety",
-    description: "Drug safety & compliance",
-  },
-];
-
-const scienceItems = [
-  {
-    title: "R&D Overview",
-    href: "/science/overview",
-    description: "Innovation at our core",
-  },
-  {
-    title: "Research Pipeline",
-    href: "/science/pipeline",
-    description: "Products in development",
-  },
-  {
-    title: "Scientific Advisory",
-    href: "/science/advisory",
-    description: "Expert guidance",
-  },
-  {
-    title: "Publications",
-    href: "/science/publications",
-    description: "Latest research findings",
-  },
-];
-
-const storiesItems = [
-  {
-    title: "Patient Stories",
-    href: "/stories/patients",
-    description: "Real impact, real lives",
-  },
-  {
-    title: "Sustainability",
-    href: "/stories/sustainability",
-    description: "Our environmental commitment",
-  },
-  {
-    title: "Community Impact",
-    href: "/stories/community",
-    description: "Making a difference",
-  },
-  {
-    title: "Innovation Stories",
-    href: "/stories/innovation",
-    description: "Breakthroughs & discoveries",
-  },
-];
-
 // --- Mega Menu Component ---
 interface MegaMenuProps {
   title: string;
-  items: typeof aboutItems;
+  items: DynamicNavItem[];
   isOpen: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  isActivePath: boolean; // NEW PROP to check if this section is active
+  isActivePath: boolean;
 }
 
 function MegaMenu({
@@ -150,7 +53,7 @@ function MegaMenu({
     >
       <button
         className={cn(
-          "flex items-center gap-1 text-sm font-bold uppercase tracking-wider transition-colors py-2 px-1", // Added UPPERCASE
+          "flex items-center gap-1 text-sm font-bold uppercase tracking-wider transition-colors py-2 px-1",
           isOpen || isActivePath
             ? "text-primary"
             : "text-foreground hover:text-primary",
@@ -168,7 +71,7 @@ function MegaMenu({
       {/* Mega Menu Dropdown */}
       <div
         className={cn(
-          "absolute left-1/2 -translate-x-1/2 pt-4 transition-all duration-200",
+          "absolute left-1/2 -translate-x-1/2 pt-4 transition-all duration-200 z-[100]",
           isOpen
             ? "opacity-100 visible translate-y-0"
             : "opacity-0 invisible -translate-y-2",
@@ -178,8 +81,8 @@ function MegaMenu({
           <div className="space-y-1">
             {items.map((item) => (
               <Link
-                key={item.href}
-                href={item.href}
+                key={item.id}
+                href={item.href || "#"}
                 className="group flex items-start gap-4 p-3 rounded-lg hover:bg-accent transition-colors"
               >
                 <div className="flex-1">
@@ -189,9 +92,11 @@ function MegaMenu({
                     </span>
                     <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {item.description}
-                  </p>
+                  {item.description && (
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {item.description}
+                    </p>
+                  )}
                 </div>
               </Link>
             ))}
@@ -203,9 +108,15 @@ function MegaMenu({
 }
 
 // --- Main Navbar Component ---
-export default function Navbar({ siteContent }: { siteContent: SiteContent }) {
+export default function Navbar({
+  siteContent,
+  navItems = [],
+}: {
+  siteContent: SiteContent;
+  navItems: DynamicNavItem[];
+}) {
   const router = useRouter();
-  const pathname = usePathname(); // NEW: Get current path
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -282,41 +193,36 @@ export default function Navbar({ siteContent }: { siteContent: SiteContent }) {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-6">
-              <MegaMenu
-                title="About"
-                items={aboutItems}
-                isOpen={activeMenu === "about"}
-                isActivePath={pathname?.startsWith("/about") ?? false}
-                onMouseEnter={() => handleMenuEnter("about")}
-                onMouseLeave={handleMenuLeave}
-              />
-
-              <MegaMenu
-                title="Products"
-                items={productsItems}
-                isOpen={activeMenu === "products"}
-                isActivePath={pathname?.startsWith("/products") ?? false}
-                onMouseEnter={() => handleMenuEnter("products")}
-                onMouseLeave={handleMenuLeave}
-              />
-
-              <MegaMenu
-                title="Science"
-                items={scienceItems}
-                isOpen={activeMenu === "science"}
-                isActivePath={pathname?.startsWith("/science") ?? false}
-                onMouseEnter={() => handleMenuEnter("science")}
-                onMouseLeave={handleMenuLeave}
-              />
-
-              <MegaMenu
-                title="Stories"
-                items={storiesItems}
-                isOpen={activeMenu === "stories"}
-                isActivePath={pathname?.startsWith("/stories") ?? false}
-                onMouseEnter={() => handleMenuEnter("stories")}
-                onMouseLeave={handleMenuLeave}
-              />
+              {navItems.map((navItem) =>
+                navItem.children && navItem.children.length > 0 ? (
+                  <MegaMenu
+                    key={navItem.id}
+                    title={navItem.title}
+                    items={navItem.children}
+                    isOpen={activeMenu === navItem.id}
+                    isActivePath={
+                      pathname?.startsWith(
+                        navItem.href || `/${navItem.title.toLowerCase()}`,
+                      ) ?? false
+                    }
+                    onMouseEnter={() => handleMenuEnter(navItem.id)}
+                    onMouseLeave={handleMenuLeave}
+                  />
+                ) : (
+                  <Link
+                    key={navItem.id}
+                    href={navItem.href || "#"}
+                    className={cn(
+                      "text-sm font-bold uppercase tracking-wider transition-colors py-2 px-1",
+                      pathname === navItem.href
+                        ? "text-primary"
+                        : "text-foreground hover:text-primary",
+                    )}
+                  >
+                    {navItem.title}
+                  </Link>
+                ),
+              )}
             </div>
 
             {/* Right Side Actions */}
@@ -375,66 +281,83 @@ export default function Navbar({ siteContent }: { siteContent: SiteContent }) {
                     <div className="flex-1 p-6">
                       <nav className="space-y-2">
                         {/* Mobile Accordion Sections */}
-                        {[
-                          { title: "About", items: aboutItems },
-                          { title: "Products", items: productsItems },
-                          { title: "Science", items: scienceItems },
-                          { title: "Stories", items: storiesItems },
-                        ].map((section) => (
-                          <div key={section.title}>
-                            <button
-                              onClick={() => toggleMobileSection(section.title)}
-                              className={cn(
-                                "flex items-center justify-between w-full h-12 px-4 rounded-lg text-base font-bold uppercase tracking-wider transition-colors",
-                                pathname?.startsWith(
-                                  `/${section.title.toLowerCase()}`,
-                                )
-                                  ? "text-primary"
-                                  : "text-foreground hover:bg-accent",
-                              )}
-                            >
-                              {section.title}
-                              <ChevronDown
+                        {navItems.map((section) => (
+                          <div key={section.id}>
+                            {section.children && section.children.length > 0 ? (
+                              <>
+                                <button
+                                  onClick={() =>
+                                    toggleMobileSection(section.id)
+                                  }
+                                  className={cn(
+                                    "flex items-center justify-between w-full h-12 px-4 rounded-lg text-base font-bold uppercase tracking-wider transition-colors",
+                                    pathname?.startsWith(
+                                      section.href ||
+                                        `/${section.title.toLowerCase()}`,
+                                    )
+                                      ? "text-primary"
+                                      : "text-foreground hover:bg-accent",
+                                  )}
+                                >
+                                  {section.title}
+                                  <ChevronDown
+                                    className={cn(
+                                      "h-4 w-4 transition-transform duration-200",
+                                      expandedMobile === section.id &&
+                                        "rotate-180",
+                                    )}
+                                  />
+                                </button>
+                                <div
+                                  className={cn(
+                                    "overflow-hidden transition-all duration-300 ease-in-out",
+                                    expandedMobile === section.id
+                                      ? "max-h-96 opacity-100"
+                                      : "max-h-0 opacity-0",
+                                  )}
+                                >
+                                  <div className="pl-4 py-2 space-y-1">
+                                    {section.children.map((item) => (
+                                      <Link
+                                        key={item.id}
+                                        href={item.href || "#"}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex flex-col py-3 px-4 rounded-lg hover:bg-accent transition-colors"
+                                      >
+                                        <span
+                                          className={cn(
+                                            "text-sm font-medium",
+                                            pathname === item.href
+                                              ? "text-primary"
+                                              : "text-foreground",
+                                          )}
+                                        >
+                                          {item.title}
+                                        </span>
+                                        {item.description && (
+                                          <span className="text-xs text-muted-foreground">
+                                            {item.description}
+                                          </span>
+                                        )}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <Link
+                                href={section.href || "#"}
+                                onClick={() => setMobileMenuOpen(false)}
                                 className={cn(
-                                  "h-4 w-4 transition-transform duration-200",
-                                  expandedMobile === section.title &&
-                                    "rotate-180",
+                                  "flex items-center w-full h-12 px-4 rounded-lg text-base font-bold uppercase tracking-wider transition-colors",
+                                  pathname === section.href
+                                    ? "text-primary"
+                                    : "text-foreground hover:bg-accent",
                                 )}
-                              />
-                            </button>
-                            <div
-                              className={cn(
-                                "overflow-hidden transition-all duration-300 ease-in-out",
-                                expandedMobile === section.title
-                                  ? "max-h-96 opacity-100"
-                                  : "max-h-0 opacity-0",
-                              )}
-                            >
-                              <div className="pl-4 py-2 space-y-1">
-                                {section.items.map((item) => (
-                                  <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="flex flex-col py-3 px-4 rounded-lg hover:bg-accent transition-colors"
-                                  >
-                                    <span
-                                      className={cn(
-                                        "text-sm font-medium",
-                                        pathname === item.href
-                                          ? "text-primary"
-                                          : "text-foreground",
-                                      )}
-                                    >
-                                      {item.title}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground">
-                                      {item.description}
-                                    </span>
-                                  </Link>
-                                ))}
-                              </div>
-                            </div>
+                              >
+                                {section.title}
+                              </Link>
+                            )}
                           </div>
                         ))}
                       </nav>
@@ -477,38 +400,20 @@ export default function Navbar({ siteContent }: { siteContent: SiteContent }) {
             </CommandItem>
           </CommandGroup>
 
-          <CommandGroup heading="About">
-            {aboutItems.map((item) => (
-              <CommandItem
-                key={item.href}
-                onSelect={() => runCommand(() => router.push(item.href))}
-              >
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-
-          <CommandGroup heading="Products">
-            {productsItems.map((item) => (
-              <CommandItem
-                key={item.href}
-                onSelect={() => runCommand(() => router.push(item.href))}
-              >
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-
-          <CommandGroup heading="Science">
-            {scienceItems.map((item) => (
-              <CommandItem
-                key={item.href}
-                onSelect={() => runCommand(() => router.push(item.href))}
-              >
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          {navItems.map((section) => (
+            <CommandGroup key={section.id} heading={section.title}>
+              {section.children?.map((item) => (
+                <CommandItem
+                  key={item.id}
+                  onSelect={() =>
+                    runCommand(() => router.push(item.href || "#"))
+                  }
+                >
+                  <span>{item.title}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ))}
         </CommandList>
       </CommandDialog>
     </>

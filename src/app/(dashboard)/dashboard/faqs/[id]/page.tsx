@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button";
 import FaqForm from "../FaqForm";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function UpdateFaqPage({ params }: PageProps) {
