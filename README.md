@@ -6,7 +6,7 @@
 
 ## 🌐 Live Website
 
-🔗 https://sanveex.vercel.app
+🔗 https://sanveex.vercel.app/
 
 ---
 
