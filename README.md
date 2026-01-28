@@ -40,13 +40,3 @@ The website presents information about the company’s mission, products, scient
 
 ---
 
-## 🛠 Tech Stack
-
-> Update if your stack differs
-
-- **Next.js** – React framework  
-- **React** – UI library  
-- **Tailwind CSS** – Styling  
-- **Vercel** – Hosting and deployment  
-
----
