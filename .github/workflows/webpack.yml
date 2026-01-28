@@ -1,0 +1,53 @@
+name: Node.js Continuous Deployment
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/sanveex.com
+
+            git fetch --all
+            git reset --hard origin/main
+
+            if [ ! -f .env ]; then
+              cp .env.example .env
+            fi
+
+            npm install
+            npx prisma generate
+            npm run build
+
+            if pm2 describe sanveex-client > /dev/null; then
+              pm2 restart sanveex-client
+            else
+              pm2 start "npm start" --name "sanveex-client"
+            fi
+
+            pm2 save
