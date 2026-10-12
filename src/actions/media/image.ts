@@ -27,7 +27,7 @@ export const addImage = async (
       };
     }
 
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 5 * 1024 * 1024; // 2MB
     const maxFiles = 10;
     const allowedTypes = [
       "image/jpeg",
