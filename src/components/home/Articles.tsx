@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, CalendarDays } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Clock, Newspaper } from "lucide-react";
 import { format } from "date-fns";
+import SectionHeader from "../shared/SectionHeader";
+import { resolveImageSrc } from "@/lib/images";
 
 interface Article {
   id: string;
@@ -24,75 +26,94 @@ export default function InsightsSection({ articles = [] }: ArticlesProps) {
   if (articles.length === 0) return null;
 
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto max-w-6xl px-4">
-        {/* --- Section Header --- */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-gray-100 pb-8">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
-              Our Latest
-              <span className="text-primary"> Press Releases</span>
-            </h2>
-            <p className="text-gray-500 text-lg">
-              Explore the latest updates, medical breakthroughs, and
-              announcements from our team of specialists.
-            </p>
-          </div>
+    <section className="bg-navy-50/60 py-16 lg:py-24">
+      <div className="container-x">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeader
+            align="left"
+            icon={Newspaper}
+            eyebrow="Newsroom"
+            title="Latest news &amp; medical updates"
+            description="Announcements, product updates and clinical information from the Sanveex medical affairs team."
+          />
+
           <Link
             href="/newsroom"
-            className="group flex items-center gap-2 px-5 py-3 rounded-full bg-gray-50 text-gray-900 font-medium hover:bg-primary hover:text-white transition-all duration-300"
+            className="mb-12 hidden shrink-0 items-center gap-2 rounded-lg border border-navy-200 bg-white px-5 py-3 text-sm font-semibold text-primary transition-all hover:border-primary hover:shadow-sm lg:inline-flex"
           >
-            View All Articles
-            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            Visit the newsroom
+            <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
 
-        {/* --- Standard Articles Grid --- */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map((article) => (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {articles.slice(0, 3).map((article) => (
             <Link
               key={article.id}
               href={`/newsroom/press-releases/${article.slug}`}
-              className="group flex flex-col bg-transparent"
+              className="group flex flex-col overflow-hidden rounded-xl border border-border bg-white transition-all duration-300 hover:-translate-y-1 hover:border-navy-200 hover:shadow-lg"
             >
-              {/* Image */}
-              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl mb-5 shadow-sm border bg-muted">
-                <div className="absolute top-4 left-4 z-10">
-                  <span className="inline-block px-3 py-1 rounded-md bg-white/95 backdrop-blur-sm text-xs font-bold uppercase tracking-wide text-gray-800 shadow-sm">
-                    {article.category}
-                  </span>
-                </div>
-                {article.image && (
+              <div className="relative aspect-[16/10] overflow-hidden bg-navy-100">
+                {resolveImageSrc(article.image, null) ? (
                   <Image
-                    src={article.image}
-                    alt={article.title}
+                    src={resolveImageSrc(article.image, null)!}
+                    alt=""
                     fill
+                    sizes="(min-width: 1024px) 380px, (min-width: 768px) 45vw, 90vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <Newspaper className="h-8 w-8 text-navy-300" />
+                  </div>
                 )}
+
+                <span className="absolute left-4 top-4 rounded-md bg-white/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-primary shadow-sm backdrop-blur">
+                  {article.category}
+                </span>
               </div>
 
-              {/* Content */}
-              <div className="flex flex-col flex-grow">
-                <div className="flex items-center gap-3 text-sm text-gray-500 mb-3">
-                  <span className="flex items-center">
-                    <CalendarDays className="w-4 h-4 mr-1.5" />
-                    {format(new Date(article.publishedAt), "MMMM dd, yyyy")}
+              <div className="flex flex-1 flex-col p-5">
+                <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <CalendarDays className="h-3.5 w-3.5" />
+                    {format(new Date(article.publishedAt), "dd MMM yyyy")}
                   </span>
-                  <span className="w-1 h-1 rounded-full bg-gray-300" />
-                  <span>{article.readTime}</span>
+                  {article.readTime && (
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5" />
+                      {article.readTime}
+                    </span>
+                  )}
                 </div>
 
-                <h4 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="line-clamp-2 text-lg font-bold leading-snug text-navy-800 transition-colors group-hover:text-primary">
                   {article.title}
-                </h4>
+                </h3>
 
-                <p className="text-gray-600 text-sm line-clamp-3 mb-5 leading-relaxed">
-                  {article.excerpt}
-                </p>
+                {article.excerpt && (
+                  <p className="mt-2.5 line-clamp-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {article.excerpt}
+                  </p>
+                )}
+
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                  Read article
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
               </div>
             </Link>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center lg:hidden">
+          <Link
+            href="/newsroom"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-700"
+          >
+            Visit the newsroom
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

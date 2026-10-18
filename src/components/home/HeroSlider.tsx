@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+
+import { useState, useEffect, useCallback } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck, FileCheck2, Truck } from "lucide-react";
 import Image from "next/image";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import Link from "next/link";
+import { resolveImageSrc } from "@/lib/images";
 
 interface SlideData {
   id?: string;
@@ -22,204 +23,190 @@ interface HeroSliderProps {
   slides: SlideData[];
 }
 
+const AUTOPLAY_MS = 7000;
+
 export default function HeroSlider({ slides = [] }: HeroSliderProps) {
   const [current, setCurrent] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const nextSlide = () => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  };
+  const total = slides.length;
 
-  const prevSlide = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  const goTo = useCallback(
+    (index: number) => setCurrent(((index % total) + total) % total),
+    [total],
+  );
 
-  const goToSlide = (index: number) => {
-    setCurrent(index);
-  };
+  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
 
   useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [current, isPlaying]);
+    if (isPaused || total <= 1) return;
+    const timer = setInterval(() => setCurrent((p) => (p + 1) % total), AUTOPLAY_MS);
+    return () => clearInterval(timer);
+  }, [isPaused, total]);
+
+  if (total === 0) return null;
+
+  const activeSlide = slides[current];
 
   return (
-    <div className="relative w-full h-[600px] md:h-screen md:min-h-[600px] md:max-h-[900px] overflow-hidden bg-black">
-      {/* Slides Container */}
-      <div className="relative w-full h-full">
+    <section
+      className="relative isolate w-full overflow-hidden bg-navy-900"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      aria-roledescription="carousel"
+      aria-label="Featured highlights"
+    >
+      <div className="relative h-[560px] w-full sm:h-[600px] lg:h-[680px]">
         {slides.map((slide, index) => {
           const isActive = index === current;
 
           return (
             <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+              key={slide.id ?? index}
+              aria-hidden={!isActive}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-out ${
+                isActive ? "z-10 opacity-100" : "z-0 opacity-0"
               }`}
             >
-              {/* Background Image */}
+              {/* Slow ken-burns on the active frame only */}
               <div
-                className={`absolute inset-0 transition-transform duration-[10000ms] ease-out ${
-                  isActive ? "scale-110" : "scale-100"
+                className={`absolute inset-0 transition-transform duration-[9000ms] ease-out ${
+                  isActive ? "scale-[1.08]" : "scale-100"
                 }`}
               >
                 <Image
-                  src={slide.backgroundImage}
-                  alt={slide.title}
-                  className="w-full h-full object-cover"
-                  height={900}
-                  width={1600}
-                  priority={isActive}
+                  src={resolveImageSrc(slide.backgroundImage, "/hero1.jpeg")!}
+                  alt=""
+                  fill
+                  priority={index === 0}
+                  sizes="100vw"
+                  className="object-cover"
                 />
-
-                {/* Gradients */}
-                <div className="absolute inset-0 bg-black/40 sm:bg-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent sm:via-black/50" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent sm:from-black/60" />
               </div>
 
-              {/* Content */}
-              <div className="relative h-full flex items-center z-20">
-                <div className="container mx-auto max-w-6xl px-6 sm:px-8">
-                  <div className="max-w-4xl pt-10 sm:pt-0">
-                    {/* Subtitle */}
-                    {slide.subtitle && (
-                      <div
-                        className={`mb-4 sm:mb-6 transition-all duration-1000 delay-100 ${
-                          isActive
-                            ? "opacity-100 translate-y-0 blur-0"
-                            : "opacity-0 translate-y-12 blur-sm"
-                        }`}
-                      >
-                        <div className="inline-flex items-center gap-2">
-                          <div className="w-8 sm:w-12 h-[2px] bg-gradient-to-r from-primary to-transparent" />
-                          <Badge
-                            variant="outline"
-                            className="border-primary/40 bg-primary/10 text-primary text-xs sm:text-sm md:text-base font-semibold tracking-wider uppercase"
-                          >
-                            {slide.subtitle}
-                          </Badge>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Title */}
-                    <h1
-                      className={`text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight transition-all duration-1000 delay-200 ${
-                        isActive
-                          ? "opacity-100 translate-y-0 blur-0"
-                          : "opacity-0 translate-y-12 blur-sm"
-                      }`}
-                    >
-                      {slide.title}
-                    </h1>
-
-                    {/* Description */}
-                    <p
-                      className={`text-sm sm:text-base md:text-xl text-gray-300 mb-8 sm:mb-12 leading-relaxed max-w-xl sm:max-w-2xl transition-all duration-1000 delay-300 ${
-                        isActive
-                          ? "opacity-100 translate-y-0 blur-0"
-                          : "opacity-0 translate-y-12 blur-sm"
-                      }`}
-                    >
-                      {slide.description}
-                    </p>
-
-                    {/* BUTTONS SECTION - FIXED */}
-                    <div
-                      className={`flex flex-row flex-wrap gap-3 sm:gap-4 transition-all duration-1000 delay-500 ${
-                        isActive
-                          ? "opacity-100 translate-y-0 blur-0"
-                          : "opacity-0 translate-y-12 blur-sm"
-                      }`}
-                    >
-                      {/* Primary Button */}
-                      <Button
-                        asChild
-                        size="lg"
-                        // MOBILE: h-10 px-5 text-sm (Compact)
-                        // DESKTOP: md:h-14 md:px-8 md:text-lg (Large & Prominent)
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold 
-                                   h-10 px-5 text-sm w-auto 
-                                   md:h-14 md:px-8 md:text-lg"
-                      >
-                        <a href={slide.buttonLink ?? undefined}>
-                          <span>{slide.buttonText}</span>
-                          <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
-                        </a>
-                      </Button>
-
-                      {/* Secondary Button */}
-                      {slide.secondaryButtonText && (
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="lg"
-                          // MOBILE: h-10 px-5 text-sm (Compact)
-                          // DESKTOP: md:h-14 md:px-8 md:text-lg (Large & Prominent)
-                          className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 font-semibold 
-                                     h-10 px-5 text-sm w-auto 
-                                     md:h-14 md:px-8 md:text-lg"
-                        >
-                          <a href={slide.secondaryButtonLink ?? undefined}>
-                            <span>{slide.secondaryButtonText}</span>
-                            <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
-                          </a>
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Legibility scrims */}
+              <div className="absolute inset-0 bg-navy-900/45" />
+              <div className="absolute inset-0 bg-gradient-to-r from-navy-900/92 via-navy-900/60 to-navy-900/10" />
+              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy-900/85 to-transparent" />
             </div>
           );
         })}
-      </div>
 
-      {/* Navigation Arrows - Desktop Only */}
-      <div className="hidden md:block">
-        <Button
-          onClick={prevSlide}
-          variant="ghost"
-          size="icon"
-          className="absolute left-8 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 transition-all"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </Button>
-        <Button
-          onClick={nextSlide}
-          variant="ghost"
-          size="icon"
-          className="absolute right-8 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full hover:bg-white/20 hover:scale-105 transition-all"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </Button>
-      </div>
+        {/* ---------------- Content ---------------- */}
+        <div className="relative z-20 flex h-full items-center">
+          <div className="container-x w-full">
+            <div className="max-w-3xl">
+              {activeSlide.subtitle && (
+                <p className="eyebrow animate-in fade-in slide-in-from-bottom-3 rounded-full border border-brand-teal-300/30 bg-brand-teal-400/10 px-4 py-2 text-brand-teal-200 backdrop-blur-sm duration-700">
+                  {activeSlide.subtitle}
+                </p>
+              )}
 
-      {/* Progress Indicators */}
-      <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-30 w-full px-6 flex justify-center">
-        <div className="flex items-center gap-2 sm:gap-3 bg-black/30 backdrop-blur-md px-4 py-3 rounded-full border border-white/10">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className="relative group py-2"
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              <div
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  index === current
-                    ? "w-8 sm:w-16 bg-white"
-                    : "w-4 sm:w-12 bg-white/30 group-hover:bg-white/50"
-                }`}
-              />
-            </button>
-          ))}
+              <h1
+                key={`title-${current}`}
+                className="mt-6 animate-in fade-in slide-in-from-bottom-4 text-3xl font-extrabold leading-[1.08] text-white duration-700 sm:text-4xl lg:text-[3.5rem]"
+              >
+                {activeSlide.title}
+              </h1>
+
+              <p
+                key={`desc-${current}`}
+                className="mt-6 max-w-2xl animate-in fade-in slide-in-from-bottom-5 text-base leading-relaxed text-navy-100 duration-700 sm:text-lg"
+              >
+                {activeSlide.description}
+              </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                {activeSlide.buttonText && (
+                  <Link
+                    href={activeSlide.buttonLink || "#"}
+                    className="inline-flex items-center gap-2 rounded-lg bg-brand-teal-400 px-7 py-3.5 text-sm font-bold text-navy-900 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-teal-300"
+                  >
+                    {activeSlide.buttonText}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+
+                {activeSlide.secondaryButtonText && (
+                  <Link
+                    href={activeSlide.secondaryButtonLink || "#"}
+                    className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:bg-white/15"
+                  >
+                    {activeSlide.secondaryButtonText}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+              </div>
+
+              {/* Trust Badges */}
+              <div className="mt-8 flex flex-wrap items-center gap-3 text-xs font-semibold text-white/80">
+                <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
+                  <ShieldCheck className="h-3.5 w-3.5 text-brand-teal-300" />
+                  WHO-GMP Certified Partner
+                </span>
+                <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
+                  <FileCheck2 className="h-3.5 w-3.5 text-brand-teal-300" />
+                  DGDA Registered
+                </span>
+                <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
+                  <Truck className="h-3.5 w-3.5 text-brand-teal-300" />
+                  Nationwide 64 Districts
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* ---------------- Controls ---------------- */}
+        {total > 1 && (
+          <>
+            <div className="absolute bottom-8 right-5 z-30 hidden items-center gap-4 sm:flex lg:right-10">
+              <span className="font-display text-sm font-bold tabular-nums text-white/70">
+                {String(current + 1).padStart(2, "0")}
+                <span className="mx-1 text-white/30">/</span>
+                {String(total).padStart(2, "0")}
+              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={prev}
+                  aria-label="Previous slide"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-sm transition-all hover:bg-white/15"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  aria-label="Next slide"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-sm transition-all hover:bg-white/15"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Progress rail */}
+            <div className="absolute bottom-0 left-0 right-0 z-30 flex gap-1.5">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id ?? index}
+                  type="button"
+                  onClick={() => goTo(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                  className={`h-1.5 flex-1 transition-colors ${
+                    index === current
+                      ? "bg-brand-teal-400"
+                      : "bg-white/20 hover:bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </section>
   );
 }

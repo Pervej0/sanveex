@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays } from "lucide-react";
 import { getAllArticles } from "@/actions/articles/actions";
 import { format } from "date-fns";
 import Image from "next/image";
+import { resolveImageSrc } from "@/lib/images";
 
 export default async function NewsroomPage() {
   const articles = await getAllArticles();
@@ -24,9 +25,9 @@ export default async function NewsroomPage() {
                     {article.category}
                   </span>
                 </div>
-                {article.image && (
+                {resolveImageSrc(article.image, null) && (
                   <Image
-                    src={article.image}
+                    src={resolveImageSrc(article.image, null)!}
                     alt={article.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"

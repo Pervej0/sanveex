@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { resolveImageSrc } from "@/lib/images";
 
 const aboutItems = [
   { title: "Company Overview", href: "/about/overview" },
@@ -47,9 +48,12 @@ interface GlobalPageBannerProps {
   mobileImage?: string;
 }
 
+const DEFAULT_DESKTOP_BANNER = "/about-banner-desktop.webp";
+const DEFAULT_MOBILE_BANNER = "/about-banner-mobile.webp";
+
 export default function GlobalPageBanner({
-  desktopImage = "/banners/default-desktop.jpg",
-  mobileImage = "/banners/default-mobile.jpg",
+  desktopImage = DEFAULT_DESKTOP_BANNER,
+  mobileImage = DEFAULT_MOBILE_BANNER,
 }: GlobalPageBannerProps) {
   const pathname = usePathname();
 
@@ -95,7 +99,7 @@ export default function GlobalPageBanner({
         {/* Mobile */}
         <div className="block md:hidden relative w-full h-full">
           <Image
-            src={mobileImage}
+            src={resolveImageSrc(mobileImage, DEFAULT_MOBILE_BANNER)!}
             alt="Banner"
             fill
             className="object-cover"
@@ -105,7 +109,7 @@ export default function GlobalPageBanner({
         {/* Desktop */}
         <div className="hidden md:block relative w-full h-full">
           <Image
-            src={desktopImage}
+            src={resolveImageSrc(desktopImage, DEFAULT_DESKTOP_BANNER)!}
             alt="Banner"
             fill
             className="object-cover"
@@ -117,9 +121,9 @@ export default function GlobalPageBanner({
       </div>
 
       {/* --- CONTENT --- */}
-      <div className="container mx-auto max-w-6xl px-4 relative z-10 h-full flex flex-col justify-center">
+      <div className="container-x relative z-10 flex h-full flex-col justify-center">
         {/* Breadcrumbs */}
-        <div className="absolute top-8 md:top-12 left-4 flex items-center gap-2 text-xs md:text-sm text-gray-200 font-medium mb-6">
+        <div className="absolute left-0 top-8 flex items-center gap-2 text-xs font-medium text-navy-100 md:top-12 md:text-sm">
           <Link href="/" className="hover:text-white transition-colors">
             Home
           </Link>

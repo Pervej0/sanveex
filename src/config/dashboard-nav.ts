@@ -12,6 +12,7 @@ import {
   Globe,
   ImagesIcon,
   Stethoscope,
+  Mail,
 } from "lucide-react";
 
 export interface NavItem {
@@ -89,6 +90,11 @@ export const dashboardNav: NavItem[] = [
     title: "FAQs",
     href: "/dashboard/faqs",
     icon: HelpCircle,
+  },
+  {
+    title: "Enquiries",
+    href: "/dashboard/enquiries",
+    icon: Mail,
   },
   {
     title: "Gallery",

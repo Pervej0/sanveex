@@ -7,7 +7,10 @@ const globalForPrisma = globalThis as unknown as {
 const prisma =
   globalForPrisma.db ??
   new PrismaClient({
-    log: ["query"], // Optional: Helpful for debugging in dev
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["warn", "error"]
+        : ["error"],
   });
 
 if (process.env.NODE_ENV !== "production") {

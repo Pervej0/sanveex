@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
 import * as LucideIcons from "lucide-react";
-import { Zap, ArrowRight } from "lucide-react";
+import { ArrowRight, Activity } from "lucide-react";
 import SectionHeader from "../shared/SectionHeader";
 import Link from "next/link";
 import DepartmentCard from "./DepartmentCard";
-import { Department } from "@/generated/prisma/client";
 
 interface DepartmentData {
   id: string;
@@ -34,77 +32,77 @@ export default function OurDepartments({
   departments = [],
   sectionData,
 }: OurDepartmentsProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   const getIcon = (name: string, className?: string) => {
     // @ts-expect-error - Dynamic lucide icon access
-    const IconComponent = LucideIcons[name] || LucideIcons.HelpCircle;
-    return <IconComponent className={className} />;
+    const IconComponent = LucideIcons[name] || LucideIcons.Activity;
+    return <IconComponent className={className} strokeWidth={1.9} />;
   };
+
+  if (departments.length === 0) return null;
 
   const bannerTitle = sectionData?.title || "Excellence in Care";
   const bannerSubtitle =
     sectionData?.subtitle || "Advancing Healthcare Through Innovation";
   const videoUrl = sectionData?.videoUrl || "/healthcare.mp4";
-  const buttonText = sectionData?.buttonText || "Explore Departments";
-  const buttonLink = sectionData?.buttonLink || "#";
+  const buttonText = sectionData?.buttonText || "Explore therapeutic areas";
+  const buttonLink = sectionData?.buttonLink || "/products/overview";
 
   return (
-    <section
-      id="departments-section"
-      ref={sectionRef}
-      className="w-full py-12 md:py-24 px-4 bg-background overflow-hidden relative"
-    >
-      <div className="container mx-auto max-w-6xl relative z-10">
+    <section id="therapeutic-areas" className="bg-white py-16 lg:py-24">
+      <div className="container-x">
         <SectionHeader
-          icon={Zap}
-          eyebrow="Explore Our Expertise"
-          title="Our Departments"
+          icon={Activity}
+          eyebrow="Therapeutic Areas"
+          title="Focused where the clinical need is greatest"
+          description="Our portfolio is organised around the therapeutic areas our medical and commercial teams know best."
         />
 
-        <div className="mb-12 md:mb-20 relative">
-          <div className="relative rounded-2xl overflow-hidden shadow-lg">
-            <div className="relative h-[300px] md:h-[500px] bg-gradient-to-br from-[#88734C]/20 to-[#A9BBC8]/20">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-              >
-                <source src={videoUrl} type="video/mp4" />
-              </video>
+        {/* Corporate film */}
+        <div className="relative mb-12 overflow-hidden rounded-2xl shadow-lg lg:mb-16">
+          <div className="relative h-[280px] bg-navy-900 sm:h-[380px] lg:h-[460px]">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/hero1.jpeg"
+              className="h-full w-full object-cover"
+            >
+              <source src={videoUrl} type="video/mp4" />
+            </video>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#202e44]/90 via-[#202e44]/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-900/95 via-navy-900/45 to-navy-900/10" />
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-                <h3 className="text-2xl md:text-4xl font-light text-white mb-2 md:mb-3">
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10 lg:p-12">
+              <div className="max-w-2xl">
+                <h3 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
                   {bannerTitle}
                 </h3>
-                <p className="text-sm md:text-lg text-white/90 mb-3 md:mb-4 max-w-2xl">
+                <p className="mt-3 text-sm leading-relaxed text-navy-100 sm:text-base">
                   {bannerSubtitle}
                 </p>
-                <Link href={buttonLink}>
-                  <button className="px-4 py-2 md:px-6 md:py-3 bg-primary text-white text-sm md:text-base rounded-lg flex items-center gap-2 hover:bg-[#88734C]/90 transition">
-                    {buttonText}
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                <Link
+                  href={buttonLink}
+                  className="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand-teal-400 px-6 py-3 text-sm font-bold text-navy-900 transition-all hover:-translate-y-0.5 hover:bg-brand-teal-300"
+                >
+                  {buttonText}
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>
-            <div className="absolute inset-0 border-4 border-[#A9BBC8]/30 rounded-2xl -m-2 pointer-events-none" />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+        {/* Areas grid */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {departments.map((department: any) => (
             <DepartmentCard
               key={department.id}
               department={{
                 ...department,
-                icon: getIcon(department.icon, "w-5 h-5 md:w-7 md:h-7"),
+                icon: getIcon(department.icon, "w-5 h-5"),
                 secondaryIcon: department.secondaryIcon
-                  ? getIcon(department.secondaryIcon, "w-3 h-3 md:w-4 md:h-4")
+                  ? getIcon(department.secondaryIcon, "w-3.5 h-3.5")
                   : null,
               }}
             />

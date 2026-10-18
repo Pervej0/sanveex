@@ -4,8 +4,9 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Zap } from "lucide-react";
+import { Quote, MessageSquareQuote } from "lucide-react";
 import SectionHeader from "../shared/SectionHeader";
+import { resolveImageSrc } from "@/lib/images";
 
 interface Testimonial {
   id: string;
@@ -19,55 +20,77 @@ interface ClientsReviewProps {
   testimonials: Testimonial[];
 }
 
+/** Fallback avatar label when a reviewer has no usable photo. */
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 export default function ClientsReview({
   testimonials = [],
 }: ClientsReviewProps) {
-  const testimonialSettings = {
+  if (testimonials.length === 0) return null;
+
+  const settings = {
     dots: true,
-    infinite: true,
+    infinite: testimonials.length > 1,
     autoplay: true,
     speed: 600,
-    autoplaySpeed: 3500,
+    autoplaySpeed: 6000,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
+    pauseOnHover: true,
   };
 
-  if (testimonials.length === 0) return null;
-
   return (
-    <section className="py-16 md:py-20 ">
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="max-w-6xl mx-auto">
-          {/* Heading */}
-          <SectionHeader
-            icon={Zap}
-            eyebrow="Client Testimonials"
-            title="What Our Clients Say"
-          />
+    <section className="border-y border-border bg-navy-50/60 py-16 lg:py-24">
+      <div className="container-x">
+        <SectionHeader
+          icon={MessageSquareQuote}
+          eyebrow="Partner Voices"
+          title="Trusted by pharmacists, hospitals and distributors"
+        />
 
-          {/* Testimonial Slider */}
-          <Slider {...testimonialSettings} className="mb-10">
+        <div className="mx-auto max-w-4xl">
+          <Slider {...settings}>
             {testimonials.map((item) => (
-              <div key={item.id} className="text-center px-4">
-                <p className="text-foreground text-lg italic max-w-3xl mx-auto">
-                  &rdquo;{item.text}&rdquo;
-                </p>
-                <div className="flex items-center justify-center gap-4 mt-6">
-                  <Image
-                    src={item.image}
-                    width={60}
-                    height={60}
-                    alt={item.name}
-                    className="rounded-full border object-cover aspect-square"
-                  />
-                  <div className="text-left">
-                    <h6 className="text-lg font-semibold">{item.name}</h6>
-                    <span className="text-sm text-muted-foreground">
-                      {item.role}
-                    </span>
-                  </div>
-                </div>
+              <div key={item.id} className="px-1">
+                <figure className="rounded-2xl border border-border bg-white p-8 shadow-sm sm:p-12">
+                  <Quote className="h-8 w-8 text-brand-teal-400" />
+
+                  <blockquote className="mt-6 text-lg leading-relaxed font-medium text-navy-800 sm:text-xl">
+                    {item.text}
+                  </blockquote>
+
+                  <figcaption className="mt-8 flex items-center gap-4 border-t border-border pt-6">
+                    {resolveImageSrc(item.image, null) ? (
+                      <Image
+                        src={resolveImageSrc(item.image, null)!}
+                        width={56}
+                        height={56}
+                        alt=""
+                        className="h-14 w-14 rounded-full border border-border object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-teal-100 text-sm font-bold text-brand-teal-700">
+                        {initials(item.name)}
+                      </span>
+                    )}
+                    <div>
+                      <p className="font-display font-bold text-navy-800">
+                        {item.name}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {item.role}
+                      </p>
+                    </div>
+                  </figcaption>
+                </figure>
               </div>
             ))}
           </Slider>

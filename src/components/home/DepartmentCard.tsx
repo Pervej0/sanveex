@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -14,71 +13,42 @@ interface DepartmentCardProps {
 }
 
 export default function DepartmentCard({ department }: DepartmentCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  const href = `/departments/${department.slug ?? ""}`;
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="group relative h-full outline-none
-      focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+    <Link
+      href={href}
+      className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-navy-200 hover:shadow-lg"
     >
-      <div
-        className="relative h-full rounded-2xl bg-white p-5 md:p-8
-        border border-zinc-200/70
-        transition-all duration-300 ease-out
-        hover:-translate-y-1 hover:shadow"
+      {/* Accent wash */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ backgroundColor: department.color }}
+      />
+
+      <span
+        className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105"
+        style={{
+          backgroundColor: `${department.color}1A`,
+          color: department.color,
+        }}
       >
-        <div className="relative z-10 flex h-full flex-col">
-          {/* Icon */}
-          <div className="mb-5 inline-flex">
-            <div
-              className="relative rounded-2xl p-4 shadow-sm transition-all duration-300
-              group-hover:scale-105 group-hover:rotate-2"
-              style={{
-                background: `linear-gradient(135deg, ${department.color}25, ${department.color}10)`,
-              }}
-            >
-              <div style={{ color: department.color }}>{department.icon}</div>
+        {department.icon}
+      </span>
 
-              {department.secondaryIcon && (
-                <div
-                  className="absolute -top-2 -right-2 scale-0 transition-transform duration-300 group-hover:scale-100"
-                  style={{ color: department.color }}
-                >
-                  {department.secondaryIcon}
-                </div>
-              )}
-            </div>
-          </div>
+      <h3 className="text-lg font-bold text-navy-800 transition-colors group-hover:text-primary">
+        {department.title}
+      </h3>
 
-          {/* Title */}
-          <h3
-            className="mb-2 text-lg md:text-xl font-semibold tracking-tight transition-colors duration-300"
-            style={{ color: isHovered ? department.color : "#202e44" }}
-          >
-            {department.title}
-          </h3>
+      <p className="mt-2.5 line-clamp-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+        {department.description}
+      </p>
 
-          {/* Description */}
-          <p className="mb-6 text-sm text-[#202e44]/70 leading-relaxed line-clamp-3">
-            {department.description}
-          </p>
-
-          {/* CTA */}
-          <Link
-            href={`/departments/${department.slug || "#"}`}
-            className="mt-auto inline-flex items-center gap-2 text-sm font-semibold
-            transition-all duration-300 group-hover:translate-x-1 hover:underline "
-            style={{ color: department.color }}
-          >
-            Learn more
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
-    </div>
+      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+        Learn more
+        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </span>
+    </Link>
   );
 }

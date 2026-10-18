@@ -23,7 +23,7 @@ const DepartmentPage = async ({ params }: DepartmentPageProps) => {
       />
       <div className="py-12">
         {/* Content Section */}
-        <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12 rounded bg-white">
+        <div className="container-x rounded bg-white py-8 md:py-12">
           <div
             className="prose max-w-none mx-auto"
             dangerouslySetInnerHTML={{ __html: data.content || "" }}

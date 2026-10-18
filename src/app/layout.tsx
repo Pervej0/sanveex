@@ -1,74 +1,81 @@
-import type { Metadata } from "next";
-import { Arsenal, Roboto } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import QueryProvider from "@/components/providers/query-provider";
 
-const roboto = Roboto({
+const body = Inter({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
-  variable: "--font-sans",
+  variable: "--font-body",
 });
 
-const arsenal = Arsenal({
+const heading = Manrope({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
-  variable: "--font-serif",
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sanveex.com"),
   title: {
-    default: "SANVEEX GLOBAL HEALTH",
-    template: "%s | SANVEEX GLOBAL HEALTH",
+    default:
+      "Sanveex Global Health — Pharmaceutical Marketing & Distribution",
+    template: "%s | Sanveex Global Health",
   },
   description:
-    "SANVEEX GLOBAL HEALTH provides innovative healthcare solutions, patient support programs, medical services, and global health assistance for a healthier tomorrow.",
+    "Sanveex Global Health is a Bangladesh-based pharmaceutical marketing and distribution company delivering WHO-GMP quality medicines in partnership with Amulet Pharmaceuticals Ltd.",
   keywords: [
     "Sanveex Global Health",
-    "Healthcare Services",
-    "Patient Support Program",
-    "Medical Solutions",
-    "Global Health",
-    "Health Technology",
-    "Clinical Support",
-    "Pharmaceutical Services",
+    "pharmaceutical distribution Bangladesh",
+    "pharmaceutical marketing company Dhaka",
+    "Amulet Pharmaceuticals",
+    "WHO-GMP medicines",
+    "generic medicine Bangladesh",
+    "Montilet 10",
+    "Adcal D",
+    "Xofedin 120",
   ],
-  authors: [{ name: "SANVEEX GLOBAL HEALTH" }],
-  creator: "SANVEEX GLOBAL HEALTH",
-  publisher: "SANVEEX GLOBAL HEALTH",
+  authors: [{ name: "Sanveex Global Health" }],
+  creator: "Sanveex Global Health",
+  publisher: "Sanveex Global Health",
+  category: "Healthcare",
   openGraph: {
     type: "website",
     url: "https://sanveex.com",
-    title: "SANVEEX GLOBAL HEALTH",
+    title: "Sanveex Global Health — Pharmaceutical Marketing & Distribution",
     description:
-      "Trusted healthcare & innovative medical solutions enhancing patient support and global medical services.",
-    siteName: "SANVEEX GLOBAL HEALTH",
+      "Quality-assured medicines, ethical marketing and reliable nationwide distribution across Bangladesh.",
+    siteName: "Sanveex Global Health",
+    locale: "en_US",
     images: [
       {
-        url: "https://sanveex.com/assets/image/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SANVEEX GLOBAL HEALTH",
+        url: "/sanveex-logo.png",
+        width: 352,
+        height: 138,
+        alt: "Sanveex Global Health",
       },
     ],
   },
-
   twitter: {
     card: "summary_large_image",
-    title: "SANVEEX GLOBAL HEALTH",
+    title: "Sanveex Global Health",
     description:
-      "Innovative medical solutions & patient support programs for a healthier future.",
-    images: ["https://sanveex.com/assets/image/og-image.jpg"],
+      "Quality-assured medicines, ethical marketing and reliable nationwide distribution across Bangladesh.",
+    images: ["/sanveex-logo.png"],
   },
-
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#25306d",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -77,10 +84,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`bg-background text-foreground antialiased ${roboto.className} ${arsenal.variable}`}
-      >
+    <html lang="en" className={`${body.variable} ${heading.variable}`}>
+      <body className="bg-background text-foreground antialiased">
         <QueryProvider>
           {children}
           <Toaster position="top-center" />

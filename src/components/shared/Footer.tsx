@@ -1,128 +1,139 @@
-"use client";
-
 import Link from "next/link";
+import Image from "next/image";
 import {
   Facebook,
-  Twitter,
   Instagram,
   Linkedin,
   Mail,
   Phone,
   MapPin,
   ArrowRight,
+  ShieldCheck,
+  Twitter,
+  Youtube,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { SiteContent } from "@/generated/prisma/client";
+import { company, legalDisclaimer } from "@/lib/company";
+
+const productLinks = [
+  { name: "All Products Catalogue", href: "/products" },
+  { name: "Montilet® 10 (Montelukast)", href: "/products/montilet-10" },
+  { name: "Adcal D (Calcium & Vit D3)", href: "/products/adcal-d" },
+  { name: "Xofedin® 120 (Fexofenadine)", href: "/products/xofedin-120" },
+  { name: "Medical Information", href: "/products/medical-info" },
+  { name: "Quality Assurance", href: "/products/quality" },
+  { name: "Safety & Pharmacovigilance", href: "/products/safety" },
+];
+
+const companyLinks = [
+  { name: "Company Overview", href: "/about/overview" },
+  { name: "Leadership Team", href: "/about/leadership" },
+  { name: "Board Message", href: "/about/speech" },
+  { name: "Newsroom", href: "/newsroom" },
+  { name: "Contact Us", href: "/contact" },
+];
+
+const socialIconMap = {
+  facebook: Facebook,
+  twitter: Twitter,
+  instagram: Instagram,
+  linkedin: Linkedin,
+  youtube: Youtube,
+} as const;
 
 export default function Footer({ siteContent }: { siteContent: SiteContent }) {
-  const [email, setEmail] = useState("");
-
-  const handleSubscribe = () => {
-    if (email) {
-      console.log("Subscribing email:", email);
-      setEmail("");
-    }
-  };
+  const socialLinks = (siteContent.socialLinks ?? {}) as Record<string, string>;
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-gray-950 text-gray-300">
-      {/* Decorative Top Border */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/50 to-transparent"></div>
-
-      {/* Main Footer */}
-      <div className="container mx-auto max-w-6xl px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
-          {/* Company Info */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="mb-6">
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-                {siteContent.name.toUpperCase()}
-              </h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                {siteContent.description}
+    <footer className="bg-navy-900 text-navy-100">
+      {/* ================= Partner CTA ================= */}
+      <div className="border-b border-white/10">
+        <div className="container-x">
+          <div className="flex flex-col items-start justify-between gap-6 py-10 md:flex-row md:items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                Partner with Sanveex Global Health
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-navy-200">
+                Looking for a reliable distribution partner, product
+                information or a career in pharmaceutical marketing? Our team
+                responds within one business day.
               </p>
             </div>
+            <div className="flex shrink-0 flex-wrap gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex h-12 items-center gap-2 rounded-lg bg-brand-teal-400 px-6 text-sm font-semibold text-navy-900 transition-colors hover:bg-brand-teal-300"
+              >
+                Contact our team
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href={`tel:${company.contact.phoneHref}`}
+                className="inline-flex h-12 items-center gap-2 rounded-lg border border-white/20 px-6 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+              >
+                <Phone className="h-4 w-4" />
+                {company.contact.phone}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Social Links */}
-            <div className="space-y-3">
-              <p className="text-sm font-semibold text-white">Follow Us</p>
-              <div className="flex gap-3">
-                {[
-                  {
-                    icon: Facebook,
-                    href: (siteContent.socialLinks as any)?.facebook,
-                  },
-                  {
-                    icon: Twitter,
-                    href: (siteContent.socialLinks as any)?.twitter,
-                  },
-                  {
-                    icon: Instagram,
-                    href: (siteContent.socialLinks as any)?.instagram,
-                  },
-                  {
-                    icon: Linkedin,
-                    href: (siteContent.socialLinks as any)?.linkedin,
-                  },
-                ]
-                  .filter((social) => social.href)
-                  .map((social, index) => (
-                    <a
-                      key={index}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-800 hover:bg-primary text-gray-400 hover:text-white transition-all duration-300 hover:-translate-y-1"
-                    >
-                      <social.icon className="w-4 h-4" />
-                    </a>
-                  ))}
-              </div>
+      {/* ================= Main footer ================= */}
+      <div className="container-x">
+        <div className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12">
+          {/* Brand */}
+          <div className="lg:col-span-4">
+            <Link href="/" className="inline-block">
+              <span className="relative block h-12 w-44 rounded-md bg-white/95 p-1.5">
+                <Image
+                  src={siteContent.logoUrl}
+                  alt={`${siteContent.name} logo`}
+                  fill
+                  sizes="176px"
+                  className="object-contain p-1"
+                />
+              </span>
+            </Link>
+
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-navy-200">
+              {siteContent.description}
+            </p>
+
+            <div className="mt-6 flex items-center gap-3">
+              {Object.entries(socialIconMap).map(([key, Icon]) => {
+                const href = socialLinks[key];
+                if (!href) return null;
+                return (
+                  <a
+                    key={key}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Sanveex Global Health on ${key}`}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-navy-200 transition-all hover:-translate-y-0.5 hover:border-brand-teal-400/40 hover:text-brand-teal-300"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
-          {/* Departments */}
-          <div className="hidden sm:block">
-            <h4 className="text-lg font-bold text-white mb-6 pb-2 border-b-2 border-primary/30">
-              Departments
-            </h4>
-            <ul className="space-y-3">
-              {["Cardiology", "Orthopedics", "Psychiatry", "Ophthalmology"].map(
-                (dept) => (
-                  <li key={dept}>
-                    <Link
-                      href="#"
-                      className="text-sm text-gray-400 hover:text-primary transition-colors duration-300 flex items-center group"
-                    >
-                      <ArrowRight className="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 -ml-6 group-hover:ml-0 transition-all duration-300" />
-                      {dept}
-                    </Link>
-                  </li>
-                ),
-              )}
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div className="hidden lg:block">
-            <h4 className="text-lg font-bold text-white mb-6 pb-2 border-b-2 border-primary/30">
-              Quick Links
-            </h4>
-            <ul className="space-y-3">
-              {[
-                { name: "About Us", href: "#" },
-                { name: "Services", href: "#" },
-                { name: "Doctors", href: "#" },
-                { name: "Contact", href: "/contact-us" },
-                { name: "Careers", href: "#" },
-              ].map((link) => (
+          {/* Products */}
+          <div className="lg:col-span-2">
+            <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-white">
+              Products
+            </h3>
+            <ul className="mt-5 space-y-3">
+              {productLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-400 hover:text-primary transition-colors duration-300 flex items-center group"
+                    className="text-sm text-navy-200 transition-colors hover:text-brand-teal-300"
                   >
-                    <ArrowRight className="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 -ml-6 group-hover:ml-0 transition-all duration-300" />
                     {link.name}
                   </Link>
                 </li>
@@ -130,75 +141,105 @@ export default function Footer({ siteContent }: { siteContent: SiteContent }) {
             </ul>
           </div>
 
-          {/* Contact & Newsletter */}
-          <div>
-            <h4 className="text-lg font-bold text-white mb-6 pb-2 border-b-2 border-primary/30">
-              Get In Touch
-            </h4>
+          {/* Company */}
+          <div className="lg:col-span-2">
+            <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-white">
+              Company
+            </h3>
+            <ul className="mt-5 space-y-3">
+              {companyLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-navy-200 transition-colors hover:text-brand-teal-300"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            {/* Contact Info */}
-            <div className="space-y-4 mb-6">
-              <div className="flex items-start gap-3">
-                <Phone className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-white font-medium">
-                    {siteContent.phone}
-                  </p>
-                  <p className="text-xs text-gray-500">Available 24/7</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-white font-medium">
-                    {siteContent.email}
-                  </p>
-                  <p className="text-xs text-gray-500">Support Email</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-white font-medium">
-                    {siteContent.address}
-                  </p>
-                </div>
+          {/* Contact */}
+          <div className="lg:col-span-4">
+            <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-white">
+              Registered Office
+            </h3>
+            <ul className="mt-5 space-y-4 text-sm">
+              <li className="flex gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-300" />
+                <span className="leading-relaxed text-navy-200">
+                  {siteContent.address}
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-300" />
+                <a
+                  href={`tel:${company.contact.phoneHref}`}
+                  className="text-navy-200 transition-colors hover:text-brand-teal-300"
+                >
+                  {company.contact.phone}
+                </a>
+              </li>
+              <li className="flex gap-3">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-300" />
+                <a
+                  href={`mailto:${siteContent.email}`}
+                  className="text-navy-200 transition-colors hover:text-brand-teal-300"
+                >
+                  {siteContent.email}
+                </a>
+              </li>
+            </ul>
+
+            <div className="mt-6 flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-4">
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand-teal-300" />
+              <div className="text-xs leading-relaxed text-navy-200">
+                <p className="font-semibold text-white">
+                  {company.regulatory.qualityStandard}
+                </p>
+                <p className="mt-1">
+                  Manufactured by {company.manufacturer.name} · Mfg. Licence No.{" "}
+                  {company.regulatory.mfgLicence}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-800">
-        <div className="container mx-auto max-w-6xl px-4 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-            <p className="text-gray-400 text-center sm:text-left">
-              © {new Date().getFullYear()}{" "}
-              <span className="text-white font-semibold">
-                {siteContent.name.toUpperCase()}
-              </span>{" "}
-              Global Healthcare. All rights reserved.
+      {/* ================= Legal ================= */}
+      <div className="border-t border-white/10">
+        <div className="container-x">
+          <div className="py-6">
+            <p className="max-w-4xl text-xs leading-relaxed text-navy-300">
+              {legalDisclaimer}
             </p>
-            <div className="flex flex-wrap justify-center gap-6 text-gray-400">
-              <Link
-                href="#"
-                className="hover:text-primary transition-colors duration-300"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="#"
-                className="hover:text-primary transition-colors duration-300"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/contact-us"
-                className="hover:text-primary transition-colors duration-300"
-              >
-                Help
-              </Link>
+
+            <div className="mt-5 flex flex-col-reverse items-start justify-between gap-4 border-t border-white/5 pt-5 sm:flex-row sm:items-center">
+              <p className="text-xs text-navy-300">
+                © {year} {siteContent.name}. All rights reserved.
+              </p>
+              <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
+                <Link
+                  href="/privacy-policy"
+                  className="text-navy-300 transition-colors hover:text-brand-teal-300"
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  href="/terms"
+                  className="text-navy-300 transition-colors hover:text-brand-teal-300"
+                >
+                  Terms of Use
+                </Link>
+                <Link
+                  href="/products/safety"
+                  className="text-navy-300 transition-colors hover:text-brand-teal-300"
+                >
+                  Report an Adverse Event
+                </Link>
+              </nav>
             </div>
           </div>
         </div>

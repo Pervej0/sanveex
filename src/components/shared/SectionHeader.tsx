@@ -6,6 +6,9 @@ type SectionHeaderProps = {
   eyebrow?: string;
   icon?: LucideIcon;
   align?: "center" | "left";
+  description?: string;
+  /** Applies light-on-dark styling for use on navy sections. */
+  tone?: "default" | "inverse";
 };
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({
@@ -13,22 +16,53 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   eyebrow,
   icon: Icon,
   align = "center",
+  description,
+  tone = "default",
 }) => {
-  const alignment =
-    align === "left" ? "items-start text-left" : "items-center text-center";
+  const inverse = tone === "inverse";
 
   return (
-    <div className={`flex flex-col mb-16 ${alignment}`}>
+    <div
+      className={`mb-12 flex flex-col gap-4 md:mb-16 ${
+        align === "left" ? "items-start text-left" : "items-center text-center"
+      }`}
+    >
       {eyebrow && (
-        <h3 className="text-primary font-medium mb-2 flex items-center gap-2">
-          {Icon && <Icon className="w-4 h-4" />}
+        <span
+          className={`eyebrow rounded-full px-3.5 py-1.5 ${
+            inverse
+              ? "bg-white/10 text-brand-teal-300"
+              : "bg-brand-teal-100 text-brand-teal-700"
+          }`}
+        >
+          {Icon && <Icon className="h-3.5 w-3.5" />}
           {eyebrow}
-        </h3>
+        </span>
       )}
 
-      <h2 className="text-4xl md:text-5xl mb-4">{title}</h2>
+      <h2
+        className={`max-w-3xl text-3xl sm:text-4xl lg:text-[2.75rem] ${
+          inverse ? "text-white" : ""
+        }`}
+      >
+        {title}
+      </h2>
 
-      <div className="w-32 h-1 bg-gradient-to-r from-primary to-secondary" />
+      {description && (
+        <p
+          className={`max-w-2xl text-base leading-relaxed ${
+            inverse ? "text-navy-200" : "text-muted-foreground"
+          }`}
+        >
+          {description}
+        </p>
+      )}
+
+      <span
+        className={`h-1 w-16 rounded-full ${
+          inverse ? "bg-brand-teal-400" : "bg-brand-teal-400"
+        }`}
+      />
     </div>
   );
 };

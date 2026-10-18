@@ -254,3 +254,19 @@ model NavItem {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+/// Enquiries submitted through the public contact form.
+model ContactEnquiry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  /// General Enquiry | Medical Information | Product Quality Complaint |
+  /// Adverse Event Report | Business Partnership | Careers
+  topic     String   @default("General Enquiry")
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

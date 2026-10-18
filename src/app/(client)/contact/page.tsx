@@ -1,222 +1,251 @@
-"use client";
-
+import type { Metadata } from "next";
+import Link from "next/link";
 import {
-  ArrowRight,
+  ArrowUpRight,
   Building2,
-  Globe,
+  Clock,
+  ClipboardList,
+  FlaskConical,
+  Mail,
   MapPin,
-  Newspaper,
+  Phone,
+  ShieldAlert,
   Users,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import ContactForm from "@/components/contact/ContactForm";
+import prisma from "@/lib/prisma";
+import { company } from "@/lib/company";
 
-// --- MOCK DATA ---
-const departments = [
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description:
+    "Contact Sanveex Global Health for medical information, product quality complaints, adverse event reporting, distribution partnerships and careers.",
+};
+
+const departmentContacts = [
   {
-    title: "Media Relations",
+    title: "Medical Information",
+    description:
+      "Prescribing information, composition, dosage and clinical references.",
     email: "info@sanveex.com",
-    icon: Newspaper,
+    icon: FlaskConical,
   },
   {
-    title: "Investor Relations",
+    title: "Quality Complaints",
+    description:
+      "Report a defect, packaging issue or suspected batch problem.",
+    email: "info@sanveex.com",
+    icon: ClipboardList,
+  },
+  {
+    title: "Pharmacovigilance",
+    description:
+      "Report a suspected adverse reaction — acknowledged within 24 hours.",
+    email: "info@sanveex.com",
+    icon: ShieldAlert,
+  },
+  {
+    title: "Business Development",
+    description:
+      "Distribution partnerships, institutional supply and tenders.",
     email: "info@sanveex.com",
     icon: Building2,
   },
   {
-    title: "Business Development",
+    title: "Media Relations",
+    description: "Press enquiries, interviews and corporate statements.",
     email: "info@sanveex.com",
     icon: Users,
   },
 ];
 
-const locations = [
-  {
-    city: "Dhaka, Bangladesh",
-    address: "123 Gulshan Avenue, Dhaka 1212",
-    phone: "+8801996716929",
-  },
-];
+export default async function ContactPage() {
+  const siteContent = await prisma.siteContent.findFirst().catch(() => null);
 
-export default function ContactPage() {
+  const address = siteContent?.address ?? company.address.full;
+  const phone = siteContent?.phone ?? company.contact.phone;
+  const email = siteContent?.email ?? company.contact.email;
+  const phoneHref = phone.replace(/[^\d+]/g, "");
+
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-[#0085CA] selection:text-white">
-      {/* 2. MAIN CONTAINER */}
-      <div className="container mx-auto px-4 lg:px-8 py-16">
-        {/* Layout: 8 cols (Content) + 4 cols (Sidebar) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-20">
-          {/* --- LEFT COLUMN: Main Content (Form & Triage) --- */}
-          <div className="lg:col-span-8">
-            {/* Intro */}
-            <div className="mb-12 border-b border-gray-100 pb-10">
-              <h2 className="text-3xl font-bold text-[#0085CA] mb-6">
+    <main className="bg-white">
+      {/* ================= Intro ================= */}
+      <section className="border-b border-border py-12 lg:py-16">
+        <div className="container-x">
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7">
+              <span className="eyebrow rounded-full bg-brand-teal-100 px-3.5 py-1.5 text-brand-teal-700">
+                Contact
+              </span>
+              <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">
                 How can we help?
-              </h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Thank you for your interest in Sanveex. To ensure your inquiry
-                is routed to the correct team, please review the department
-                contacts below or use the general inquiry form.
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+                Thank you for your interest in {company.legalName}. To route
+                your enquiry to the right team, choose the most relevant topic
+                in the form below or contact a department directly. We
+                acknowledge every enquiry within one business day.
               </p>
             </div>
 
-            {/* Department Triage (Clean Horizontal List) */}
-            <div className="mb-16">
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">
-                Direct Department Contacts
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {departments.map((dept, idx) => (
-                  <a
-                    key={idx}
-                    href={`mailto:${dept.email}`}
-                    className="group flex flex-col p-5 border border-gray-200 rounded-sm hover:border-[#0085CA] hover:bg-slate-50 transition-all duration-300"
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <dept.icon className="w-5 h-5 text-[#0085CA]" />
-                      <span className="font-bold text-slate-900 text-sm">
-                        {dept.title}
-                      </span>
-                    </div>
-                    <div className="mt-auto flex items-center text-xs font-bold text-gray-400 group-hover:text-[#0085CA] transition-colors uppercase tracking-wider">
-                      Email Team{" "}
-                      <ArrowRight className="w-3 h-3 ml-2 opacity-50 group-hover:translate-x-1 group-hover:opacity-100 transition-all" />
-                    </div>
-                  </a>
-                ))}
+            {/* Primary contact card */}
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl border border-border bg-navy-50/70 p-6 sm:p-8">
+                <h2 className="text-lg font-bold">Registered office</h2>
+
+                <ul className="mt-5 space-y-4 text-sm">
+                  <li className="flex gap-3">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-500" />
+                    <span className="leading-relaxed text-navy-800">
+                      {address}
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-500" />
+                    <a
+                      href={`tel:${phoneHref}`}
+                      className="font-medium text-navy-800 transition-colors hover:text-primary"
+                    >
+                      {phone}
+                    </a>
+                  </li>
+                  <li className="flex gap-3">
+                    <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-500" />
+                    <a
+                      href={`mailto:${email}`}
+                      className="font-medium text-navy-800 transition-colors hover:text-primary"
+                    >
+                      {email}
+                    </a>
+                  </li>
+                  <li className="flex gap-3">
+                    <Clock className="mt-0.5 h-4 w-4 shrink-0 text-brand-teal-500" />
+                    <span className="text-navy-800">{company.contact.hours}</span>
+                  </li>
+                </ul>
               </div>
-            </div>
-
-            {/* Contact Form (Clean & Airy) */}
-            <div>
-              <div className="flex items-center mb-8">
-                <div className="w-1 h-6 bg-[#0085CA] mr-3"></div>
-                <h3 className="text-2xl font-bold text-slate-900">
-                  General Inquiry Form
-                </h3>
-              </div>
-
-              <form className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                      First Name
-                    </Label>
-                    <Input
-                      className="border-0 border-b border-gray-300 rounded-none px-0 focus-visible:ring-0 focus-visible:border-[#0085CA] transition-colors bg-transparent placeholder:text-gray-300"
-                      placeholder="Jane"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                      Last Name
-                    </Label>
-                    <Input
-                      className="border-0 border-b border-gray-300 rounded-none px-0 focus-visible:ring-0 focus-visible:border-[#0085CA] transition-colors bg-transparent placeholder:text-gray-300"
-                      placeholder="Doe"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                    Email Address
-                  </Label>
-                  <Input
-                    type="email"
-                    className="border-0 border-b border-gray-300 rounded-none px-0 focus-visible:ring-0 focus-visible:border-[#0085CA] transition-colors bg-transparent placeholder:text-gray-300"
-                    placeholder="name@company.com"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                    Message
-                  </Label>
-                  <Textarea
-                    className="min-h-[150px] resize-none border-gray-300 focus-visible:ring-[#0085CA] bg-gray-50/50"
-                    placeholder="Please provide details regarding your inquiry..."
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <Button className="h-14 px-8 bg-[#0085CA] hover:bg-[#006fab] text-white font-bold uppercase tracking-widest text-xs rounded-sm transition-all shadow-lg hover:shadow-xl w-full md:w-auto">
-                    Send Message
-                  </Button>
-                </div>
-              </form>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* --- RIGHT COLUMN: Sidebar (Locations & Map) --- */}
-          <aside className="lg:col-span-4 lg:pl-8 border-t lg:border-t-0 lg:border-l border-gray-200 pt-12 lg:pt-0">
-            <div className="sticky top-8">
-              {/* Sidebar Title */}
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-[#0085CA] font-bold uppercase tracking-widest text-xs">
-                  Global Offices
+      {/* ================= Department contacts ================= */}
+      <section className="border-b border-border py-12 lg:py-16">
+        <div className="container-x">
+          <h2 className="text-2xl font-bold sm:text-3xl">
+            Direct department contacts
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            For the fastest response, contact the relevant team directly.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {departmentContacts.map((department) => (
+              <a
+                key={department.title}
+                href={`mailto:${department.email}?subject=${encodeURIComponent(
+                  department.title,
+                )}`}
+                className="group rounded-xl border border-border bg-white p-5 transition-all hover:-translate-y-1 hover:border-navy-200 hover:shadow-md"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-navy-50 text-primary">
+                  <department.icon className="h-5 w-5" strokeWidth={1.9} />
+                </span>
+                <h3 className="mt-4 text-sm font-bold text-navy-800 transition-colors group-hover:text-primary">
+                  {department.title}
                 </h3>
-                <Globe className="w-4 h-4 text-[#0085CA]" />
-              </div>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                  {department.description}
+                </p>
+                <span className="mt-4 inline-block text-xs font-semibold text-brand-teal-600">
+                  {department.email}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              {/* Map Container */}
-              <div className="h-56 w-full bg-slate-100 rounded-sm overflow-hidden mb-8 relative border border-gray-200">
+      {/* ================= Form + map ================= */}
+      <section className="py-12 lg:py-16">
+        <div className="container-x">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7">
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                Send us a message
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Fields marked with * are required.
+              </p>
+              <div className="mt-8">
+                <ContactForm />
+              </div>
+            </div>
+
+            <aside className="lg:col-span-5">
+              <div className="overflow-hidden rounded-2xl border border-border bg-navy-50">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.903663909163!2d90.39108221498223!3d23.75088579457964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzAzLjIiTiA5MMKwMjMnMzMuOSJF!5e0!3m2!1sen!2sbd!4v1692023417435"
-                  className="w-full h-full grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                  title="Sanveex Global Health office location"
+                  src="https://www.google.com/maps?q=Farmgate,+Dhaka+1215,+Bangladesh&output=embed"
+                  className="h-64 w-full border-0 lg:h-80"
                   loading="lazy"
-                ></iframe>
-                <div className="absolute bottom-2 left-2 bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-800 backdrop-blur-sm rounded-sm">
-                  Interactive Map
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+                <div className="flex items-center justify-between gap-4 border-t border-border bg-white px-5 py-3">
+                  <p className="text-xs leading-snug text-muted-foreground">
+                    {company.address.full}
+                  </p>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Farmgate,+Dhaka+1215,+Bangladesh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-brand-teal-600 transition-colors hover:text-brand-teal-700"
+                  >
+                    Open in Maps
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
                 </div>
               </div>
 
-              {/* Locations List */}
-              <div className="space-y-8">
-                {locations.map((loc, i) => (
-                  <div key={i} className="group">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin className="w-4 h-4 text-gray-400 group-hover:text-[#0085CA] transition-colors" />
-                      <h4 className="font-bold text-slate-900">{loc.city}</h4>
-                    </div>
-                    <div className="pl-6 space-y-1">
-                      <p className="text-sm text-gray-600">{loc.address}</p>
-                      <p className="text-sm text-[#0085CA] font-medium">
-                        {loc.phone}
-                      </p>
-                    </div>
+              <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                <div className="flex items-start gap-3">
+                  <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+                  <div>
+                    <h3 className="text-sm font-bold text-amber-900">
+                      Reporting a side effect?
+                    </h3>
+                    <p className="mt-1.5 text-xs leading-relaxed text-amber-900/80">
+                      Please select{" "}
+                      <strong>Adverse Event Report</strong> as your topic and
+                      include the product name, batch number and a description
+                      of the event. Serious reports are handled within 24 hours
+                      and forwarded to the DGDA where required.
+                    </p>
                   </div>
-                ))}
+                </div>
               </div>
 
-              {/* Sidebar Footer Info */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-xs text-gray-400 leading-relaxed">
-                  Sanveex Global Health
-                  <br />
-                  Copyright © 2026
-                  <br />
-                  <a
-                    href="#"
-                    className="hover:text-[#0085CA] transition-colors"
-                  >
-                    Privacy Policy
-                  </a>{" "}
-                  &bull;{" "}
-                  <a
-                    href="#"
-                    className="hover:text-[#0085CA] transition-colors"
-                  >
-                    Terms of Use
-                  </a>
+              <div className="mt-6 rounded-2xl border border-border bg-navy-50/70 p-5">
+                <h3 className="text-sm font-bold text-navy-800">
+                  Medical emergency?
+                </h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                  This website is not monitored for emergencies. If you or
+                  someone else is seriously unwell, contact your physician or
+                  the nearest emergency department immediately.
                 </p>
+                <Link
+                  href="/products/safety"
+                  className="mt-4 inline-block text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  Read our safety information →
+                </Link>
               </div>
-            </div>
-          </aside>
+            </aside>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

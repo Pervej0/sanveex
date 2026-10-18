@@ -1,15 +1,35 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { SiteContent } from "@/generated/prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { Phone, Menu, ChevronDown, Search, ArrowRight } from "lucide-react";
+import {
+  Phone,
+  Menu,
+  ChevronDown,
+  Search,
+  ArrowRight,
+  ArrowUpRight,
+  Mail,
+  MapPin,
+  Globe,
+  ShieldCheck,
+  Building2,
+  FileCheck2,
+  Pill,
+  Sparkles,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { company } from "@/lib/company";
 import type { DynamicNavItem } from "@/types/navigation.types";
 
-// Shadcn UI Components
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -27,24 +47,64 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-// --- Mega Menu Component ---
-interface MegaMenuProps {
-  title: string;
-  items: DynamicNavItem[];
-  isOpen: boolean;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-  isActivePath: boolean;
+/* -------------------------------------------------------------------------- */
+/* Types                                                                      */
+/* -------------------------------------------------------------------------- */
+
+export interface NavProduct {
+  name: string;
+  slug: string;
+  genericName?: string | null;
+  strength?: string | null;
+  image: string;
+  brandBangla?: string | null;
 }
 
+interface NavbarProps {
+  siteContent: SiteContent;
+  navItems: DynamicNavItem[];
+  products?: NavProduct[];
+}
+
+/** Pre-header audience and quick navigation links. */
+const audienceLinks = [
+  { title: "Healthcare Professionals", href: "/products/medical-info" },
+  { title: "Distribution Partners", href: "/contact" },
+  { title: "Pharmacovigilance", href: "/products/safety" },
+];
+
+const socialIconMap = {
+  facebook: Facebook,
+  twitter: Twitter,
+  instagram: Instagram,
+  linkedin: Linkedin,
+  youtube: Youtube,
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/* International Mega Menu                                                    */
+/* -------------------------------------------------------------------------- */
+
 function MegaMenu({
-  title,
-  items,
+  navItem,
   isOpen,
+  isActivePath,
+  products,
   onMouseEnter,
   onMouseLeave,
-  isActivePath,
-}: MegaMenuProps) {
+  onNavigate,
+}: {
+  navItem: DynamicNavItem;
+  isOpen: boolean;
+  isActivePath: boolean;
+  products: NavProduct[];
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  onNavigate: () => void;
+}) {
+  const children = navItem.children ?? [];
+  const isProductsMenu = /product/i.test(navItem.href ?? navItem.title ?? "");
+
   return (
     <div
       className="relative"
@@ -52,90 +112,229 @@ function MegaMenu({
       onMouseLeave={onMouseLeave}
     >
       <button
+        type="button"
+        aria-expanded={isOpen}
         className={cn(
-          "flex items-center gap-1 text-sm font-bold uppercase tracking-wider transition-colors py-2 px-1",
+          "group relative flex items-center gap-1.5 whitespace-nowrap py-2.5 text-[0.8125rem] font-bold uppercase tracking-[0.08em] transition-colors",
           isOpen || isActivePath
             ? "text-primary"
-            : "text-foreground hover:text-primary",
+            : "text-navy-800 hover:text-primary",
         )}
       >
-        {title}
+        {navItem.title}
         <ChevronDown
           className={cn(
-            "h-3.5 w-3.5 transition-transform duration-200",
-            isOpen && "rotate-180",
+            "h-3.5 w-3.5 stroke-[2.2] transition-transform duration-300",
+            isOpen && "rotate-180 text-brand-teal-500",
+          )}
+        />
+        <span
+          className={cn(
+            "absolute -bottom-px left-0 h-[2.5px] rounded-full bg-gradient-to-r from-brand-teal-400 to-primary transition-all duration-300",
+            isOpen || isActivePath ? "w-full" : "w-0 group-hover:w-full",
           )}
         />
       </button>
 
-      {/* Mega Menu Dropdown */}
+      {/* Mega dropdown container */}
       <div
         className={cn(
-          "absolute left-1/2 -translate-x-1/2 pt-4 transition-all duration-200 z-[100]",
+          "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 transition-all duration-200",
           isOpen
-            ? "opacity-100 visible translate-y-0"
-            : "opacity-0 invisible -translate-y-2",
+            ? "visible translate-y-0 opacity-100"
+            : "invisible -translate-y-2 opacity-0",
         )}
       >
-        <div className="bg-card rounded-xl shadow-xl border border-border p-6 min-w-[380px]">
-          <div className="space-y-1">
-            {items.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href || "#"}
-                className="group flex items-start gap-4 p-3 rounded-lg hover:bg-accent transition-colors"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                      {item.title}
+        <div className="overflow-hidden rounded-2xl border border-border/80 bg-white/98 shadow-2xl shadow-navy-950/12 ring-1 ring-black/5 backdrop-blur-xl">
+          {isProductsMenu ? (
+            /* Products rich mega menu */
+            <div className="flex w-[56rem] max-w-[95vw] divide-x divide-border/70 p-4">
+              {/* Left Column: Categories and Sections */}
+              <div className="w-[18rem] shrink-0 space-y-1 pr-4">
+                <p className="eyebrow mb-2 px-3 text-brand-teal-600">
+                  Portfolio Taxonomy
+                </p>
+                {children.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.href || "#"}
+                    onClick={onNavigate}
+                    className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors hover:bg-navy-50/70"
+                  >
+                    <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
+                      <Pill className="h-3.5 w-3.5" />
                     </span>
-                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </div>
-                  {item.description && (
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {item.description}
-                    </p>
-                  )}
+                    <span className="flex-1">
+                      <span className="flex items-center gap-1.5 text-sm font-bold text-navy-800 group-hover/item:text-primary transition-colors">
+                        {item.title}
+                        <ArrowRight className="h-3 w-3 -translate-x-1 opacity-0 transition-all group-hover/item:translate-x-0 group-hover/item:opacity-100 text-brand-teal-500" />
+                      </span>
+                      {item.description && (
+                        <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                          {item.description}
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Center Column: Core Approved Products */}
+              <div className="flex-1 px-4">
+                <div className="mb-2.5 flex items-center justify-between">
+                  <p className="eyebrow text-navy-800">
+                    Approved Formulations
+                  </p>
+                  <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
+                    DGDA Authorised
+                  </span>
                 </div>
-              </Link>
-            ))}
-          </div>
+
+                <div className="space-y-2">
+                  {products.slice(0, 3).map((product) => (
+                    <Link
+                      key={product.slug}
+                      href={`/products/${product.slug}`}
+                      onClick={onNavigate}
+                      className="group/prod flex items-center gap-3.5 rounded-xl border border-border/60 bg-white p-2.5 shadow-2xs transition-all hover:border-brand-teal-300 hover:bg-slate-50/80 hover:shadow-md"
+                    >
+                      <span className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-border/80 bg-slate-50 p-1">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          sizes="64px"
+                          className="object-contain p-1 transition-transform group-hover/prod:scale-110"
+                        />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline gap-2">
+                          <span className="block truncate text-sm font-extrabold text-navy-800 group-hover/prod:text-primary transition-colors">
+                            {product.name}
+                          </span>
+                          {product.brandBangla && (
+                            <span className="text-[11px] font-semibold text-muted-foreground">
+                              {product.brandBangla}
+                            </span>
+                          )}
+                        </div>
+                        <span className="block truncate text-xs text-brand-teal-600 font-medium">
+                          {product.strength || product.genericName}
+                        </span>
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-brand-teal-500 opacity-0 transition-all group-hover/prod:opacity-100 group-hover/prod:translate-x-0.5" />
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="mt-3 flex items-center justify-between pt-2 border-t border-border/60">
+                  <Link
+                    href="/products"
+                    onClick={onNavigate}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-brand-teal-600 transition-colors"
+                  >
+                    View All Products &amp; Formulations
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <span className="text-[11px] text-muted-foreground">
+                    WHO-GMP Quality Assured
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Column: Corporate Quality & Distribution Badge */}
+              <div className="w-[17rem] shrink-0 space-y-3 bg-gradient-to-br from-navy-900 to-navy-950 p-4 text-white rounded-xl ml-2">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5 text-brand-teal-300" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-brand-teal-300">
+                    Quality Standard
+                  </span>
+                </div>
+                <h4 className="text-sm font-extrabold leading-snug">
+                  WHO-GMP Compliant Manufacturing
+                </h4>
+                <p className="text-xs leading-relaxed text-navy-200">
+                  Manufactured in partnership with Amulet Pharmaceuticals Ltd. (Licence No. 418 &amp; 287) adhering to rigorous international pharmacopeial standards.
+                </p>
+                <div className="pt-2 border-t border-white/10">
+                  <Link
+                    href="/contact"
+                    onClick={onNavigate}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-teal-400 py-2.5 text-xs font-bold text-navy-950 shadow-sm transition-all hover:bg-brand-teal-300"
+                  >
+                    Partner with Sanveex
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Standard section dropdown */
+            <div className="min-w-[24rem] p-3">
+              <div className="space-y-1">
+                {children.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.href || "#"}
+                    onClick={onNavigate}
+                    className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors hover:bg-navy-50/70"
+                  >
+                    <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
+                      <Building2 className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="flex items-center gap-1.5 text-sm font-bold text-navy-800 group-hover/item:text-primary transition-colors">
+                        {item.title}
+                        <ArrowRight className="h-3 w-3 -translate-x-1 opacity-0 transition-all group-hover/item:translate-x-0 group-hover/item:opacity-100 text-brand-teal-500" />
+                      </span>
+                      {item.description && (
+                        <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
+                          {item.description}
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-// --- Main Navbar Component ---
+/* -------------------------------------------------------------------------- */
+/* Main Navigation Bar                                                        */
+/* -------------------------------------------------------------------------- */
+
 export default function Navbar({
   siteContent,
   navItems = [],
-}: {
-  siteContent: SiteContent;
-  navItems: DynamicNavItem[];
-}) {
+  products = [],
+}: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
+  const [isCompact, setIsCompact] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const emergencyNumber = siteContent.phone;
+  const phone = siteContent.phone || company.contact.phone;
+  const socialLinks = (siteContent.socialLinks ?? {}) as Record<string, string>;
 
-  // Handle scroll for sticky navbar
+  /* Compact the header upon leaving the top of page. */
   useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 60);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsCompact(window.scrollY > 28);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Handle keyboard shortcut for search
+  /* ⌘K / Ctrl+K opens global search. */
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -147,256 +346,490 @@ export default function Navbar({
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const handleMenuEnter = (menu: string) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setActiveMenu(menu);
-  };
+  /* Close menus on route change using React 19 documented state adjustment. */
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setActiveMenu(null);
+    setMobileMenuOpen(false);
+  }
 
-  const handleMenuLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setActiveMenu(null);
-    }, 150);
-  };
+  const handleMenuEnter = useCallback((id: string) => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    setActiveMenu(id);
+  }, []);
 
-  const toggleMobileSection = (section: string) => {
-    setExpandedMobile(expandedMobile === section ? null : section);
-  };
+  const handleMenuLeave = useCallback(() => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    hoverTimeout.current = setTimeout(() => setActiveMenu(null), 180);
+  }, []);
 
   const runCommand = (command: () => void) => {
     setOpenSearch(false);
     command();
   };
 
+  const isActive = (href?: string | null) =>
+    !!href && href !== "#" && (pathname === href || pathname?.startsWith(`${href}/`));
+
   return (
     <>
-      <nav
-        className={cn(
-          "left-0 right-0 z-50 bg-background/95 transition-all duration-300",
-          isSticky
-            ? "fixed top-0 shadow-sm border-b border-border"
-            : "relative",
-        )}
-      >
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex h-16 lg:h-20 items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 shrink-0">
-              <Image
-                src={siteContent.logoUrl}
-                alt={`${siteContent.name} Logo`}
-                width={140}
-                height={40}
-                priority
-                className="w-auto h-8 lg:h-10"
-              />
-            </Link>
+      <header className="sticky top-0 z-50 w-full">
+        {/* ================= Top Accent Line ================= */}
+        <div className="h-[2px] w-full bg-gradient-to-r from-brand-teal-400 via-primary to-brand-teal-300" />
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-6">
-              {navItems.map((navItem) =>
-                navItem.children && navItem.children.length > 0 ? (
-                  <MegaMenu
-                    key={navItem.id}
-                    title={navItem.title}
-                    items={navItem.children}
-                    isOpen={activeMenu === navItem.id}
-                    isActivePath={
-                      pathname?.startsWith(
-                        navItem.href || `/${navItem.title.toLowerCase()}`,
-                      ) ?? false
-                    }
-                    onMouseEnter={() => handleMenuEnter(navItem.id)}
-                    onMouseLeave={handleMenuLeave}
-                  />
-                ) : (
-                  <Link
-                    key={navItem.id}
-                    href={navItem.href || "#"}
-                    className={cn(
-                      "text-sm font-bold uppercase tracking-wider transition-colors py-2 px-1",
-                      pathname === navItem.href
-                        ? "text-primary"
-                        : "text-foreground hover:text-primary",
-                    )}
-                  >
-                    {navItem.title}
-                  </Link>
-                ),
-              )}
-            </div>
-
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-3">
-              {/* Search Button */}
-              <button
-                onClick={() => setOpenSearch(true)}
-                className="flex items-center gap-2 h-9 px-3 rounded-lg bg-secondary hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Search className="h-4 w-4" />
-                <span className="hidden sm:inline text-sm">Search</span>
-                <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                  <span className="text-xs">⌘</span>K
-                </kbd>
-              </button>
-
-              {/* Phone CTA - Desktop */}
-              <div className="hidden md:flex items-center">
-                <a
-                  href={`tel:${emergencyNumber.replace(/\s/g, "")}`}
-                  className="flex items-center gap-2 h-9 px-4 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
-                  <Phone className="h-4 w-4" />
-                  <span className="text-sm font-medium">{emergencyNumber}</span>
-                </a>
+        {/* ================= Global Utility Bar ================= */}
+        <div
+          className={cn(
+            "hidden overflow-hidden border-b border-white/[0.08] bg-[#0d132e] text-white/90 transition-[max-height,opacity] duration-300 lg:block",
+            isCompact ? "max-h-0 opacity-0" : "max-h-12 opacity-100",
+          )}
+        >
+          <div className="container-x flex h-10 items-center justify-between text-xs">
+            {/* Left: Operational presence & hotline */}
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                <span className="font-semibold tracking-wide text-white">
+                  Dhaka Hub
+                </span>
+                <span className="text-white/40">·</span>
+                <span className="text-navy-200">
+                  64 Districts Supply Network
+                </span>
               </div>
 
-              {/* Mobile Menu Toggle */}
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild className="lg:hidden">
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
-                    <Menu className="h-5 w-5" />
-                    <span className="sr-only">Toggle menu</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent
-                  side="right"
-                  className="w-full max-w-md p-0 overflow-y-auto"
-                >
-                  <div className="flex flex-col h-full">
-                    <SheetHeader className="p-6 border-b border-border">
-                      <div className="flex items-center justify-between">
-                        <SheetTitle className="flex items-center gap-3">
-                          <div className="relative w-32 h-8">
-                            <Image
-                              src={siteContent.logoUrl}
-                              alt={siteContent.name}
-                              fill
-                              className="object-contain object-left"
-                            />
-                          </div>
-                        </SheetTitle>
-                      </div>
-                    </SheetHeader>
+              <span className="h-3.5 w-px bg-white/20" />
 
-                    <div className="flex-1 p-6">
-                      <nav className="space-y-2">
-                        {/* Mobile Accordion Sections */}
-                        {navItems.map((section) => (
-                          <div key={section.id}>
-                            {section.children && section.children.length > 0 ? (
-                              <>
-                                <button
-                                  onClick={() =>
-                                    toggleMobileSection(section.id)
-                                  }
-                                  className={cn(
-                                    "flex items-center justify-between w-full h-12 px-4 rounded-lg text-base font-bold uppercase tracking-wider transition-colors",
-                                    pathname?.startsWith(
-                                      section.href ||
-                                        `/${section.title.toLowerCase()}`,
-                                    )
-                                      ? "text-primary"
-                                      : "text-foreground hover:bg-accent",
-                                  )}
-                                >
-                                  {section.title}
-                                  <ChevronDown
-                                    className={cn(
-                                      "h-4 w-4 transition-transform duration-200",
-                                      expandedMobile === section.id &&
-                                        "rotate-180",
-                                    )}
-                                  />
-                                </button>
-                                <div
-                                  className={cn(
-                                    "overflow-hidden transition-all duration-300 ease-in-out",
-                                    expandedMobile === section.id
-                                      ? "max-h-96 opacity-100"
-                                      : "max-h-0 opacity-0",
-                                  )}
-                                >
-                                  <div className="pl-4 py-2 space-y-1">
-                                    {section.children.map((item) => (
-                                      <Link
-                                        key={item.id}
-                                        href={item.href || "#"}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex flex-col py-3 px-4 rounded-lg hover:bg-accent transition-colors"
-                                      >
-                                        <span
-                                          className={cn(
-                                            "text-sm font-medium",
-                                            pathname === item.href
-                                              ? "text-primary"
-                                              : "text-foreground",
-                                          )}
-                                        >
-                                          {item.title}
-                                        </span>
-                                        {item.description && (
-                                          <span className="text-xs text-muted-foreground">
-                                            {item.description}
-                                          </span>
-                                        )}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              </>
-                            ) : (
-                              <Link
-                                href={section.href || "#"}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={cn(
-                                  "flex items-center w-full h-12 px-4 rounded-lg text-base font-bold uppercase tracking-wider transition-colors",
-                                  pathname === section.href
-                                    ? "text-primary"
-                                    : "text-foreground hover:bg-accent",
-                                )}
-                              >
-                                {section.title}
-                              </Link>
-                            )}
-                          </div>
-                        ))}
-                      </nav>
-                    </div>
+              <a
+                href={`tel:${phone.replace(/[^\d+]/g, "")}`}
+                className="flex items-center gap-1.5 transition-colors hover:text-brand-teal-300"
+              >
+                <Phone className="h-3.5 w-3.5 text-brand-teal-300" />
+                <span className="font-medium">{phone}</span>
+              </a>
 
-                    {/* Mobile Footer */}
-                    <div className="p-6 border-t border-border bg-muted/50">
-                      <a
-                        href={`tel:${emergencyNumber.replace(/\s/g, "")}`}
-                        className="flex items-center justify-center gap-2 h-12 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                      >
-                        <Phone className="h-4 w-4" />
-                        <span className="text-sm font-semibold">
-                          {emergencyNumber}
-                        </span>
-                      </a>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <a
+                href={`mailto:${siteContent.email || company.contact.email}`}
+                className="flex items-center gap-1.5 transition-colors hover:text-brand-teal-300"
+              >
+                <Mail className="h-3.5 w-3.5 text-brand-teal-300" />
+                <span className="font-medium">
+                  {siteContent.email || company.contact.email}
+                </span>
+              </a>
+            </div>
+
+            {/* Right: Portals, Region & Social */}
+            <div className="flex items-center gap-5">
+              <nav className="flex items-center gap-4 text-[11px] font-medium text-white/80">
+                {audienceLinks.map((link) => (
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="transition-colors hover:text-white"
+                  >
+                    {link.title}
+                  </Link>
+                ))}
+              </nav>
+
+              <span className="h-3.5 w-px bg-white/20" />
+
+              {/* International Market Tag */}
+              <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold text-brand-teal-200 backdrop-blur">
+                <Globe className="h-3 w-3" />
+                <span>Global / BD (EN)</span>
+              </div>
+
+              {/* Social Channels */}
+              <div className="flex items-center gap-2.5">
+                {Object.entries(socialIconMap).map(([key, Icon]) => {
+                  const href = socialLinks[key];
+                  if (!href) return null;
+                  return (
+                    <a
+                      key={key}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Sanveex on ${key}`}
+                      className="text-white/60 transition-colors hover:text-brand-teal-300"
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-      </nav>
 
-      {/* Search Command Dialog */}
-      <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
-        <CommandInput placeholder="Search products, pages, information..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-
-          <CommandGroup heading="Quick Links">
-            <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
-              <span>Home</span>
-            </CommandItem>
-            <CommandItem
-              onSelect={() => runCommand(() => router.push("/contact"))}
+        {/* ================= Main Corporate Header ================= */}
+        <div
+          className={cn(
+            "border-b bg-white/95 backdrop-blur-xl transition-all duration-300",
+            isCompact
+              ? "border-slate-200/90 shadow-md shadow-navy-950/5"
+              : "border-slate-200/70 shadow-2xs",
+          )}
+        >
+          <div className="container-x">
+            <div
+              className={cn(
+                "flex items-center justify-between gap-5 transition-[height] duration-300",
+                isCompact ? "h-[70px]" : "h-[86px]",
+              )}
             >
-              <span>Contact Us</span>
+              {/* Corporate Identity & Logo */}
+              <Link
+                href="/"
+                className="group flex shrink-0 items-center gap-3.5"
+                aria-label={`${siteContent.name} — Home`}
+              >
+                <div className="relative">
+                  <Image
+                    src={siteContent.logoUrl || "/sanveex-logo.png"}
+                    alt={`${siteContent.name} logo`}
+                    width={352}
+                    height={138}
+                    priority
+                    className={cn(
+                      "w-auto transition-all duration-300",
+                      isCompact ? "h-9" : "h-11",
+                    )}
+                  />
+                </div>
+                <span className="hidden h-10 w-px bg-slate-200 xl:block" />
+                <div className="hidden flex-col xl:flex">
+                  <span className="text-[12px] font-extrabold uppercase tracking-[0.06em] text-navy-900 group-hover:text-primary transition-colors">
+                    Sanveex Global Health
+                  </span>
+                  <span className="text-[9.5px] font-bold uppercase tracking-[0.14em] text-brand-teal-600">
+                    Pharmaceutical Marketing &amp; Distribution
+                  </span>
+                </div>
+              </Link>
+
+              {/* Desktop Corporate Navigation */}
+              <nav className="hidden items-center gap-5 xl:gap-6 lg:flex">
+                {navItems.map((navItem) =>
+                  navItem.children && navItem.children.length > 0 ? (
+                    <MegaMenu
+                      key={navItem.id}
+                      navItem={navItem}
+                      isOpen={activeMenu === navItem.id}
+                      isActivePath={isActive(navItem.href)}
+                      products={products}
+                      onMouseEnter={() => handleMenuEnter(navItem.id)}
+                      onMouseLeave={handleMenuLeave}
+                      onNavigate={() => setActiveMenu(null)}
+                    />
+                  ) : (
+                    <Link
+                      key={navItem.id}
+                      href={navItem.href || "#"}
+                      className={cn(
+                        "group relative whitespace-nowrap py-2.5 text-[0.8125rem] font-bold uppercase tracking-[0.08em] transition-colors",
+                        isActive(navItem.href)
+                          ? "text-primary"
+                          : "text-navy-800 hover:text-primary",
+                      )}
+                    >
+                      {navItem.title}
+                      <span
+                        className={cn(
+                          "absolute -bottom-px left-0 h-[2.5px] rounded-full bg-gradient-to-r from-brand-teal-400 to-primary transition-all duration-300",
+                          isActive(navItem.href)
+                            ? "w-full"
+                            : "w-0 group-hover:w-full",
+                        )}
+                      />
+                    </Link>
+                  ),
+                )}
+              </nav>
+
+              {/* Header Action Controls */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                {/* Search trigger */}
+                <button
+                  type="button"
+                  onClick={() => setOpenSearch(true)}
+                  aria-label="Search medicines and documents"
+                  className="flex h-10 items-center gap-2 rounded-xl border border-border/80 bg-slate-50/70 px-3 text-muted-foreground transition-all hover:border-brand-teal-400 hover:bg-white hover:text-navy-800 hover:shadow-sm"
+                >
+                  <Search className="h-4 w-4 text-brand-teal-500" />
+                  <span className="hidden text-xs font-semibold xl:inline">
+                    Search medicines…
+                  </span>
+                  <kbd className="hidden items-center gap-0.5 rounded border border-border bg-white px-1.5 py-0.5 font-mono text-[10px] font-bold text-muted-foreground xl:inline-flex">
+                    ⌘K
+                  </kbd>
+                </button>
+
+                {/* Corporate CTA */}
+                <Button
+                  asChild
+                  className="hidden h-10 rounded-xl bg-gradient-to-r from-navy-700 via-primary to-navy-800 px-5 font-bold text-white shadow-md shadow-navy-900/10 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-navy-900/20 sm:inline-flex"
+                >
+                  <Link href="/contact">
+                    Partner with Us
+                    <ArrowRight className="ml-1.5 h-4 w-4" />
+                  </Link>
+                </Button>
+
+                {/* Mobile Hamburger Sheet */}
+                <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                  <SheetTrigger asChild className="lg:hidden">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-xl border-border/80 text-navy-800"
+                      aria-label="Open navigation menu"
+                    >
+                      <Menu className="h-5 w-5" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="right"
+                    className="w-full max-w-sm overflow-y-auto p-0"
+                  >
+                    <div className="flex h-full flex-col">
+                      <SheetHeader className="border-b border-border/80 bg-gradient-to-b from-navy-50 to-white px-6 py-5">
+                        <SheetTitle asChild>
+                          <Link
+                            href="/"
+                            className="relative block h-10 w-36"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <Image
+                              src={siteContent.logoUrl || "/sanveex-logo.png"}
+                              alt={siteContent.name}
+                              fill
+                              sizes="144px"
+                              className="object-contain object-left"
+                            />
+                          </Link>
+                        </SheetTitle>
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-brand-teal-600 mt-1">
+                          Pharmaceutical Marketing &amp; Distribution
+                        </p>
+                      </SheetHeader>
+
+                      <nav className="flex-1 px-4 py-5">
+                        <ul className="space-y-1">
+                          {navItems.map((section) => {
+                            const hasChildren =
+                              !!section.children && section.children.length > 0;
+                            const expanded = expandedMobile === section.id;
+
+                            return (
+                              <li key={section.id}>
+                                {hasChildren ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setExpandedMobile(
+                                          expanded ? null : section.id,
+                                        )
+                                      }
+                                      aria-expanded={expanded}
+                                      className={cn(
+                                        "flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-bold uppercase tracking-[0.08em] transition-colors",
+                                        isActive(section.href)
+                                          ? "text-primary bg-navy-50"
+                                          : "text-navy-800 hover:bg-slate-50",
+                                      )}
+                                    >
+                                      {section.title}
+                                      <ChevronDown
+                                        className={cn(
+                                          "h-4 w-4 transition-transform duration-300",
+                                          expanded && "rotate-180 text-brand-teal-500",
+                                        )}
+                                      />
+                                    </button>
+                                    <div
+                                      className={cn(
+                                        "grid overflow-hidden transition-all duration-300 ease-in-out",
+                                        expanded
+                                          ? "grid-rows-[1fr] opacity-100"
+                                          : "grid-rows-[0fr] opacity-0",
+                                      )}
+                                    >
+                                      <div className="min-h-0">
+                                        <div className="ml-3 space-y-0.5 border-l-2 border-brand-teal-200 py-1 pl-3">
+                                          {section.children!.map((item) => (
+                                            <Link
+                                              key={item.id}
+                                              href={item.href || "#"}
+                                              onClick={() =>
+                                                setMobileMenuOpen(false)
+                                              }
+                                              className="block rounded-lg px-3 py-2 text-sm font-medium text-navy-800 hover:bg-navy-50 transition-colors"
+                                            >
+                                              <span className="block font-semibold">
+                                                {item.title}
+                                              </span>
+                                              {item.description && (
+                                                <span className="mt-0.5 block text-xs text-muted-foreground line-clamp-1">
+                                                  {item.description}
+                                                </span>
+                                              )}
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <Link
+                                    href={section.href || "#"}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={cn(
+                                      "block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-[0.08em] transition-colors",
+                                      isActive(section.href)
+                                        ? "text-primary bg-navy-50"
+                                        : "text-navy-800 hover:bg-slate-50",
+                                    )}
+                                  >
+                                    {section.title}
+                                  </Link>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+
+                        {/* Mobile Products Drawer */}
+                        {products.length > 0 && (
+                          <div className="mt-6 border-t border-border pt-5">
+                            <p className="eyebrow mb-3 px-1 text-brand-teal-600">
+                              Core Product Catalogue
+                            </p>
+                            <div className="space-y-1.5">
+                              {products.map((product) => (
+                                <Link
+                                  key={product.slug}
+                                  href={`/products/${product.slug}`}
+                                  onClick={() => setMobileMenuOpen(false)}
+                                  className="flex items-center gap-3 rounded-xl border border-border/60 bg-white p-2.5 transition-colors hover:bg-navy-50"
+                                >
+                                  <span className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md border border-border bg-slate-50">
+                                    <Image
+                                      src={product.image}
+                                      alt={product.name}
+                                      fill
+                                      sizes="56px"
+                                      className="object-contain p-1"
+                                    />
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <span className="block truncate text-sm font-bold text-navy-800">
+                                      {product.name}
+                                    </span>
+                                    <span className="block truncate text-xs text-brand-teal-600 font-medium">
+                                      {product.strength || product.genericName}
+                                    </span>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </nav>
+
+                      {/* Mobile Footer CTAs */}
+                      <div className="border-t border-border bg-slate-50 p-5 space-y-2">
+                        <Button
+                          asChild
+                          className="w-full h-11 rounded-xl bg-primary font-bold text-white"
+                        >
+                          <Link
+                            href="/contact"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Partner with Sanveex
+                            <ArrowRight className="ml-1.5 h-4 w-4" />
+                          </Link>
+                        </Button>
+                        <a
+                          href={`tel:${phone.replace(/[^\d+]/g, "")}`}
+                          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-white text-sm font-semibold text-navy-800 transition-colors hover:border-navy-300"
+                        >
+                          <Phone className="h-4 w-4 text-brand-teal-500" />
+                          {phone}
+                        </a>
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ================= Command / Global Search ================= */}
+      <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
+        <CommandInput placeholder="Search medicines, molecules, therapeutic classes…" />
+        <CommandList>
+          <CommandEmpty>No matching pharmaceutical records found.</CommandEmpty>
+
+          {products.length > 0 && (
+            <CommandGroup heading="Approved Medicines & Formulations">
+              {products.map((product) => (
+                <CommandItem
+                  key={product.slug}
+                  value={`${product.name} ${product.genericName ?? ""} ${product.brandBangla ?? ""}`}
+                  onSelect={() =>
+                    runCommand(() => router.push(`/products/${product.slug}`))
+                  }
+                  className="flex items-center justify-between py-2.5"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-50 text-primary">
+                      <Pill className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <span className="font-bold text-navy-800">{product.name}</span>
+                      {product.brandBangla && (
+                        <span className="ml-2 text-xs font-semibold text-muted-foreground">
+                          ({product.brandBangla})
+                        </span>
+                      )}
+                      <p className="text-xs text-brand-teal-600 font-medium">
+                        {product.genericName}
+                      </p>
+                    </div>
+                  </div>
+                  {product.strength && (
+                    <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700">
+                      {product.strength}
+                    </span>
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+
+          <CommandGroup heading="Key Corporate Destinations">
+            <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
+              Home
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => router.push("/products"))}>
+              Complete Product Catalogue
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => router.push("/about/overview"))}>
+              About Sanveex Global Health
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
+              Corporate Office &amp; Partner Inquiries
             </CommandItem>
           </CommandGroup>
 
@@ -409,7 +842,7 @@ export default function Navbar({
                     runCommand(() => router.push(item.href || "#"))
                   }
                 >
-                  <span>{item.title}</span>
+                  {item.title}
                 </CommandItem>
               ))}
             </CommandGroup>

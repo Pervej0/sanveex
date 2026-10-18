@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
 import SocialShare from "@/components/shared/SocialShare";
+import { resolveImageSrc } from "@/lib/images";
 
 type PressReleasePageProps = {
   params: Promise<{ slug: string }>;
@@ -56,10 +57,10 @@ export default async function PressReleasePage({
               {article.title}
             </h1>
 
-            {article.image && (
+            {resolveImageSrc(article.image, null) && (
               <div className="relative aspect-video w-full mb-10 overflow-hidden rounded-xl border shadow-sm">
                 <Image
-                  src={article.image}
+                  src={resolveImageSrc(article.image, null)!}
                   alt={article.title}
                   fill
                   className="object-cover"

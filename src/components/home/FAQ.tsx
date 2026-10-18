@@ -1,11 +1,10 @@
-import { PhoneCall } from "lucide-react";
+import { PhoneCall, HelpCircle } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface FaqItem {
@@ -26,66 +25,68 @@ interface FAQProps {
   sectionData?: SectionData | null;
 }
 
-// --- 2. The Separated Component (Reusable) ---
-function FaqList({ items }: { items: FaqItem[] }) {
-  return (
-    <Accordion type="single" collapsible className="w-full ">
-      {items.map((item, index) => (
-        <AccordionItem key={item.id} value={`item-${index}`}>
-          <AccordionTrigger className="text-left font-medium text-lg italic decoration-primary group-hover:no-underline">
-            {item.question}
-          </AccordionTrigger>
-          <AccordionContent className="text-muted-foreground leading-relaxed text-lg">
-            {item.answer}
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
-  );
-}
-
 function FAQ({ faqs = [], sectionData }: FAQProps) {
-  const title = sectionData?.title || "Common Questions";
+  const title = sectionData?.title || "Common questions";
   const description =
     sectionData?.description ||
-    "Managing a small business today is already tough. We are here to help clear up any confusion so you can focus on growth.";
-  const buttonText = sectionData?.buttonText || "Any questions? Reach out";
-  const buttonLink = sectionData?.buttonLink || "#";
+    "Answers to the questions we receive most often from clinicians, pharmacists and patients.";
+  const buttonText = sectionData?.buttonText || "Contact our medical team";
+  const buttonLink = sectionData?.buttonLink || "/contact";
 
   if (faqs.length === 0) return null;
 
   return (
-    <div className="w-full py-16 md:py-24 bg-gray-50/50">
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
-          {/* Left Column: Header Content */}
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-4">
-                <h4 className="text-3xl md:text-5xl tracking-tighter max-w-xl text-left font-semibold text-primary">
-                  {title}
-                </h4>
-                <p className="text-lg max-w-xl leading-relaxed tracking-tight text-muted-foreground text-left">
-                  {description}
-                </p>
-              </div>
-              <div>
-                <Link href={buttonLink}>
-                  <Button className="gap-2" variant="outline">
-                    {buttonText} <PhoneCall className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
+    <section className="bg-white py-16 lg:py-24">
+      <div className="container-x">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Heading */}
+          <div className="lg:col-span-5">
+            <span className="eyebrow rounded-full bg-brand-teal-100 px-3.5 py-1.5 text-brand-teal-700">
+              <HelpCircle className="h-3.5 w-3.5" />
+              Support
+            </span>
+
+            <h2 className="mt-5 text-3xl sm:text-4xl">{title}</h2>
+
+            <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+              {description}
+            </p>
+
+            <Link
+              href={buttonLink}
+              className="mt-7 inline-flex items-center gap-2 rounded-lg border border-border px-5 py-3 text-sm font-semibold text-navy-800 transition-colors hover:border-navy-200 hover:text-primary"
+            >
+              <PhoneCall className="h-4 w-4 text-brand-teal-500" />
+              {buttonText}
+            </Link>
           </div>
 
-          {/* Right Column: The Separated FAQ Component */}
-          <div className="w-full">
-            <FaqList items={faqs} />
+          {/* Accordion */}
+          <div className="lg:col-span-7">
+            <Accordion
+              type="single"
+              collapsible
+              className="divide-y divide-border border-y border-border"
+            >
+              {faqs.map((item, index) => (
+                <AccordionItem
+                  key={item.id}
+                  value={`item-${index}`}
+                  className="border-b-0"
+                >
+                  <AccordionTrigger className="py-5 text-left font-display text-base font-bold text-navy-800 hover:text-primary hover:no-underline sm:text-lg">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-5 text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
