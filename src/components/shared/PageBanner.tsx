@@ -93,7 +93,7 @@ export default function GlobalPageBanner({
   });
 
   return (
-    <div className="relative w-full h-[300px] md:h-[400px] flex items-center">
+    <div className="relative w-full h-[240px] md:h-[300px] flex items-center border-b-4 border-brand-teal-400 bg-navy-950 overflow-hidden">
       {/* --- BACKGROUND IMAGES --- */}
       <div className="absolute inset-0 z-0">
         {/* Mobile */}
@@ -116,25 +116,35 @@ export default function GlobalPageBanner({
             priority
           />
         </div>
-        {/* Overlay for readability - sophisticated gradient */}
-        <div className="absolute inset-0 bg-black/40 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
+        {/* Overlay for readability - sophisticated multi-layer gradient */}
+        <div className="absolute inset-0 bg-navy-950/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/30" />
       </div>
 
+      {/* Ambient subtle glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-20 top-0 z-10 h-64 w-64 rounded-full bg-brand-teal-500/15 blur-3xl"
+      />
+
       {/* --- CONTENT --- */}
-      <div className="container-x relative z-10 flex h-full flex-col justify-center">
+      <div className="container-x relative z-10 flex h-full flex-col justify-center pt-4">
         {/* Breadcrumbs */}
-        <div className="absolute left-0 top-8 flex items-center gap-2 text-xs font-medium text-navy-100 md:top-12 md:text-sm">
+        <nav
+          aria-label="Breadcrumbs"
+          className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-300/90 sm:text-sm"
+        >
           <Link href="/" className="hover:text-white transition-colors">
             Home
           </Link>
           {breadcrumbs.map((crumb, index) => (
             <div key={crumb.href} className="flex items-center gap-2">
-              <ChevronRight className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               <Link
                 href={crumb.href}
                 className={`transition-colors ${
                   index === breadcrumbs.length - 1
-                    ? "text-white font-bold pointer-events-none"
+                    ? "text-brand-teal-300 font-semibold pointer-events-none"
                     : "hover:text-white"
                 }`}
               >
@@ -142,13 +152,14 @@ export default function GlobalPageBanner({
               </Link>
             </div>
           ))}
-        </div>
+        </nav>
 
         {/* Title */}
-        <div className="mt-10 border-l-[6px] border-white pl-6 md:pl-8 py-1">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-md capitalize">
+        <div className="mt-3 sm:mt-4">
+          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight capitalize sm:text-4xl lg:text-5xl">
             {pageTitle}
           </h1>
+          <span className="mt-4 block h-[3px] w-14 rounded-full bg-brand-teal-400" />
         </div>
       </div>
     </div>

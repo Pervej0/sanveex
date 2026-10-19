@@ -4,12 +4,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { SiteContent } from "@/generated/prisma/client";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Phone,
   Menu,
   ChevronDown,
-  Search,
   ArrowRight,
   ArrowUpRight,
   Mail,
@@ -38,14 +37,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
@@ -107,7 +98,6 @@ function MegaMenu({
 
   return (
     <div
-      className="relative"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -115,7 +105,7 @@ function MegaMenu({
         type="button"
         aria-expanded={isOpen}
         className={cn(
-          "group relative flex items-center gap-1.5 whitespace-nowrap py-2.5 text-[0.8125rem] font-bold uppercase tracking-[0.08em] transition-colors",
+          "group relative flex items-center gap-1.5 whitespace-nowrap py-2.5 text-[0.8rem] font-semibold uppercase tracking-[0.07em] transition-colors",
           isOpen || isActivePath
             ? "text-primary"
             : "text-navy-800 hover:text-primary",
@@ -130,7 +120,7 @@ function MegaMenu({
         />
         <span
           className={cn(
-            "absolute -bottom-px left-0 h-[2.5px] rounded-full bg-gradient-to-r from-brand-teal-400 to-primary transition-all duration-300",
+            "absolute -bottom-px left-0 h-[2px] bg-brand-teal-400 transition-all duration-300",
             isOpen || isActivePath ? "w-full" : "w-0 group-hover:w-full",
           )}
         />
@@ -145,12 +135,12 @@ function MegaMenu({
             : "invisible -translate-y-2 opacity-0",
         )}
       >
-        <div className="overflow-hidden rounded-2xl border border-border/80 bg-white/98 shadow-2xl shadow-navy-950/12 ring-1 ring-black/5 backdrop-blur-xl">
+        <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-xl shadow-navy-950/10 border-t-2 border-t-brand-teal-400">
           {isProductsMenu ? (
             /* Products rich mega menu */
-            <div className="flex w-[56rem] max-w-[95vw] divide-x divide-border/70 p-4">
+            <div className="flex w-[42rem] max-w-[calc(100vw-2.5rem)] divide-x divide-border/70 p-4">
               {/* Left Column: Categories and Sections */}
-              <div className="w-[18rem] shrink-0 space-y-1 pr-4">
+              <div className="w-[16rem] shrink-0 space-y-1 pr-4">
                 <p className="eyebrow mb-2 px-3 text-brand-teal-600">
                   Portfolio Taxonomy
                 </p>
@@ -159,7 +149,7 @@ function MegaMenu({
                     key={item.id}
                     href={item.href || "#"}
                     onClick={onNavigate}
-                    className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors hover:bg-navy-50/70"
+                    className="group/item flex items-start gap-3 rounded-md p-3 transition-colors hover:bg-navy-50/70"
                   >
                     <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                       <Pill className="h-3.5 w-3.5" />
@@ -180,7 +170,7 @@ function MegaMenu({
               </div>
 
               {/* Center Column: Core Approved Products */}
-              <div className="flex-1 px-4">
+              <div className="min-w-0 flex-1 pl-4">
                 <div className="mb-2.5 flex items-center justify-between">
                   <p className="eyebrow text-navy-800">
                     Approved Formulations
@@ -196,7 +186,7 @@ function MegaMenu({
                       key={product.slug}
                       href={`/products/${product.slug}`}
                       onClick={onNavigate}
-                      className="group/prod flex items-center gap-3.5 rounded-xl border border-border/60 bg-white p-2.5 shadow-2xs transition-all hover:border-brand-teal-300 hover:bg-slate-50/80 hover:shadow-md"
+                      className="group/prod flex items-center gap-3.5 rounded-md border border-border/60 bg-white p-2.5 shadow-2xs transition-all hover:border-brand-teal-300 hover:bg-slate-50/80 hover:shadow-md"
                     >
                       <span className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-border/80 bg-slate-50 p-1">
                         <Image
@@ -236,35 +226,6 @@ function MegaMenu({
                     View All Products &amp; Formulations
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
-                  <span className="text-[11px] text-muted-foreground">
-                    WHO-GMP Quality Assured
-                  </span>
-                </div>
-              </div>
-
-              {/* Right Column: Corporate Quality & Distribution Badge */}
-              <div className="w-[17rem] shrink-0 space-y-3 bg-gradient-to-br from-navy-900 to-navy-950 p-4 text-white rounded-xl ml-2">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-5 w-5 text-brand-teal-300" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-brand-teal-300">
-                    Quality Standard
-                  </span>
-                </div>
-                <h4 className="text-sm font-extrabold leading-snug">
-                  WHO-GMP Compliant Manufacturing
-                </h4>
-                <p className="text-xs leading-relaxed text-navy-200">
-                  Manufactured in partnership with Amulet Pharmaceuticals Ltd. (Licence No. 418 &amp; 287) adhering to rigorous international pharmacopeial standards.
-                </p>
-                <div className="pt-2 border-t border-white/10">
-                  <Link
-                    href="/contact"
-                    onClick={onNavigate}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-teal-400 py-2.5 text-xs font-bold text-navy-950 shadow-sm transition-all hover:bg-brand-teal-300"
-                  >
-                    Partner with Sanveex
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
                 </div>
               </div>
             </div>
@@ -277,7 +238,7 @@ function MegaMenu({
                     key={item.id}
                     href={item.href || "#"}
                     onClick={onNavigate}
-                    className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors hover:bg-navy-50/70"
+                    className="group/item flex items-start gap-3 rounded-md p-3 transition-colors hover:bg-navy-50/70"
                   >
                     <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                       <Building2 className="h-3.5 w-3.5" />
@@ -313,11 +274,9 @@ export default function Navbar({
   navItems = [],
   products = [],
 }: NavbarProps) {
-  const router = useRouter();
   const pathname = usePathname();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openSearch, setOpenSearch] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
@@ -328,22 +287,10 @@ export default function Navbar({
 
   /* Compact the header upon leaving the top of page. */
   useEffect(() => {
-    const onScroll = () => setIsCompact(window.scrollY > 28);
+    const onScroll = () => setIsCompact(window.scrollY > 4);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  /* ⌘K / Ctrl+K opens global search. */
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpenSearch((open) => !open);
-      }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
   }, []);
 
   /* Close menus on route change using React 19 documented state adjustment. */
@@ -364,89 +311,58 @@ export default function Navbar({
     hoverTimeout.current = setTimeout(() => setActiveMenu(null), 180);
   }, []);
 
-  const runCommand = (command: () => void) => {
-    setOpenSearch(false);
-    command();
-  };
-
   const isActive = (href?: string | null) =>
     !!href && href !== "#" && (pathname === href || pathname?.startsWith(`${href}/`));
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full">
-        {/* ================= Top Accent Line ================= */}
-        <div className="h-[2px] w-full bg-gradient-to-r from-brand-teal-400 via-primary to-brand-teal-300" />
-
-        {/* ================= Global Utility Bar ================= */}
+        {/* ================= Utility Bar ================= */}
         <div
           className={cn(
-            "hidden overflow-hidden border-b border-white/[0.08] bg-[#0d132e] text-white/90 transition-[max-height,opacity] duration-300 lg:block",
-            isCompact ? "max-h-0 opacity-0" : "max-h-12 opacity-100",
+            "hidden bg-navy-900 text-white/85 lg:block",
           )}
         >
-          <div className="container-x flex h-10 items-center justify-between text-xs">
-            {/* Left: Operational presence & hotline */}
-            <div className="flex items-center gap-5">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-                </span>
-                <span className="font-semibold tracking-wide text-white">
-                  Dhaka Hub
-                </span>
-                <span className="text-white/40">·</span>
-                <span className="text-navy-200">
-                  64 Districts Supply Network
-                </span>
-              </div>
-
-              <span className="h-3.5 w-px bg-white/20" />
-
+          <div className="container-x flex h-9 items-center justify-between whitespace-nowrap text-[11.5px]">
+            {/* Left: contact */}
+            <div className="flex items-center divide-x divide-white/15">
               <a
                 href={`tel:${phone.replace(/[^\d+]/g, "")}`}
-                className="flex items-center gap-1.5 transition-colors hover:text-brand-teal-300"
+                className="flex items-center gap-2 pr-5 transition-colors hover:text-white"
               >
-                <Phone className="h-3.5 w-3.5 text-brand-teal-300" />
-                <span className="font-medium">{phone}</span>
+                <Phone className="h-3 w-3 text-brand-teal-300" />
+                <span className="font-medium tracking-wide">{phone}</span>
               </a>
-
               <a
                 href={`mailto:${siteContent.email || company.contact.email}`}
-                className="flex items-center gap-1.5 transition-colors hover:text-brand-teal-300"
+                className="flex items-center gap-2 pl-5 transition-colors hover:text-white"
               >
-                <Mail className="h-3.5 w-3.5 text-brand-teal-300" />
-                <span className="font-medium">
+                <Mail className="h-3 w-3 text-brand-teal-300" />
+                <span className="font-medium tracking-wide">
                   {siteContent.email || company.contact.email}
                 </span>
               </a>
             </div>
 
-            {/* Right: Portals, Region & Social */}
-            <div className="flex items-center gap-5">
-              <nav className="flex items-center gap-4 text-[11px] font-medium text-white/80">
+            {/* Right: audiences, region, social */}
+            <div className="flex items-center">
+              <nav className="hidden items-center divide-x divide-white/15 font-medium xl:flex">
                 {audienceLinks.map((link) => (
                   <Link
                     key={link.title}
                     href={link.href}
-                    className="transition-colors hover:text-white"
+                    className="px-4 transition-colors hover:text-white"
                   >
                     {link.title}
                   </Link>
                 ))}
               </nav>
 
-              <span className="h-3.5 w-px bg-white/20" />
+              <span className="flex items-center gap-1.5 px-4 font-medium xl:border-l xl:border-white/15">
+                <Globe className="h-3 w-3 text-brand-teal-300" />
+                Global · EN
+              </span>
 
-              {/* International Market Tag */}
-              <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold text-brand-teal-200 backdrop-blur">
-                <Globe className="h-3 w-3" />
-                <span>Global / BD (EN)</span>
-              </div>
-
-              {/* Social Channels */}
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3 border-l border-white/15 pl-4">
                 {Object.entries(socialIconMap).map(([key, Icon]) => {
                   const href = socialLinks[key];
                   if (!href) return null;
@@ -468,50 +384,38 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* ================= Main Corporate Header ================= */}
+        {/* ================= Main Header (sticky, fixed height: no layout shift) ================= */}
+        <header className="sticky top-0 z-50 w-full">
         <div
           className={cn(
-            "border-b bg-white/95 backdrop-blur-xl transition-all duration-300",
-            isCompact
-              ? "border-slate-200/90 shadow-md shadow-navy-950/5"
-              : "border-slate-200/70 shadow-2xs",
+            "border-b border-slate-200 border-t-2 border-t-brand-teal-400 bg-white transition-shadow duration-300",
+            isCompact && "shadow-[0_2px_12px_-4px_rgb(21_28_66/0.15)]",
           )}
         >
-          <div className="container-x">
+          <div className="container-x relative">
             <div
               className={cn(
-                "flex items-center justify-between gap-5 transition-[height] duration-300",
-                isCompact ? "h-[70px]" : "h-[86px]",
+                "flex items-center justify-between gap-8",
+                "h-[76px] lg:h-[84px]",
               )}
             >
-              {/* Corporate Identity & Logo */}
+              {/* Logo only */}
               <Link
                 href="/"
-                className="group flex shrink-0 items-center gap-3.5"
+                className="flex shrink-0 items-center"
                 aria-label={`${siteContent.name} — Home`}
               >
-                <div className="relative">
-                  <Image
-                    src={siteContent.logoUrl || "/sanveex-logo.png"}
-                    alt={`${siteContent.name} logo`}
-                    width={352}
-                    height={138}
-                    priority
-                    className={cn(
-                      "w-auto transition-all duration-300",
-                      isCompact ? "h-9" : "h-11",
-                    )}
-                  />
-                </div>
-                <span className="hidden h-10 w-px bg-slate-200 xl:block" />
-                <div className="hidden flex-col xl:flex">
-                  <span className="text-[12px] font-extrabold uppercase tracking-[0.06em] text-navy-900 group-hover:text-primary transition-colors">
-                    Sanveex Global Health
-                  </span>
-                  <span className="text-[9.5px] font-bold uppercase tracking-[0.14em] text-brand-teal-600">
-                    Pharmaceutical Marketing &amp; Distribution
-                  </span>
-                </div>
+                <Image
+                  src={siteContent.logoUrl || "/sanveex-logo.png"}
+                  alt={`${siteContent.name} logo`}
+                  width={352}
+                  height={138}
+                  priority
+                  className={cn(
+                    "w-auto transition-all duration-300",
+                    "h-11 lg:h-[52px]",
+                  )}
+                />
               </Link>
 
               {/* Desktop Corporate Navigation */}
@@ -533,7 +437,7 @@ export default function Navbar({
                       key={navItem.id}
                       href={navItem.href || "#"}
                       className={cn(
-                        "group relative whitespace-nowrap py-2.5 text-[0.8125rem] font-bold uppercase tracking-[0.08em] transition-colors",
+                        "group relative whitespace-nowrap py-2.5 text-[0.8rem] font-semibold uppercase tracking-[0.07em] transition-colors",
                         isActive(navItem.href)
                           ? "text-primary"
                           : "text-navy-800 hover:text-primary",
@@ -542,7 +446,7 @@ export default function Navbar({
                       {navItem.title}
                       <span
                         className={cn(
-                          "absolute -bottom-px left-0 h-[2.5px] rounded-full bg-gradient-to-r from-brand-teal-400 to-primary transition-all duration-300",
+                          "absolute -bottom-px left-0 h-[2px] bg-brand-teal-400 transition-all duration-300",
                           isActive(navItem.href)
                             ? "w-full"
                             : "w-0 group-hover:w-full",
@@ -555,26 +459,10 @@ export default function Navbar({
 
               {/* Header Action Controls */}
               <div className="flex items-center gap-2 sm:gap-3">
-                {/* Search trigger */}
-                <button
-                  type="button"
-                  onClick={() => setOpenSearch(true)}
-                  aria-label="Search medicines and documents"
-                  className="flex h-10 items-center gap-2 rounded-xl border border-border/80 bg-slate-50/70 px-3 text-muted-foreground transition-all hover:border-brand-teal-400 hover:bg-white hover:text-navy-800 hover:shadow-sm"
-                >
-                  <Search className="h-4 w-4 text-brand-teal-500" />
-                  <span className="hidden text-xs font-semibold xl:inline">
-                    Search medicines…
-                  </span>
-                  <kbd className="hidden items-center gap-0.5 rounded border border-border bg-white px-1.5 py-0.5 font-mono text-[10px] font-bold text-muted-foreground xl:inline-flex">
-                    ⌘K
-                  </kbd>
-                </button>
-
                 {/* Corporate CTA */}
                 <Button
                   asChild
-                  className="hidden h-10 rounded-xl bg-gradient-to-r from-navy-700 via-primary to-navy-800 px-5 font-bold text-white shadow-md shadow-navy-900/10 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-navy-900/20 sm:inline-flex"
+                  className="hidden h-10 rounded-md bg-primary px-6 text-[13px] font-semibold tracking-wide text-white transition-colors hover:bg-navy-700 sm:inline-flex"
                 >
                   <Link href="/contact">
                     Partner with Us
@@ -588,7 +476,7 @@ export default function Navbar({
                     <Button
                       variant="outline"
                       size="icon"
-                      className="h-10 w-10 rounded-xl border-border/80 text-navy-800"
+                      className="h-10 w-10 rounded-md border-border/80 text-navy-800"
                       aria-label="Open navigation menu"
                     >
                       <Menu className="h-5 w-5" />
@@ -615,9 +503,6 @@ export default function Navbar({
                             />
                           </Link>
                         </SheetTitle>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-brand-teal-600 mt-1">
-                          Pharmaceutical Marketing &amp; Distribution
-                        </p>
                       </SheetHeader>
 
                       <nav className="flex-1 px-4 py-5">
@@ -640,7 +525,7 @@ export default function Navbar({
                                       }
                                       aria-expanded={expanded}
                                       className={cn(
-                                        "flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-bold uppercase tracking-[0.08em] transition-colors",
+                                        "flex w-full items-center justify-between rounded-md px-4 py-3 text-left text-sm font-bold uppercase tracking-[0.08em] transition-colors",
                                         isActive(section.href)
                                           ? "text-primary bg-navy-50"
                                           : "text-navy-800 hover:bg-slate-50",
@@ -692,7 +577,7 @@ export default function Navbar({
                                     href={section.href || "#"}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={cn(
-                                      "block rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-[0.08em] transition-colors",
+                                      "block rounded-md px-4 py-3 text-sm font-bold uppercase tracking-[0.08em] transition-colors",
                                       isActive(section.href)
                                         ? "text-primary bg-navy-50"
                                         : "text-navy-800 hover:bg-slate-50",
@@ -718,7 +603,7 @@ export default function Navbar({
                                   key={product.slug}
                                   href={`/products/${product.slug}`}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className="flex items-center gap-3 rounded-xl border border-border/60 bg-white p-2.5 transition-colors hover:bg-navy-50"
+                                  className="flex items-center gap-3 rounded-md border border-border/60 bg-white p-2.5 transition-colors hover:bg-navy-50"
                                 >
                                   <span className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md border border-border bg-slate-50">
                                     <Image
@@ -748,7 +633,7 @@ export default function Navbar({
                       <div className="border-t border-border bg-slate-50 p-5 space-y-2">
                         <Button
                           asChild
-                          className="w-full h-11 rounded-xl bg-primary font-bold text-white"
+                          className="w-full h-11 rounded-md bg-primary font-bold text-white"
                         >
                           <Link
                             href="/contact"
@@ -760,7 +645,7 @@ export default function Navbar({
                         </Button>
                         <a
                           href={`tel:${phone.replace(/[^\d+]/g, "")}`}
-                          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-white text-sm font-semibold text-navy-800 transition-colors hover:border-navy-300"
+                          className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-white text-sm font-semibold text-navy-800 transition-colors hover:border-navy-300"
                         >
                           <Phone className="h-4 w-4 text-brand-teal-500" />
                           {phone}
@@ -773,82 +658,7 @@ export default function Navbar({
             </div>
           </div>
         </div>
-      </header>
-
-      {/* ================= Command / Global Search ================= */}
-      <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
-        <CommandInput placeholder="Search medicines, molecules, therapeutic classes…" />
-        <CommandList>
-          <CommandEmpty>No matching pharmaceutical records found.</CommandEmpty>
-
-          {products.length > 0 && (
-            <CommandGroup heading="Approved Medicines & Formulations">
-              {products.map((product) => (
-                <CommandItem
-                  key={product.slug}
-                  value={`${product.name} ${product.genericName ?? ""} ${product.brandBangla ?? ""}`}
-                  onSelect={() =>
-                    runCommand(() => router.push(`/products/${product.slug}`))
-                  }
-                  className="flex items-center justify-between py-2.5"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-50 text-primary">
-                      <Pill className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <span className="font-bold text-navy-800">{product.name}</span>
-                      {product.brandBangla && (
-                        <span className="ml-2 text-xs font-semibold text-muted-foreground">
-                          ({product.brandBangla})
-                        </span>
-                      )}
-                      <p className="text-xs text-brand-teal-600 font-medium">
-                        {product.genericName}
-                      </p>
-                    </div>
-                  </div>
-                  {product.strength && (
-                    <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700">
-                      {product.strength}
-                    </span>
-                  )}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )}
-
-          <CommandGroup heading="Key Corporate Destinations">
-            <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
-              Home
-            </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => router.push("/products"))}>
-              Complete Product Catalogue
-            </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => router.push("/about/overview"))}>
-              About Sanveex Global Health
-            </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => router.push("/contact"))}>
-              Corporate Office &amp; Partner Inquiries
-            </CommandItem>
-          </CommandGroup>
-
-          {navItems.map((section) => (
-            <CommandGroup key={section.id} heading={section.title}>
-              {section.children?.map((item) => (
-                <CommandItem
-                  key={item.id}
-                  onSelect={() =>
-                    runCommand(() => router.push(item.href || "#"))
-                  }
-                >
-                  {item.title}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          ))}
-        </CommandList>
-      </CommandDialog>
+        </header>
     </>
   );
 }

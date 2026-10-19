@@ -14,34 +14,37 @@ type SectionHeaderProps = {
 const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   eyebrow,
-  icon: Icon,
-  align = "center",
+  align = "left",
   description,
   tone = "default",
 }) => {
   const inverse = tone === "inverse";
+  const centered = align === "center";
 
   return (
     <div
-      className={`mb-12 flex flex-col gap-4 md:mb-16 ${
-        align === "left" ? "items-start text-left" : "items-center text-center"
+      className={`mb-12 flex flex-col gap-4 md:mb-14 ${
+        centered ? "items-center text-center" : "items-start text-left"
       }`}
     >
       {eyebrow && (
         <span
-          className={`eyebrow rounded-full px-3.5 py-1.5 ${
-            inverse
-              ? "bg-white/10 text-brand-teal-300"
-              : "bg-brand-teal-100 text-brand-teal-700"
+          className={`eyebrow ${
+            inverse ? "text-brand-teal-300" : "text-brand-teal-600"
           }`}
         >
-          {Icon && <Icon className="h-3.5 w-3.5" />}
+          <span
+            aria-hidden
+            className={`h-px w-8 ${
+              inverse ? "bg-brand-teal-300" : "bg-brand-teal-500"
+            }`}
+          />
           {eyebrow}
         </span>
       )}
 
       <h2
-        className={`max-w-3xl text-3xl sm:text-4xl lg:text-[2.75rem] ${
+        className={`max-w-3xl text-3xl sm:text-4xl lg:text-[2.5rem] ${
           inverse ? "text-white" : ""
         }`}
       >
@@ -57,12 +60,6 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
           {description}
         </p>
       )}
-
-      <span
-        className={`h-1 w-16 rounded-full ${
-          inverse ? "bg-brand-teal-400" : "bg-brand-teal-400"
-        }`}
-      />
     </div>
   );
 };

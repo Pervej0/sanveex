@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck, FileCheck2, Truck } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ShieldCheck,
+  FileCheck2,
+  CheckCircle2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { resolveImageSrc } from "@/lib/images";
@@ -51,129 +58,170 @@ export default function HeroSlider({ slides = [] }: HeroSliderProps) {
 
   return (
     <section
-      className="relative isolate w-full overflow-hidden bg-navy-900"
+      className="relative isolate w-full overflow-hidden bg-navy-950 text-white"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       aria-roledescription="carousel"
       aria-label="Featured highlights"
     >
-      <div className="relative h-[560px] w-full sm:h-[600px] lg:h-[680px]">
+      <div className="relative min-h-[640px] sm:min-h-[680px] lg:min-h-[720px] xl:min-h-[760px] w-full flex flex-col justify-between">
+        {/* Background Imagery with Smooth Transitions */}
         {slides.map((slide, index) => {
           const isActive = index === current;
-
           return (
             <div
               key={slide.id ?? index}
               aria-hidden={!isActive}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-out ${
-                isActive ? "z-10 opacity-100" : "z-0 opacity-0"
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? "z-10 opacity-100" : "z-0 opacity-0 pointer-events-none"
               }`}
             >
-              {/* Slow ken-burns on the active frame only */}
-              <div
-                className={`absolute inset-0 transition-transform duration-[9000ms] ease-out ${
-                  isActive ? "scale-[1.08]" : "scale-100"
-                }`}
-              >
-                <Image
-                  src={resolveImageSrc(slide.backgroundImage, "/hero1.jpeg")!}
-                  alt=""
-                  fill
-                  priority={index === 0}
-                  sizes="100vw"
-                  className="object-cover"
-                />
-              </div>
-
-              {/* Legibility scrims */}
-              <div className="absolute inset-0 bg-navy-900/45" />
-              <div className="absolute inset-0 bg-gradient-to-r from-navy-900/92 via-navy-900/60 to-navy-900/10" />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy-900/85 to-transparent" />
+              <Image
+                src={resolveImageSrc(slide.backgroundImage, "/hero1.jpeg")!}
+                alt=""
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+              {/* Premium Multi-layer Scrim for pristine text contrast */}
+              <div className="absolute inset-0 bg-navy-950/50" />
+              <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
+              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy-950/90 to-transparent" />
             </div>
           );
         })}
 
-        {/* ---------------- Content ---------------- */}
-        <div className="relative z-20 flex h-full items-center">
+        {/* Ambient Subtle Radial Glow for corporate depth */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-40 top-0 z-10 h-[500px] w-[500px] rounded-full bg-brand-teal-500/10 blur-[120px]"
+        />
+
+        {/* Main Content Area */}
+        <div className="relative z-20 flex-1 flex items-center pt-16 pb-28 sm:pb-32 lg:pb-36">
           <div className="container-x w-full">
-            <div className="max-w-3xl">
+            <div className="max-w-2xl lg:max-w-3xl">
+              {/* Slide Category / Subtitle Pill */}
               {activeSlide.subtitle && (
-                <p className="eyebrow animate-in fade-in slide-in-from-bottom-3 rounded-full border border-brand-teal-300/30 bg-brand-teal-400/10 px-4 py-2 text-brand-teal-200 backdrop-blur-sm duration-700">
-                  {activeSlide.subtitle}
-                </p>
+                <div
+                  key={`sub-${current}`}
+                  className="inline-flex items-center gap-2.5 rounded-full border border-brand-teal-400/30 bg-brand-teal-950/60 px-3.5 py-1.5 backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-500"
+                >
+                  <span className="h-2 w-2 rounded-full bg-brand-teal-400 animate-pulse" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-teal-300">
+                    {activeSlide.subtitle}
+                  </span>
+                </div>
               )}
 
+              {/* Slide Title */}
               <h1
                 key={`title-${current}`}
-                className="mt-6 animate-in fade-in slide-in-from-bottom-4 text-3xl font-extrabold leading-[1.08] text-white duration-700 sm:text-4xl lg:text-[3.5rem]"
+                className="mt-5 font-display text-3xl font-extrabold leading-[1.12] tracking-tight text-white animate-in fade-in slide-in-from-bottom-3 duration-600 sm:text-5xl lg:text-[3.65rem]"
               >
                 {activeSlide.title}
               </h1>
 
+              {/* Slide Description */}
               <p
                 key={`desc-${current}`}
-                className="mt-6 max-w-2xl animate-in fade-in slide-in-from-bottom-5 text-base leading-relaxed text-navy-100 duration-700 sm:text-lg"
+                className="mt-5 max-w-xl text-base leading-relaxed text-slate-200/90 animate-in fade-in slide-in-from-bottom-4 duration-700 sm:text-lg"
               >
                 {activeSlide.description}
               </p>
 
-              <div className="mt-9 flex flex-wrap gap-3">
+              {/* Action Buttons (side by side on small devices, adjusted sizing) */}
+              <div className="mt-6 sm:mt-8 flex flex-row items-center gap-2 sm:gap-4">
                 {activeSlide.buttonText && (
                   <Link
                     href={activeSlide.buttonLink || "#"}
-                    className="inline-flex items-center gap-2 rounded-lg bg-brand-teal-400 px-7 py-3.5 text-sm font-bold text-navy-900 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-teal-300"
+                    className="inline-flex h-9 sm:h-12 items-center justify-center gap-1 sm:gap-2 rounded-md bg-brand-teal-400 px-3 sm:px-7 text-xs sm:text-sm font-bold text-navy-950 shadow-md shadow-brand-teal-500/20 transition-all hover:bg-brand-teal-300 hover:shadow-lg shrink-0"
                   >
-                    {activeSlide.buttonText}
-                    <ArrowRight className="h-4 w-4" />
+                    <span>{activeSlide.buttonText}</span>
+                    <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Link>
                 )}
 
                 {activeSlide.secondaryButtonText && (
                   <Link
                     href={activeSlide.secondaryButtonLink || "#"}
-                    className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:bg-white/15"
+                    className="inline-flex h-9 sm:h-12 items-center justify-center gap-1 sm:gap-2 rounded-md border border-white/30 bg-white/5 px-3 sm:px-6 text-xs sm:text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/15 shrink-0"
                   >
-                    {activeSlide.secondaryButtonText}
-                    <ArrowRight className="h-4 w-4" />
+                    <span>{activeSlide.secondaryButtonText}</span>
                   </Link>
                 )}
               </div>
 
-              {/* Trust Badges */}
-              <div className="mt-8 flex flex-wrap items-center gap-3 text-xs font-semibold text-white/80">
-                <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
-                  <ShieldCheck className="h-3.5 w-3.5 text-brand-teal-300" />
-                  WHO-GMP Certified Partner
-                </span>
-                <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
-                  <FileCheck2 className="h-3.5 w-3.5 text-brand-teal-300" />
-                  DGDA Registered
-                </span>
-                <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 backdrop-blur-md">
-                  <Truck className="h-3.5 w-3.5 text-brand-teal-300" />
-                  Nationwide 64 Districts
-                </span>
+              {/* Corporate Trust Credentials Strip */}
+              <div className="mt-8 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs font-medium text-slate-300/85">
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className="h-4 w-4 text-brand-teal-400" />
+                  <span>WHO-GMP Facility</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <FileCheck2 className="h-4 w-4 text-brand-teal-400" />
+                  <span>DGDA Authorized</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-brand-teal-400" />
+                  <span>Batch Documented</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ---------------- Controls ---------------- */}
+        {/* Slide Controls Bar (Always docked cleanly without overlapping CTAs) */}
         {total > 1 && (
-          <>
-            <div className="absolute bottom-8 right-5 z-30 hidden items-center gap-4 sm:flex lg:right-10">
-              <span className="font-display text-sm font-bold tabular-nums text-white/70">
-                {String(current + 1).padStart(2, "0")}
-                <span className="mx-1 text-white/30">/</span>
-                {String(total).padStart(2, "0")}
-              </span>
+          <div className="relative z-30 pb-24 sm:pb-28 lg:pb-32">
+            <div className="container-x flex items-center justify-between gap-4 pr-16 sm:pr-0">
+              {/* Pagination & Time Indicator */}
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="font-display text-sm font-bold tabular-nums text-white">
+                  {String(current + 1).padStart(2, "0")}
+                </span>
 
+                <div className="flex items-center gap-2">
+                  {slides.map((slide, index) => (
+                    <button
+                      key={slide.id ?? index}
+                      type="button"
+                      onClick={() => goTo(index)}
+                      aria-label={`Go to slide ${index + 1}`}
+                      className="group relative h-5 w-8 sm:w-12 py-1"
+                    >
+                      <span className="block h-[3px] w-full overflow-hidden rounded-full bg-white/20 transition-colors group-hover:bg-white/40">
+                        {index === current && (
+                          <span
+                            key={`bar-${current}`}
+                            className="block h-full bg-brand-teal-400"
+                            style={{
+                              animation: `progress ${AUTOPLAY_MS}ms linear forwards`,
+                              animationPlayState: isPaused ? "paused" : "running",
+                            }}
+                          />
+                        )}
+                        {index < current && (
+                          <span className="block h-full w-full bg-white/70" />
+                        )}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                <span className="font-display text-sm font-bold tabular-nums text-white/50">
+                  {String(total).padStart(2, "0")}
+                </span>
+              </div>
+
+              {/* Prev / Next Navigation Arrows */}
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={prev}
                   aria-label="Previous slide"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-sm transition-all hover:bg-white/15"
+                  className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-md border border-white/25 bg-navy-900/60 text-white backdrop-blur-sm transition-all hover:border-white hover:bg-white hover:text-navy-950"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -181,30 +229,13 @@ export default function HeroSlider({ slides = [] }: HeroSliderProps) {
                   type="button"
                   onClick={next}
                   aria-label="Next slide"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-sm transition-all hover:bg-white/15"
+                  className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-md border border-white/25 bg-navy-900/60 text-white backdrop-blur-sm transition-all hover:border-white hover:bg-white hover:text-navy-950"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
               </div>
             </div>
-
-            {/* Progress rail */}
-            <div className="absolute bottom-0 left-0 right-0 z-30 flex gap-1.5">
-              {slides.map((slide, index) => (
-                <button
-                  key={slide.id ?? index}
-                  type="button"
-                  onClick={() => goTo(index)}
-                  aria-label={`Go to slide ${index + 1}`}
-                  className={`h-1.5 flex-1 transition-colors ${
-                    index === current
-                      ? "bg-brand-teal-400"
-                      : "bg-white/20 hover:bg-white/40"
-                  }`}
-                />
-              ))}
-            </div>
-          </>
+          </div>
         )}
       </div>
     </section>

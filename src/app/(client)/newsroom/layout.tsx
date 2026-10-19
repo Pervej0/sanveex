@@ -1,17 +1,7 @@
-import GlobalPageBanner from "@/components/shared/PageBanner";
-
-export default function AboutLayout({
+export default function NewsroomLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="">
-      <GlobalPageBanner
-        desktopImage="/about-banner-desktop.webp"
-        mobileImage="/about-banner-mobile.webp"
-      />
-      <div className="">{children}</div>
-    </div>
-  );
+  return <div className="min-h-screen bg-slate-50/50">{children}</div>;
 }

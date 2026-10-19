@@ -1,19 +1,19 @@
-import { Inter, Poppins, Roboto_Mono, Playfair_Display } from "next/font/google";
+import { Source_Sans_3, Roboto_Mono } from "next/font/google";
 
-// Primary font family (for body text)
-export const primaryFont = Inter({
+// Primary font family (for body text and headings)
+export const primaryFont = Source_Sans_3({
   variable: "--font-primary",
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
-// Secondary font family (for headings)
-export const secondaryFont = Poppins({
+// Secondary font family
+export const secondaryFont = Source_Sans_3({
   variable: "--font-secondary",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700", "800"],
 });
 
 // Monospace font family (for code)
@@ -24,12 +24,12 @@ export const monoFont = Roboto_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
-// Display font family (for special headings)
-export const displayFont = Playfair_Display({
+// Display font family
+export const displayFont = Source_Sans_3({
   variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["600", "700", "800", "900"],
 });
 
 // Font family CSS variables mapping

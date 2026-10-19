@@ -1,20 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Manrope } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import QueryProvider from "@/components/providers/query-provider";
 
-const body = Inter({
+const sourceSans3 = Source_Sans_3({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
-  variable: "--font-body",
-});
-
-const heading = Manrope({
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  display: "swap",
-  variable: "--font-heading",
+  variable: "--font-source-sans",
 });
 
 export const metadata: Metadata = {
@@ -84,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${body.variable} ${heading.variable}`}>
+    <html lang="en" className={sourceSans3.variable}>
       <body className="bg-background text-foreground antialiased">
         <QueryProvider>
           {children}

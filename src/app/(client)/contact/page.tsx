@@ -75,7 +75,7 @@ export default async function ContactPage() {
         <div className="container-x">
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-7">
-              <span className="eyebrow rounded-full bg-brand-teal-100 px-3.5 py-1.5 text-brand-teal-700">
+              <span className="eyebrow text-brand-teal-600">
                 Contact
               </span>
               <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">
@@ -147,7 +147,7 @@ export default async function ContactPage() {
                 href={`mailto:${department.email}?subject=${encodeURIComponent(
                   department.title,
                 )}`}
-                className="group rounded-xl border border-border bg-white p-5 transition-all hover:-translate-y-1 hover:border-navy-200 hover:shadow-md"
+                className="group rounded-xl border border-border bg-white p-5 transition-all hover:border-navy-200"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-navy-50 text-primary">
                   <department.icon className="h-5 w-5" strokeWidth={1.9} />

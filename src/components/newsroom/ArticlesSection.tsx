@@ -30,7 +30,7 @@ export default function ArticlesSection() {
           {articles.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row bg-white shadow-sm hover:shadow-md transition rounded-lg overflow-hidden"
+              className="flex flex-col sm:flex-row bg-white shadow-sm transition rounded-lg overflow-hidden"
             >
               <div className="w-full sm:w-[220px] shrink-0">
                 <Image

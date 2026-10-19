@@ -167,15 +167,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <div className="order-1 lg:order-2 lg:col-span-6">
               <div className="flex flex-wrap items-center gap-2">
                 {product.categoryName && (
-                  <span className="eyebrow rounded-full bg-brand-teal-100 px-3 py-1.5 text-brand-teal-700">
+                  <span className="eyebrow text-brand-teal-600">
                     {product.categoryName}
                   </span>
                 )}
-                <span className="eyebrow rounded-full bg-navy-100 px-3 py-1.5 text-navy-800">
+                <span className="eyebrow text-navy-800">
                   WHO-GMP Compliant
                 </span>
                 {maNumber && (
-                  <span className="eyebrow rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-emerald-200">
+                  <span className="eyebrow text-emerald-700">
                     MA: {maNumber}
                   </span>
                 )}

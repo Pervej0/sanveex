@@ -19,7 +19,7 @@ export default function WhatsAppButton({
       target="_blank"
       rel="noreferrer noopener"
       aria-label="Chat on WhatsApp"
-      className="fixed bottom-4 right-4 z-50 inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#25d366] shadow-lg hover:bg-[#20bd5a] transition-colors duration-300"
+      className="fixed bottom-4 right-4 z-50 inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#25d366] hover:bg-[#20bd5a] transition-colors duration-300"
     >
       {/* Ping Animation Layer */}
       <div className="absolute z-10 top-0 left-0 w-full h-full rounded-full bg-[#25d366] opacity-75 animate-ping" />

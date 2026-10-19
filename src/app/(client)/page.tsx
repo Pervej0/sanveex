@@ -92,7 +92,7 @@ export default async function Home() {
   const featuredArticles = articles
     .filter((a) => a.isActive)
     .sort((a, b) => (a.isFeatured === b.isFeatured ? 0 : a.isFeatured ? -1 : 1))
-    .slice(0, 3);
+    .slice(0, 4);
 
   return (
     <>

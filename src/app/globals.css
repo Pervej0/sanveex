@@ -23,6 +23,7 @@
   --brand-navy-700: #1d2657;
   --brand-navy-800: #151c42;
   --brand-navy-900: #0e132e;
+  --brand-navy-950: #090c20;
 
   /* ---------- Brand ramp: Teal ---------- */
   --brand-teal-50: #eef9fa;
@@ -86,14 +87,16 @@
   --sidebar-ring: var(--brand-teal-400);
 
   /* ---------- Type ---------- */
-  --font-sans: var(--font-body), ui-sans-serif, system-ui, -apple-system,
+  --font-body: var(--font-source-sans);
+  --font-heading: var(--font-source-sans);
+  --font-sans: var(--font-source-sans), "Source Sans 3", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
-  --font-display: var(--font-heading), var(--font-sans);
+  --font-display: var(--font-source-sans), "Source Sans 3", var(--font-sans);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 
   /* ---------- Shape ---------- */
-  --radius: 0.5rem;
+  --radius: 0.25rem;
 
   /* ---------- Elevation (soft, corporate) ---------- */
   --shadow-2xs: 0 1px 2px 0 rgb(21 28 66 / 0.04);
@@ -189,6 +192,7 @@
   --color-navy-700: var(--brand-navy-700);
   --color-navy-800: var(--brand-navy-800);
   --color-navy-900: var(--brand-navy-900);
+  --color-navy-950: var(--brand-navy-950);
   --color-brand-teal-50: var(--brand-teal-50);
   --color-brand-teal-100: var(--brand-teal-100);
   --color-brand-teal-200: var(--brand-teal-200);
@@ -205,8 +209,9 @@
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 6px);
-  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --radius-3xl: calc(var(--radius) + 6px);
 
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
@@ -234,7 +239,6 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "cv11", "ss01";
     text-rendering: optimizeLegibility;
   }
 
@@ -249,13 +253,13 @@
   }
 
   h1 {
-    @apply text-4xl sm:text-5xl lg:text-6xl;
-    line-height: 1.05;
+    @apply text-4xl sm:text-5xl lg:text-[3.5rem];
+    line-height: 1.08;
   }
 
   h2 {
-    @apply text-3xl sm:text-4xl lg:text-[2.75rem];
-    line-height: 1.12;
+    @apply text-3xl sm:text-4xl lg:text-[2.5rem];
+    line-height: 1.15;
   }
 
   h3 {
@@ -275,6 +279,17 @@
   ::selection {
     background: var(--brand-navy-600);
     color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   @keyframes progress {
@@ -311,12 +326,21 @@
 @utility eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
+  gap: 0.625rem;
+  font-size: 0.72rem;
   line-height: 1;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+/* Consistent vertical rhythm for page sections */
+@utility section-y {
+  padding-block: 4rem;
+
+  @media (width >= 64rem) {
+    padding-block: 6rem;
+  }
 }
 
 /* ==========================================================================

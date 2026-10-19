@@ -8,12 +8,11 @@ import {
   Phone,
   MapPin,
   ArrowRight,
-  ShieldCheck,
   Twitter,
   Youtube,
 } from "lucide-react";
 import { SiteContent } from "@/generated/prisma/client";
-import { company, legalDisclaimer } from "@/lib/company";
+import { company } from "@/lib/company";
 
 const productLinks = [
   { name: "All Products Catalogue", href: "/products" },
@@ -21,8 +20,6 @@ const productLinks = [
   { name: "Adcal D (Calcium & Vit D3)", href: "/products/adcal-d" },
   { name: "Xofedin® 120 (Fexofenadine)", href: "/products/xofedin-120" },
   { name: "Medical Information", href: "/products/medical-info" },
-  { name: "Quality Assurance", href: "/products/quality" },
-  { name: "Safety & Pharmacovigilance", href: "/products/safety" },
 ];
 
 const companyLinks = [
@@ -46,19 +43,19 @@ export default function Footer({ siteContent }: { siteContent: SiteContent }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-navy-900 text-navy-100">
+    <footer className="bg-navy-950 text-slate-300 border-t border-slate-800">
       {/* ================= Partner CTA ================= */}
-      <div className="border-b border-white/10">
+      <div className="border-b border-white/10 bg-navy-900/60">
         <div className="container-x">
           <div className="flex flex-col items-start justify-between gap-6 py-10 md:flex-row md:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              <h2 className="font-display text-2xl font-extrabold text-white sm:text-3xl tracking-tight">
                 Partner with Sanveex Global Health
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-navy-200">
-                Looking for a reliable distribution partner, product
-                information or a career in pharmaceutical marketing? Our team
-                responds within one business day.
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">
+                Looking for a reliable distribution partner, product information
+                or a career in pharmaceutical marketing? Our team responds
+                within one business day.
               </p>
             </div>
             <div className="flex shrink-0 flex-wrap gap-3">
@@ -113,7 +110,7 @@ export default function Footer({ siteContent }: { siteContent: SiteContent }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Sanveex Global Health on ${key}`}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-navy-200 transition-all hover:-translate-y-0.5 hover:border-brand-teal-400/40 hover:text-brand-teal-300"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-navy-200 transition-all hover:border-brand-teal-400/40 hover:text-brand-teal-300"
                   >
                     <Icon className="h-4 w-4" />
                   </a>
@@ -192,18 +189,6 @@ export default function Footer({ siteContent }: { siteContent: SiteContent }) {
               </li>
             </ul>
 
-            <div className="mt-6 flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-4">
-              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand-teal-300" />
-              <div className="text-xs leading-relaxed text-navy-200">
-                <p className="font-semibold text-white">
-                  {company.regulatory.qualityStandard}
-                </p>
-                <p className="mt-1">
-                  Manufactured by {company.manufacturer.name} · Mfg. Licence No.{" "}
-                  {company.regulatory.mfgLicence}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -211,36 +196,30 @@ export default function Footer({ siteContent }: { siteContent: SiteContent }) {
       {/* ================= Legal ================= */}
       <div className="border-t border-white/10">
         <div className="container-x">
-          <div className="py-6">
-            <p className="max-w-4xl text-xs leading-relaxed text-navy-300">
-              {legalDisclaimer}
+          <div className="flex flex-col-reverse items-start justify-between gap-4 py-6 sm:flex-row sm:items-center">
+            <p className="text-xs text-navy-300">
+              © {year} {siteContent.name}. All rights reserved.
             </p>
-
-            <div className="mt-5 flex flex-col-reverse items-start justify-between gap-4 border-t border-white/5 pt-5 sm:flex-row sm:items-center">
-              <p className="text-xs text-navy-300">
-                © {year} {siteContent.name}. All rights reserved.
-              </p>
-              <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
-                <Link
-                  href="/privacy-policy"
-                  className="text-navy-300 transition-colors hover:text-brand-teal-300"
-                >
-                  Privacy Policy
-                </Link>
-                <Link
-                  href="/terms"
-                  className="text-navy-300 transition-colors hover:text-brand-teal-300"
-                >
-                  Terms of Use
-                </Link>
-                <Link
-                  href="/products/safety"
-                  className="text-navy-300 transition-colors hover:text-brand-teal-300"
-                >
-                  Report an Adverse Event
-                </Link>
-              </nav>
-            </div>
+            <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
+              <Link
+                href="/privacy-policy"
+                className="text-navy-300 transition-colors hover:text-brand-teal-300"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms"
+                className="text-navy-300 transition-colors hover:text-brand-teal-300"
+              >
+                Terms of Use
+              </Link>
+              <Link
+                href="/products/safety"
+                className="text-navy-300 transition-colors hover:text-brand-teal-300"
+              >
+                Report an Adverse Event
+              </Link>
+            </nav>
           </div>
         </div>
       </div>

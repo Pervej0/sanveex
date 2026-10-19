@@ -35,7 +35,7 @@ export default function ProductGalleryViewer({
   return (
     <div>
       {/* Main Image Stage */}
-      <div className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-navy-50/30 p-6 shadow-md transition-all duration-300 hover:shadow-xl">
+      <div className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-navy-50/30 p-6 shadow-md transition-all duration-300">
         <Image
           src={currentImage}
           alt={`${productName} — ${genericName ?? "Pharmaceutical formulation"}`}
@@ -102,7 +102,7 @@ export default function ProductGalleryViewer({
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className="relative max-h-[90vh] max-w-5xl overflow-hidden rounded-2xl bg-white p-6 shadow-2xl"
+            className="relative max-h-[90vh] max-w-5xl overflow-hidden rounded-2xl bg-white p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between border-b pb-3">
